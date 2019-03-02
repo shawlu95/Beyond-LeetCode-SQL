@@ -4,7 +4,10 @@ In depth analysis of SQL for Leetcode and classic interview questions, tradeoff 
 ### LeetCode catalogue
 | \# | Problems | Solutions | Note |
 |----|----------|-----------|------|
-| 262 | [Trips and Users](https://leetcode.com/problems/trips-and-users/) | [MySQL](./LeetCode/Trips_and_Users) | Hard |
+| 262 | [Trips and Users](https://leetcode.com/problems/trips-and-users/) | [MySQL](./LeetCode/Trips_and_Users.md) | Hard |
 
 
 ### Classic interview question
+| \# | Problems | Solutions | Note |
+|----|----------|-----------|------|
+| 1 | User Status Update| [MySQL](./Interview/01_User_Status_Update/solution.md) | Transition diagram, boolean algebra |
