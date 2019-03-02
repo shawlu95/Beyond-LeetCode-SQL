@@ -1,2 +1,0 @@
-# Trips and Users
-
