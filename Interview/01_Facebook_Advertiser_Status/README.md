@@ -7,7 +7,7 @@
 * Boolean algebra and simplification.
 
 ### Two Tables:
-* *DailyPay*: user_id (showing today paid ads fee) on day T
+* *DailyPay*: user_id (showing today paid ads fee) on day T. __Only__ advertisers who paid will show up in this table. 
 * *Advertiser*: two columns, user_id and their status on day T-1
 Use today’s payment log in *DailyPay* table to update status in *Advertiser* table
 
