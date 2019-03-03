@@ -1,138 +1,132 @@
 # Spotify Listening History
 
 ### Test
-* Conditional update with join.
-* Left join vs. inner join.
-* Edge case: adding new users.
-* Boolean algebra and simplification.
+* Update aggregate table with event log.
+* Temporary table & reusability.
+* Update with join statement.
+* Edge case: adding new user-song pair.
+* Aggregation.
 
-### Two Tables:
-* *DailyPay*: user_id (showing today paid ads fee) on day T
-* *Advertiser*: two columns, user_id and their status on day T-1
-Use today’s payment log in *DailyPay* table to update status in *Advertiser* table
+### Two Tables
+You have a History table where you have date, user_id, song_id and count(tally).
+It shows at the end of each day how many times in her history a user has listened to a given song.
+So count is cumulative sum.
 
-### Status: 
-* New: users registered on day T.
-* Existing: users who paid on day T-1 and on day T.
-* Churn: users who paid on day T-1 but not on day T.
-* Resurrect: users who did not pay on T-1 but paid on day T.
+You have to update this on a daily basis based on a second *Daily* table that records 
+in real time when a user listens to a given song.
 
-### State Transition
-
-<p align="center">
-    <img src="fig/transition.png" width="700">
-</p>
-
-|#| Start | End | Condition |
-|-|----|----------|-----------|
-|1|NEW|EXISTING|Paid on day T|
-|2|NEW|CHURN|No pay on day T|
-|3|EXISTING|EXISTING|Paid on day T|
-|4|EXISTING|CHURN|No pay on day T|
-|5|CHURN|RESURRECT|Paid on day T|
-|6|CHURN|CHURN|No pay on day T|
-|7|RESURRECT|EXISTING|Paid on day T|
-|8|RESURRECT|CHURN|No pay on day T|
-
-By examining the above table. We can see that as long as user has not paid on day T, his status is updated to CHURN regardless of previous status (check with interviewer that all new users who registered on day T did pay, and if they didn't, they are not immediately considered as CHURN.
-
-When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RESURRECT, depending on their previous state. RESURRECT is only possible when previous state is CHURN. When previous state is anythint else, status is updated to EXISTING.
-
-After simplifying the boolean algebra, we only need three conditions. State __EXPLICITLY__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
+Basically, at the end of each day, you go to this second table and pull a count 
+of each user/song combination and then add this count to the first table that 
+has the lifetime count.
 
 ### Sample Database
-Load the database file [db.sql](db.sql) to localhost MySQL. An Advertiser dabase will be created with two tables. 
+Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify dabase will be created with two tables. 
 ```
 mysql < db.sql -uroot -p
 ```
 
 ```
-mysql> SELECT * FROM Advertiser;
-+----+---------+-----------+
-| id | user_id | status    |
-+----+---------+-----------+
-|  1 | bing    | NEW       |
-|  2 | yahoo   | NEW       |
-|  3 | alibaba | EXISTING  |
-|  4 | baidu   | EXISTING  |
-|  5 | target  | CHURN     |
-|  6 | tesla   | CHURN     |
-|  7 | morgan  | RESURRECT |
-|  8 | chase   | RESURRECT |
-+----+---------+-----------+
-8 rows in set (0.00 sec)
+mysql> SELECT * from History;
++----+---------+---------+-------+
+| id | user_id | song_id | tally |
++----+---------+---------+-------+
+|  1 | shaw    | rise    |     2 |
+|  2 | linda   | lemon   |     4 |
++----+---------+---------+-------+
+2 rows in set (0.00 sec)
 
-mysql> SELECT * FROM DailyPay;
-+----+---------+------+
-| id | user_id | paid |
-+----+---------+------+
-|  1 | yahoo   |   45 |
-|  2 | alibaba |  100 |
-|  3 | target  |   13 |
-|  4 | morgan  |  600 |
-|  5 | fitdata |    1 |
-+----+---------+------+
+mysql> SELECT * from Daily;
++----+---------+---------+---------------------+
+| id | user_id | song_id | time_stamp          |
++----+---------+---------+---------------------+
+|  1 | shaw    | rise    | 2019-03-01 05:33:08 |
+|  2 | shaw    | rise    | 2019-03-01 16:00:00 |
+|  3 | shaw    | goodie  | 2019-03-01 10:15:00 |
+|  4 | linda   | lemon   | 2019-02-28 00:00:00 |
+|  5 | mark    | game    | 2019-03-01 04:00:00 |
++----+---------+---------+---------------------+
 5 rows in set (0.00 sec)
 ```
 
+### Observation 
+* Note that the *Daily* table is a event-log. To update *History*, we need to aggregate the event log, grouping by *user_id* and *song_id*.
+* A user may listen to a new song for the first time, in which case no existing (*user_id*, *song_id*) compound key pair exists in the *History* table. So we need an additional INSERT statement.
+
 ### Solution
+For both the UPDATE and INSERT statements, we need the same aggregated information from the *Daily* table. So we can save it as a temporary table.
 ```
-UPDATE Advertiser AS a
-LEFT JOIN DailyPay AS d
-ON a.user_id = d.user_id
-SET a.status = CASE 
-    WHEN d.paid IS NULL THEN "CHURN" 
-    WHEN a.status = "CHURN" AND d.paid IS NOT NULL THEN "RESURRECT"
-    WHEN a.status != "CHURN" AND d.paid IS NOT NULL THEN "EXISTING"
-    END;
+SET @now = "2019-03-01 00:00:00";
+
+-- Create tamporary table
+CREATE TEMPORARY TABLE daily_count
+SELECT 
+    user_id
+    ,song_id
+    ,COUNT(*) AS tally
+FROM Daily
+WHERE DATEDIFF(@now, time_stamp) = 0
+GROUP BY user_id, song_id;
 ```
 
-Check the *Advertiser* to see if the update make sense.
+Check the temporary table.
 ```
-mysql> SELECT * FROM Advertiser;                                                
-+----+---------+-----------+
-| id | user_id | status    |
-+----+---------+-----------+
-|  1 | bing    | CHURN     |
-|  2 | yahoo   | EXISTING  |
-|  3 | alibaba | CHURN     |
-|  4 | baidu   | EXISTING  |
-|  5 | target  | CHURN     |
-|  6 | tesla   | RESURRECT |
-|  7 | morgan  | CHURN     |
-|  8 | chase   | EXISTING  |
-+----+---------+-----------+
-8 rows in set (0.00 sec)
+mysql> SELECT * FROM daily_count;       
++---------+---------+-------+
+| user_id | song_id | tally |
++---------+---------+-------+
+| mark    | game    |     1 |
+| shaw    | goodie  |     1 |
+| shaw    | rise    |     2 |
++---------+---------+-------+
+3 rows in set (0.00 sec)
 ```
 
-Note that we missed the new user. To find the new user, left join *DailyPay* with *Advertizer*. If there is no match on the right, the user is new.
-
+It's okay to join the temporary table with the History table during the update process, because History is independent of the temporary table. 
 ```
-INSERT INTO 
-Advertiser (user_id, status)
-SELECT d.user_id
-    ,"NEW" as status
-FROM DailyPay AS d
-LEFT JOIN Advertiser AS a
-  ON d.user_id = a.user_id
-WHERE a.user_id IS NULL;
+UPDATE History AS uh
+JOIN daily_count AS dc
+    ON uh.user_id = dc.user_id
+    AND uh.song_id = dc.song_id
+SET uh.tally = uh.tally + dc.tally;
 ```
 
-Check again that the new users are added.
+Check if update is correct: *shaw* listened to *rise* twice on March 1. So the compound key is incremented by 2. On the other hand, linda did not listened to any song on March 1. So her number doesn't change.
 ```
-SELECT * FROM Advertiser;
-+----+---------+-----------+
-| id | user_id | status    |
-+----+---------+-----------+
-|  1 | bing    | CHURN     |
-|  2 | yahoo   | EXISTING  |
-|  3 | alibaba | CHURN     |
-|  4 | baidu   | EXISTING  |
-|  5 | target  | CHURN     |
-|  6 | tesla   | RESURRECT |
-|  7 | morgan  | CHURN     |
-|  8 | chase   | EXISTING  |
-| 10 | fitdata | NEW       |
-+----+---------+-----------+
-9 rows in set (0.00 sec)
+mysql> SELECT * FROM History;
++----+---------+---------+-------+
+| id | user_id | song_id | tally |
++----+---------+---------+-------+
+|  1 | shaw    | rise    |     4 |
+|  2 | linda   | lemon   |     4 |
++----+---------+---------+-------+
+2 rows in set (0.00 sec)
+```
+
+After updating existing (*user_id*, *song_id*) compound key pair, we need to insert new ones:
+
+```
+INSERT INTO History (user_id, song_id, tally)
+SELECT
+    dc.user_id
+    ,dc.song_id
+    ,dc.tally
+FROM daily_count AS dc
+LEFT JOIN History AS uh
+    ON dc.user_id = uh.user_id
+    AND dc.song_id = uh.song_id
+WHERE uh.tally IS NULL;
+```
+
+Check that the insertions are correct.
+```
+mysql> SELECT * FROM History;
++----+---------+---------+-------+
+| id | user_id | song_id | tally |
++----+---------+---------+-------+
+|  1 | shaw    | rise    |     4 |
+|  2 | linda   | lemon   |     4 |
+|  3 | mark    | game    |     1 |
+|  4 | shaw    | goodie  |     1 |
++----+---------+---------+-------+
+4 rows in set (0.00 sec)
 ```
