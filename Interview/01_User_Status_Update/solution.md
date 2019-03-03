@@ -17,6 +17,29 @@ Use today’s payment log in *AdDaily* table to update status in *Advertiser* ta
 * Churn: users who paid on day T-1 but not on day T.
 * Resurrect: users who did not pay on T-1 but paid on day T.
 
+### State Transition
+
+<p align="center">
+    <img src="fig/transition.png" width="800">
+</p>
+
+|#| Start | End | Condition |
+|-|----|----------|-----------|
+|1|NEW|EXISTING|Paid on day T|
+|2|NEW|CHURN|No pay on day T|
+|3|EXISTING|EXISTING|Paid on day T|
+|4|EXISTING|CHURN|No pay on day T|
+|5|CHURN|RESURRECT|Paid on day T|
+|6|CHURN|CHURN|No pay on day T|
+|7|RESURRECT|EXISTING|Paid on day T|
+|8|RESURRECT|CHURN|No pay on day T|
+
+By examining the above table. We can see that as long as user has not paid on day T, his status is updated to CHURN regardless of previous status (check with interviewer that all new users who registered on day T did pay, and if they didn't, they are not immediately considered as CHURN.
+
+When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RESURRECT, depending on their previous state. RESURRECT is only possible when previous state is CHURN. When previous state is anythint else, status is updated to EXISTING.
+
+After simplifying the boolean algebra, we only need three conditions. State __EXPLICITLY__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
+
 ### Sample Database
 Load the database file[dn.sql](db.sql) to localhost MySQL. An Advertiser dabase will be created with two tables. 
 ```
@@ -51,28 +74,8 @@ mysql> SELECT * FROM AdDaily;
 +----+---------+------+
 5 rows in set (0.00 sec)
 ```
-### State Transition
-|#| Start | End | Condition |
-|-|----|----------|-----------|
-|1|NEW|EXISTING|Paid on day T|
-|2|NEW|CHURN|No pay on day T|
-|3|EXISTING|EXISTING|Paid on day T|
-|4|EXISTING|CHURN|No pay on day T|
-|5|CHURN|RESURRECT|Paid on day T|
-|6|CHURN|CHURN|No pay on day T|
-|7|RESURRECT|EXISTING|Paid on day T|
-|8|RESURRECT|CHURN|No pay on day T|
 
-By examining the above table. We can see that as long as user has not paid on day T, his status is updated to CHURN regardless of previous status (check with interviewer that all new users who registered on day T did pay, and if they didn't, they are not immediately considered as CHURN.
-
-When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RESURRECT, depending on their previous state. RESURRECT is only possible when previous state is CHURN. When previous state is anythint else, status is updated to EXISTING.
-
-<p align="center">
-    <img src="fig/transition.png" width="800">
-</p>
-
-After simplifying the boolean algebra, we only need three conditions. State __EXPLICITLY__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
-
+### Solution
 ```
 UPDATE Advertiser AS a
 LEFT JOIN AdDaily AS d
