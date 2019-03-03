@@ -26,23 +26,23 @@ ALTER TABLE `Advertiser`
 ALTER TABLE `Advertiser`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
--- Table structure for table `AdDaily`
-DROP TABLE IF EXISTS `AdDaily`;
-CREATE TABLE `AdDaily` (
+-- Table structure for table `DailyPay`
+DROP TABLE IF EXISTS `DailyPay`;
+CREATE TABLE `DailyPay` (
   `id` int(11) NOT NULL,
   `user_id` varchar(10) NOT NULL,
   `paid` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `AdDaily` (`id`, `user_id`, `paid`) VALUES
+INSERT INTO `DailyPay` (`id`, `user_id`, `paid_amount`) VALUES
 (1, 'yahoo', 45),
 (2, 'alibaba', 100),
 (3, 'target', 13),
 (4, 'morgan', 600),
 (5, 'fitdata', 1);
 
-ALTER TABLE `AdDaily`
+ALTER TABLE `DailyPay`
   ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `AdDaily`
+ALTER TABLE `DailyPay`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;

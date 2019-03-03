@@ -7,9 +7,9 @@
 * Boolean algebra and simplification.
 
 ### Two Tables:
-* *AdDaily*: user_id (showing today paid ads fee) on day T
+* *DailyPay*: user_id (showing today paid ads fee) on day T
 * *Advertiser*: two columns, user_id and their status on day T-1
-Use today’s payment log in *AdDaily* table to update status in *Advertiser* table
+Use today’s payment log in *DailyPay* table to update status in *Advertiser* table
 
 ### Status: 
 * New: users registered on day T.
@@ -62,7 +62,7 @@ mysql> SELECT * FROM Advertiser;
 +----+---------+-----------+
 8 rows in set (0.00 sec)
 
-mysql> SELECT * FROM AdDaily;
+mysql> SELECT * FROM DailyPay;
 +----+---------+------+
 | id | user_id | paid |
 +----+---------+------+
@@ -78,7 +78,7 @@ mysql> SELECT * FROM AdDaily;
 ### Solution
 ```
 UPDATE Advertiser AS a
-LEFT JOIN AdDaily AS d
+LEFT JOIN DailyPay AS d
 ON a.user_id = d.user_id
 SET a.status = CASE 
     WHEN d.paid IS NULL THEN "CHURN" 
@@ -105,14 +105,14 @@ mysql> SELECT * FROM Advertiser;
 8 rows in set (0.00 sec)
 ```
 
-Note that we missed the new user. To find the new user, left join *AdDaily* with *Advertizer*. If there is no match on the right, the user is new.
+Note that we missed the new user. To find the new user, left join *DailyPay* with *Advertizer*. If there is no match on the right, the user is new.
 
 ```
 INSERT INTO 
 Advertiser (user_id, status)
 SELECT d.user_id
     ,"NEW" as status
-FROM AdDaily AS d
+FROM DailyPay AS d
 LEFT JOIN Advertiser AS a
   ON d.user_id = a.user_id
 WHERE a.user_id IS NULL;
