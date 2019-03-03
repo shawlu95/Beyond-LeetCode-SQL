@@ -10,4 +10,4 @@ In depth analysis of SQL for Leetcode and classic interview questions, tradeoff 
 ### Classic interview question
 | \# | Problems | Solutions | Note |
 |----|----------|-----------|------|
-| 1 | User Status Update| [MySQL](./Interview/01_User_Status_Update/solution.md) | Transition diagram, boolean algebra |
+| 1 | User Status Update| [MySQL](./Interview/01_User_Status_Update/README.md) | Transition diagram, boolean algebra |
