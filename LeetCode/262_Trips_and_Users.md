@@ -14,7 +14,7 @@ Make the following observation to interviewers. Confirm your observation is corr
 
 Basic solution that gives correct ouput:
 ```
--- MySQL
+-- MySQL: simple version
 SELECT
   t.Request_at AS Day
   ,ROUND(SUM(t.Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'
@@ -36,7 +36,8 @@ Similarly, joining the full *Trips* table can be wasteful. It may contain years 
 Finally, we inner join the pre-filtered *valid_trips* table to *valid_user* table twice. INNER JOIN filters out trips that have no match in *valid_users*, meaning that the driver or rider is banned.
 
 ```
--- WARNING: LeetCode does not allow temporary table
+-- MySQL: pre-filtering before join
+-- WARNING: LeetCode MySQL does not allow temporary table
 WITH valid_user AS (
   SELECT User_Id
   FROM Users
@@ -63,7 +64,7 @@ When using multi-column predicate, applying more restrictive condition first. Fo
 Using IN (... Banned = "No") clause is more efficient than using NOT IN (...Banned = "Yes"). To check an element is not in a set, a full scan of the set is required.
 
 ```
--- MySQL
+-- MySQL: set version
 SELECT
   Request_at AS Day
   ,ROUND(SUM(Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'
@@ -74,5 +75,5 @@ WHERE Request_at BETWEEN "2013-10-01" AND "2013-10-03"
 GROUP BY Request_at;
 ```
 
-## Final Thought
+## Parting Thought
 Because temporary table has no index. The second solution works better only when the pre-filtering results in significant reduction of table size. Otherwise, joining temporary tables without index can be slower than joining the full tables. In practice, look up the query plan and estimated cost before running the query.
