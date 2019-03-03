@@ -1,3 +1,4 @@
+-- Step 1. Update existing advertiser
 UPDATE Advertiser AS a
 LEFT JOIN DailyPay AS d
   ON a.user_id = d.user_id
@@ -7,6 +8,7 @@ SET a.status = CASE
   WHEN a.status != "CHURN" AND d.paid IS NOT NULL THEN "EXISTING"
   END;
 
+-- Step 2. Insert new advertiser
 INSERT INTO 
 Advertiser (user_id, status)
 SELECT d.user_id
