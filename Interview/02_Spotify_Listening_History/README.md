@@ -59,11 +59,12 @@ For both the UPDATE and INSERT statements, we need the same aggregated informati
 SET @now = "2019-03-01 00:00:00";
 
 -- Create tamporary table
+DROP TABLE IF EXISTS daily_count;
 CREATE TEMPORARY TABLE daily_count
 SELECT 
-    user_id
-    ,song_id
-    ,COUNT(*) AS tally
+  user_id
+  ,song_id
+  ,COUNT(*) AS tally
 FROM Daily
 WHERE DATEDIFF(@now, time_stamp) = 0
 GROUP BY user_id, song_id;
@@ -86,8 +87,8 @@ __Step 2. Update existing pair.__ It's okay to join the temporary table with the
 ```
 UPDATE History AS uh
 JOIN daily_count AS dc
-    ON uh.user_id = dc.user_id
-    AND uh.song_id = dc.song_id
+  ON uh.user_id = dc.user_id
+  AND uh.song_id = dc.song_id
 SET uh.tally = uh.tally + dc.tally;
 ```
 
@@ -108,13 +109,13 @@ __Step 3. Insert new pair.__ After updating existing (*user_id*, *song_id*) comp
 ```
 INSERT INTO History (user_id, song_id, tally)
 SELECT
-    dc.user_id
-    ,dc.song_id
-    ,dc.tally
+  dc.user_id
+  ,dc.song_id
+  ,dc.tally
 FROM daily_count AS dc
 LEFT JOIN History AS uh
-    ON dc.user_id = uh.user_id
-    AND dc.song_id = uh.song_id
+  ON dc.user_id = uh.user_id
+  AND dc.song_id = uh.song_id
 WHERE uh.tally IS NULL;
 ```
 
