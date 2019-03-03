@@ -12,7 +12,7 @@ Make the following observation to interviewers. Confirm your observation is corr
 * Give descriptive names to output columns as required.
 * Constrain date range as required.
 
-Basic solution that gives correct ouput:
+Basic [solution](mysql_simple.sql) that gives correct ouput:
 ```
 -- MySQL: simple version
 SELECT
@@ -29,11 +29,11 @@ ORDER BY t.Request_at;
 ```
 
 ## On Efficiency
-SQL performs JOIN operation before applying WHERE clause. If many users are banned, JOIN operation results in lots of invalid trips in which either rider or driver is banned. We may pre-filter the *Users* table and store the results in a temporary table (note that temporary table does not work in LeetCode).
+SQL performs JOIN operation before applying WHERE clause. If many users are banned, JOIN operation results in lots of invalid trips in which either rider or driver is banned. We may [pre-filter](mysql_pre_filter.sql) the *Users* table and store the results in a temporary table (note that temporary table does not work in LeetCode).
 
 Similarly, joining the full *Trips* table can be wasteful. It may contain years of data, and we're interested in only 3 day's data. We can pre-filter the *Trips* table before joining it.
 
-Finally, we inner join the pre-filtered *valid_trips* table to *valid_user* table twice. INNER JOIN filters out trips that have no match in *valid_users*, meaning that the driver or rider is banned.
+Finally, we inner join the pre-filtered *valid_trips* table to *valid_user* table twice. INNER JOIN filters out trips that have no match in *valid_users*, meaning that the driver or rider is banned. 
 
 ```
 -- MySQL: pre-filtering before join
@@ -57,7 +57,7 @@ JOIN valid_user c ON t.Client_Id = c.Users_Id
 GROUP BY t.Request_at;
 ```
 
-Alternatively, use a set to retain all valid *User_Id*, and directly filter the *Trip* table without joining. The disadvantage is that because most database engine converts IN clause to series of OR operator, the query needs to be re-evaluated every time a new user gets banned, because the number of OR operator is constantly changing.
+Alternatively, use a [set](mysql_set.sql) to retain all valid *User_Id*, and directly filter the *Trip* table without joining. The disadvantage is that because most database engine converts IN clause to series of OR operator, the query needs to be re-evaluated every time a new user gets banned, because the number of OR operator is constantly changing.
 
 When using multi-column predicate, applying more restrictive condition first. For example, filter *Request_at* before filtering *Users_Id*. Because table size gets cut drastically upfront, computation required for later predicate decreases.
 
