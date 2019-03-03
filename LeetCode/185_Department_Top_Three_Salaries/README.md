@@ -2,77 +2,93 @@
 
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
-* Each trip has two foreign key (*Client_Id*, *Driver_Id*) referring the *Users* table's primary key.
-* No trip can have __NULL__ in *Driver_id* or *Client_Id*.
-* Because of the above assumptions, the three-way driver-trip-rider join results in same number of rows as the *Trips* table, before applying WHERE clause predicate.
+* Are salary distinct for all employee? If not, must use __DISTINCT__ keyword.
+* How to display if department has fewer than 3 distinct salaries? 
+* Every employment belongs to a department? No employee has __NULL__ in *DepartmentId*.
 
 ## On Correctness
-* Need to exclude both banned drivers and riders from calculation.
-* Output rate to 2 decimal place as requried.
-* Give descriptive names to output columns as required.
-* Constrain date range as required.
+What does top-3 paid employees in each department have in common?
+* They have the same DepartmentId.
+* They have fewer than 3 persons who get paid higher salary (can use either < 3 or <= 2).
+* Department No. 1 has 0 above him.
+* Department No. 2 has 1 above him.
+* Department No. 3 has 2 above him.
+The conditions are set-up for correlated subquery. In subquery, we can use an equi-join (*DepartmentId*) and non-equi join (*Salary*) to filter the outer query.
 
-Basic solution that gives correct ouput:
+Basic [MySQL solution](mysql_correlated_subquery.sql) implementing the equi-join and non-equi join logic above.
 ```
--- MySQL
 SELECT
-  t.Request_at AS Day
-  ,ROUND(SUM(t.Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'
-FROM Trips t
-JOIN Users d ON t.Driver_Id = d.Users_Id
-JOIN Users c ON t.Client_Id = c.Users_Id
-WHERE d.Banned = "No"
-  AND c.Banned = "No"
-  AND t.Request_at BETWEEN "2013-10-01" AND "2013-10-03"
-GROUP BY t.Request_at
-ORDER BY t.Request_at;
+  d.Name AS 'Department'
+  ,e.Name AS 'Employee'
+  ,e.Salary
+FROM Employee e
+JOIN Department d
+  ON e.DepartmentId = d.Id
+WHERE
+  (SELECT COUNT(DISTINCT e2.Salary)
+  FROM
+    Employee e2
+  WHERE
+    e2.Salary > e.Salary
+      AND e.DepartmentId = e2.DepartmentId
+      ) < 3;
 ```
 
 ## On Efficiency
-SQL performs JOIN operation before applying WHERE clause. If many users are banned, JOIN operation results in lots of invalid trips in which either rider or driver is banned. We may pre-filter the *Users* table and store the results in a temporary table (note that temporary table does not work in LeetCode).
-
-Similarly, joining the full *Trips* table can be wasteful. It may contain years of data, and we're interested in only 3 day's data. We can pre-filter the *Trips* table before joining it.
-
-Finally, we inner join the pre-filtered *valid_trips* table to *valid_user* table twice. INNER JOIN filters out trips that have no match in *valid_users*, meaning that the driver or rider is banned.
+The subquery solution above enforces __nested select__, resulting in __N+1__ select statements and bad runtime efficiency. If we have access to window function ([MS SQL solution](mssql_window.sql), we can simply rank salary over each department as partition, and pick the top 3. Instead of using __DISTINCT__, the window solution uses __DENSE_RANK()__. Note that we cannot refer to window column *rnk* in the WHERE clause. So we must set up a temporary table.
 
 ```
--- WARNING: LeetCode does not allow temporary table
-WITH valid_user AS (
-  SELECT User_Id
-  FROM Users
-  WHERE Banned = "No"
-)
-, valid_trips AS (
-  SELECT *
-  FROM Trips
-  WHERE Request_at BETWEEN "2013-10-01" AND "2013-10-03"
-)
+-- MS SQL: window function version
+WITH department_ranking AS
+(SELECT
+  e.Name AS Employee
+  ,d.Name AS Department
+  ,e.Salary
+  ,DENSE_RANK() OVER (PARTITION BY DepartmentId ORDER BY Salary DESC) AS rnk
+FROM Employee AS e
+JOIN Department AS d
+ON e.DepartmentId = d.Id)
+
 SELECT
-  t.Request_at AS Day
-  ,ROUND(SUM(t.Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'
-FROM valid_trips t
-JOIN valid_user d ON t.Driver_Id = d.Users_Id
-JOIN valid_user c ON t.Client_Id = c.Users_Id
-GROUP BY t.Request_at;
+  Department
+  ,Employee
+  ,Salary
+FROM department_ranking
+WHERE rnk <= 3
+ORDER BY Department ASC, Salary DESC;
 ```
 
-Alternatively, use a set to retain all valid *User_Id*, and directly filter the *Trip* table without joining. The disadvantage is that because most database engine converts IN clause to series of OR operator, the query needs to be re-evaluated every time a new user gets banned, because the number of OR operator is constantly changing.
-
-When using multi-column predicate, applying more restrictive condition first. For example, filter *Request_at* before filtering *Users_Id*. Because table size gets cut drastically upfront, computation required for later predicate decreases.
-
-Using IN (... Banned = "No") clause is more efficient than using NOT IN (...Banned = "Yes"). To check an element is not in a set, a full scan of the set is required.
+We can further improve effiency by [filtering](mssql_pre_filter.sql) the ranking before joining with the department table. Instead of joining every employee with his department, we now only join the department top-3 employees with their departments. This is accomplished with an additional temporary table.
 
 ```
--- MySQL
+-- MS SQL: Boosting effiency with pre-filtering
+WITH department_ranking AS
+(SELECT
+  e.Name AS Employee
+  ,e.Salary
+  ,e.DepartmentId
+  ,DENSE_RANK() OVER (PARTITION BY e.DepartmentId ORDER BY e.Salary DESC) AS rnk
+FROM Employee AS e
+)
+
+-- pre-filter table to reduce join size
+,top_three AS
+(SELECT
+  Employee
+  ,Salary
+  ,DepartmentId
+FROM department_ranking 
+WHERE rnk <= 3)
+
 SELECT
-  Request_at AS Day
-  ,ROUND(SUM(Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'
-FROM Trips
-WHERE Request_at BETWEEN "2013-10-01" AND "2013-10-03"
-  AND Driver_Id IN (SELECT Users_Id FROM Users WHERE Banned = 'No')
-  AND Client_Id IN (SELECT Users_Id FROM Users WHERE Banned = 'No')
-GROUP BY Request_at;
+  d.Name AS Department
+  ,e.Employee
+  ,e.Salary
+FROM top_three AS e
+JOIN Department AS d
+ON e.DepartmentId = d.Id
+ORDER BY d.Name ASC, e.Salary DESC;
 ```
 
-## Final Thought
-Because temporary table has no index. The second solution works better only when the pre-filtering results in significant reduction of table size. Otherwise, joining temporary tables without index can be slower than joining the full tables. In practice, look up the query plan and estimated cost before running the query.
+## Parting Thought
+Because temporary table has no index. The second solution works better only when the pre-filtering results in significant reduction of table size. In this case, fortunately, we are taking only 3 employees out of every departments, which may have hundreds of employees each (huge reduction in join size). For each employee, we have access to *DepartmentId*, which is a foreign key referring to a primary key. The joining operation is reduced to three index lookup for each department, and index lookup is efficient! So the last solution (the longest) is the most efficient one.
