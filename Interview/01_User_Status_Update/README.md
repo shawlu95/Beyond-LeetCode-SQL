@@ -20,7 +20,7 @@ Use today’s payment log in *AdDaily* table to update status in *Advertiser* ta
 ### State Transition
 
 <p align="center">
-    <img src="fig/transition.png" width="800">
+    <img src="fig/transition.png" width="700">
 </p>
 
 |#| Start | End | Condition |
@@ -41,7 +41,7 @@ When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RES
 After simplifying the boolean algebra, we only need three conditions. State __EXPLICITLY__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
 
 ### Sample Database
-Load the database file[dn.sql](db.sql) to localhost MySQL. An Advertiser dabase will be created with two tables. 
+Load the database file [db.sql](db.sql) to localhost MySQL. An Advertiser dabase will be created with two tables. 
 ```
 mysql < db.sql -uroot -p
 ```
