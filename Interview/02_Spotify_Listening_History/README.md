@@ -53,6 +53,7 @@ mysql> SELECT * from Daily;
 * A user may listen to a new song for the first time, in which case no existing (*user_id*, *song_id*) compound key pair exists in the *History* table. So we need an additional INSERT statement.
 
 ### Solution
+__Step 1. Build temporary table.__ 
 For both the UPDATE and INSERT statements, we need the same aggregated information from the *Daily* table. So we can save it as a temporary table.
 ```
 SET @now = "2019-03-01 00:00:00";
@@ -81,7 +82,7 @@ mysql> SELECT * FROM daily_count;
 3 rows in set (0.00 sec)
 ```
 
-It's okay to join the temporary table with the History table during the update process, because History is independent of the temporary table. 
+__Step 2. Update existing pair.__ It's okay to join the temporary table with the History table during the update process, because History is independent of the temporary table. 
 ```
 UPDATE History AS uh
 JOIN daily_count AS dc
@@ -102,7 +103,7 @@ mysql> SELECT * FROM History;
 2 rows in set (0.00 sec)
 ```
 
-After updating existing (*user_id*, *song_id*) compound key pair, we need to insert new ones:
+__Step 3. Insert new pair.__ After updating existing (*user_id*, *song_id*) compound key pair, we need to insert new ones:
 
 ```
 INSERT INTO History (user_id, song_id, tally)
