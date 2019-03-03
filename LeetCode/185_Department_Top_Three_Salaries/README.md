@@ -1,4 +1,4 @@
-# Trips and Users
+# Department Top Three Salaries
 
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
