@@ -3,8 +3,9 @@ This repository covers depth analysis of SQL for Leetcode and classic interview 
 
 ### LeetCode catalogue
 | \# | Problems | Solutions | Level | Concept |
-|----|----------|-----------|------|
-| 262 | [Trips and Users](https://leetcode.com/problems/trips-and-users/) | [MySQL](./LeetCode/Trips_and_Users.md) | Hard | Three-way join; filtering |
+|----|----------|-----------|------| --------|
+| 262 | [Trips and Users](https://leetcode.com/problems/trips-and-users/) | [MySQL](./LeetCode/262_Trips_and_Users.md) | Hard | Three-way join; filtering |
+| 185 | [Department Top Three Salaries](https://leetcode.com/problems/department-top-three-salaries) | [MySQL, MS SQL](./LeetCode/185_Department_Top_Three_Salaries.md) | Hard | Non-equi join; window function |
 
 
 ### Classic interview question
