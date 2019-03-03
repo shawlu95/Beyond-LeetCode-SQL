@@ -38,8 +38,6 @@ By examining the above table. We can see that as long as user has not paid on da
 
 When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RESURRECT, depending on their previous state. RESURRECT is only possible when previous state is CHURN. When previous state is anythint else, status is updated to EXISTING.
 
-After simplifying the boolean algebra, we only need three conditions. State __EXPLICITLY__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
-
 ### Sample Database
 Load the database file [db.sql](db.sql) to localhost MySQL. An Advertiser dabase will be created with two tables. 
 ```
@@ -76,6 +74,7 @@ mysql> SELECT * FROM DailyPay;
 ```
 
 ### Solution
+__Step 1. Update existing advertiser.__ After simplifying the boolean algebra, we only need three conditions. State __explicitly__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
 ```
 UPDATE Advertiser AS a
 LEFT JOIN DailyPay AS d
@@ -105,7 +104,7 @@ mysql> SELECT * FROM Advertiser;
 8 rows in set (0.00 sec)
 ```
 
-Note that we missed the new user. To find the new user, left join *DailyPay* with *Advertizer*. If there is no match on the right, the user is new.
+__Step 2. Insert new advertiser.__ Note that we missed the new user. To find the new user, left join *DailyPay* with *Advertizer*. If there is no match on the right, the user is new.
 
 ```
 INSERT INTO 
