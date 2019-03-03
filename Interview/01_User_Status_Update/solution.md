@@ -1,6 +1,12 @@
 # User Status Update
 
-### Given two tables:
+### Test
+* Conditional update with join.
+* Left join vs. inner join.
+* Edge case: adding new users.
+* Boolean algebra and simplification.
+
+### Two Tables:
 * *AdDaily*: user_id (showing today paid ads fee) on day T
 * *Advertiser*: two columns, user_id and their status on day T-1
 Use today’s payment log in *AdDaily* table to update status in *Advertiser* table
@@ -11,15 +17,119 @@ Use today’s payment log in *AdDaily* table to update status in *Advertiser* ta
 * Churn: users who paid on day T-1 but not on day T.
 * Resurrect: users who did not pay on T-1 but paid on day T.
 
-### State Transition
-| Start | End | Condition |
-|----|----------|-----------|
-|NEW|EXISTING|Paid on day T|
-|NEW|CHURN|No pay on day T|
-|EXISTING|EXISTING|Paid on day T|
-|EXISTING|CHURN|No pay on day T|
-|CHURN|RESURRECT|Paid on day T|
-|CHURN|CHURN|No pay on day T|
-|RESURRECT|EXISTING|Paid on day T|
-|RESURRECT|CHURN|No pay on day T|
+### Sample Database
+Load the database file[dn.sql](db.sql) to localhost MySQL. An Advertiser dabase will be created with two tables. 
+```
+mysql < db.sql -uroot -p
+```
 
+```
+mysql> SELECT * FROM Advertiser;
++----+---------+-----------+
+| id | user_id | status    |
++----+---------+-----------+
+|  1 | bing    | NEW       |
+|  2 | yahoo   | NEW       |
+|  3 | alibaba | EXISTING  |
+|  4 | baidu   | EXISTING  |
+|  5 | target  | CHURN     |
+|  6 | tesla   | CHURN     |
+|  7 | morgan  | RESURRECT |
+|  8 | chase   | RESURRECT |
++----+---------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT * FROM AdDaily;
++----+---------+------+
+| id | user_id | paid |
++----+---------+------+
+|  1 | yahoo   |   45 |
+|  2 | alibaba |  100 |
+|  3 | target  |   13 |
+|  4 | morgan  |  600 |
+|  5 | fitdata |    1 |
++----+---------+------+
+5 rows in set (0.00 sec)
+```
+### State Transition
+|#| Start | End | Condition |
+|-|----|----------|-----------|
+|1|NEW|EXISTING|Paid on day T|
+|2|NEW|CHURN|No pay on day T|
+|3|EXISTING|EXISTING|Paid on day T|
+|4|EXISTING|CHURN|No pay on day T|
+|5|CHURN|RESURRECT|Paid on day T|
+|6|CHURN|CHURN|No pay on day T|
+|7|RESURRECT|EXISTING|Paid on day T|
+|8|RESURRECT|CHURN|No pay on day T|
+
+By examining the above table. We can see that as long as user has not paid on day T, his status is updated to CHURN regardless of previous status (check with interviewer that all new users who registered on day T did pay, and if they didn't, they are not immediately considered as CHURN.
+
+When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RESURRECT, depending on their previous state. RESURRECT is only possible when previous state is CHURN. When previous state is anythint else, status is updated to EXISTING.
+
+<p align="center">
+    <img src="fig/transition.png" width="800">
+</p>
+
+After simplifying the boolean algebra, we only need three conditions. State __EXPLICITLY__ we don't need "ELSE status" in the CASE statement because we've covered all possible condtions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
+
+```
+UPDATE Advertiser AS a
+LEFT JOIN AdDaily AS d
+ON a.user_id = d.user_id
+SET a.status = CASE 
+    WHEN d.paid IS NULL THEN "CHURN" 
+    WHEN a.status = "CHURN" AND d.paid IS NOT NULL THEN "RESURRECT"
+    WHEN a.status != "CHURN" AND d.paid IS NOT NULL THEN "EXISTING"
+    END;
+```
+
+Check the *Advertiser* to see if the update make sense.
+```
+mysql> SELECT * FROM Advertiser;                                                
++----+---------+-----------+
+| id | user_id | status    |
++----+---------+-----------+
+|  1 | bing    | CHURN     |
+|  2 | yahoo   | EXISTING  |
+|  3 | alibaba | CHURN     |
+|  4 | baidu   | EXISTING  |
+|  5 | target  | CHURN     |
+|  6 | tesla   | RESURRECT |
+|  7 | morgan  | CHURN     |
+|  8 | chase   | EXISTING  |
++----+---------+-----------+
+8 rows in set (0.00 sec)
+```
+
+Note that we missed the new user. To find the new user, left join *AdDaily* with *Advertizer*. If there is no match on the right, the user is new.
+
+```
+INSERT INTO 
+Advertiser (user_id, status)
+SELECT d.user_id
+    ,"NEW" as status
+FROM AdDaily AS d
+LEFT JOIN Advertiser AS a
+  ON d.user_id = a.user_id
+WHERE a.user_id IS NULL;
+```
+
+Check again that the new users are added.
+```
+SELECT * FROM Advertiser;
++----+---------+-----------+
+| id | user_id | status    |
++----+---------+-----------+
+|  1 | bing    | CHURN     |
+|  2 | yahoo   | EXISTING  |
+|  3 | alibaba | CHURN     |
+|  4 | baidu   | EXISTING  |
+|  5 | target  | CHURN     |
+|  6 | tesla   | RESURRECT |
+|  7 | morgan  | CHURN     |
+|  8 | chase   | EXISTING  |
+| 10 | fitdata | NEW       |
++----+---------+-----------+
+9 rows in set (0.00 sec)
+```
