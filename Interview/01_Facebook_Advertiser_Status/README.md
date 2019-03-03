@@ -79,12 +79,12 @@ mysql> SELECT * FROM DailyPay;
 ```
 UPDATE Advertiser AS a
 LEFT JOIN DailyPay AS d
-ON a.user_id = d.user_id
+  ON a.user_id = d.user_id
 SET a.status = CASE 
-    WHEN d.paid IS NULL THEN "CHURN" 
-    WHEN a.status = "CHURN" AND d.paid IS NOT NULL THEN "RESURRECT"
-    WHEN a.status != "CHURN" AND d.paid IS NOT NULL THEN "EXISTING"
-    END;
+  WHEN d.paid IS NULL THEN "CHURN" 
+  WHEN a.status = "CHURN" AND d.paid IS NOT NULL THEN "RESURRECT"
+  WHEN a.status != "CHURN" AND d.paid IS NOT NULL THEN "EXISTING"
+  END;
 ```
 
 Check the *Advertiser* to see if the update make sense.
@@ -111,7 +111,7 @@ Note that we missed the new user. To find the new user, left join *DailyPay* wit
 INSERT INTO 
 Advertiser (user_id, status)
 SELECT d.user_id
-    ,"NEW" as status
+  ,"NEW" as status
 FROM DailyPay AS d
 LEFT JOIN Advertiser AS a
   ON d.user_id = a.user_id
