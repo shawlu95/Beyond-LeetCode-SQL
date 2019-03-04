@@ -168,7 +168,7 @@ GROUP BY e1.Id, e1.Month
 ORDER BY e1.Id ASC, e1.Month DESC
 ```
 
-By the way, we can use window function to retrieve older data. The logic is the same as above.
+By the way, we can use [window function](mssql_lag.sql) to retrieve older data. The logic is the same as above.
 
 ```
 -- MS SQL: Lag window function
