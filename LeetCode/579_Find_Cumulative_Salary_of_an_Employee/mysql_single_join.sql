@@ -1,4 +1,4 @@
--- MySQL: single join (rely on consecutive month)
+-- MySQL: single join
 SELECT
   e1.Id
   ,MAX(e2.Month) AS Month
