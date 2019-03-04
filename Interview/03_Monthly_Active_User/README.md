@@ -1,5 +1,7 @@
 # Monthly Active User
 
+This post is inspired by this [page](https://www.programmerinterview.com/index.php/database-sql/practice-interview-question-2/). However, the solution from there is not completely correct, as they selected non-aggregated columns (Question 1). Also, *DISTINCT* keyword is not necessary in Question 2.
+
 ### Key Concepts
 * Aggregate function
 * Left join
@@ -42,17 +44,16 @@ mysql> SELECT * FROM UserHistory;
 ### Q1: Find monthly active users.
 *Write a SQL query that returns the name, phone number and most recent date for any user that has logged in over the last 30 days (you can tell a user has logged in if the action field in UserHistory is set to "logged_on").*
 
-This post is adapted from this [page](https://www.programmerinterview.com/index.php/database-sql/practice-interview-question-2/). However, the solution from there is not completely correct, as they selected non-aggregated columns. 
-
 ```
+SET @today := "2019-03-01";
 SELECT 
-User.name
-,User.phone_num
-,MAX(UserHistory.date) 
+  User.name
+  ,User.phone_num
+  ,MAX(UserHistory.date) 
 FROM User, UserHistory 
 WHERE User.user_id = UserHistory.user_id 
-AND UserHistory.action = 'logged_on' 
-AND UserHistory.date >= DATE_SUB(@today, INTERVAL 30 DAY) 
+  AND UserHistory.action = 'logged_on' 
+  AND UserHistory.date >= DATE_SUB(@today, INTERVAL 30 DAY) 
 GROUP BY User.user_id;
 
 +--------+--------------+-----------------------+
@@ -70,14 +71,15 @@ The above solution is only correct when phone_num and name are functionally depe
 Depending on database engine configuration, an error may be thrown when a selected column is neither aggregated nor in the group by clause. If we are certain that one-on-one mapping exists, we can add a aggregate function to the additional columns (*MAX()* or *MIN()*).
 
 ```
+SET @today := "2019-03-01";
 SELECT
-MAX(u.name) -- functionally dependent on user_id
-,MAX(u.phone_num) -- functionally dependent on user_id
-,MAX(h.date) AS recent_date
+  MAX(u.name) -- functionally dependent on user_id
+  ,MAX(u.phone_num) -- functionally dependent on user_id
+  ,MAX(h.date) AS recent_date
 FROM User AS u, UserHistory AS h
 WHERE u.user_id = h.user_id
-AND h.action = "logged_on"
-AND DATEDIFF(@today, h.date) <= 30 -- DATEDIFF(later, earlier)
+  AND h.action = "logged_on"
+  AND DATEDIFF(@today, h.date) <= 30 -- DATEDIFF(later, earlier)
 GROUP BY u.user_id
 ORDER BY recent_date;
 
@@ -98,14 +100,14 @@ __Why__ inner join: *user_id* in  *UserHistory* table is a foreign key referring
 -- using inner join
 SET @today := "2019-03-01";
 SELECT
-MAX(u.name) -- functionally dependent on user_id
-,MAX(u.phone_num) -- functionally dependent on user_id
-,MAX(h.date) AS recent_date
+  MAX(u.name) -- functionally dependent on user_id
+  ,MAX(u.phone_num) -- functionally dependent on user_id
+  ,MAX(h.date) AS recent_date
 FROM User AS u
 JOIN UserHistory AS h
-ON u.user_id = h.user_id
+  ON u.user_id = h.user_id
 WHERE h.action = "logged_on"
-AND DATEDIFF(@today, h.date) <= 30
+  AND DATEDIFF(@today, h.date) <= 30
 GROUP BY u.user_id
 ORDER BY recent_date;
 ```
@@ -121,7 +123,7 @@ See [here](https://www.programmerinterview.com/index.php/database-sql/practice-i
 SELECT *
 FROM User AS u
 LEFT JOIN UserHistory AS h
-ON u.user_id = h.user_id
+  ON u.user_id = h.user_id
 WHERE h.user_id IS NULL;
 
 +---------+------+--------------+---------+------+--------+
@@ -138,7 +140,7 @@ A less efficient approach is to retain valid users in a hashset. Remember that _
 SELECT *
 FROM User
 WHERE user_id NOT IN (
-SELECT DISTINCT user_id FROM UserHistory
+  SELECT DISTINCT user_id FROM UserHistory
 );
 
 +---------+------+--------------+
