@@ -1,6 +1,6 @@
 # Spotify Listening History
 
-### Test
+### Key Concepts
 * Update aggregate table with event log.
 * Temporary table & reusability.
 * Update with join statement.
