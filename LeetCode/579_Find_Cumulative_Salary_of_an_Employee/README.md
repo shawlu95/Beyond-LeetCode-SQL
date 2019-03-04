@@ -80,18 +80,18 @@ We can use a set to exclude *(Id, Month)* [pair](mysql_set.sql):
 ```
 -- MySQL: set solution
 SELECT
-e.Id
-,e.Month
-,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
+  e.Id
+  ,e.Month
+  ,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
 FROM Employee e
 LEFT JOIN Employee e1 ON e.Id = e1.Id AND e.Month = e1.Month + 1
 LEFT JOIN Employee e2 ON e.Id = e2.Id AND e.Month = e2.Month + 2
 WHERE (e.Id, e.Month) NOT IN (
-SELECT 
-Id
-,MAX(Month) AS max_month
-FROM Employee 
-GROUP BY Id)
+  SELECT 
+    Id
+    ,MAX(Month) AS max_month
+  FROM Employee 
+  GROUP BY Id)
 ORDER BY e.Id ASC, e.Month DESC;
 ```
 
@@ -100,13 +100,13 @@ Or we can use a [temporary](mysql_join_tmp_table.sql) table, and filter the resu
 ```
 -- MySQL: non-equijoin
 SELECT
-e.Id
-,e.Month
-,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
+  e.Id
+  ,e.Month
+  ,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
 FROM
 (SELECT Id, MAX(Month) AS max_month
-FROM Employee 
-GROUP BY Id) AS e_max
+ FROM Employee 
+ GROUP BY Id) AS e_max
 -- if using left join, employee with only one record will see NULL returned after join
 JOIN Employee e ON e_max.Id = e.Id AND e_max.max_month > e.Month
 LEFT JOIN Employee e1 ON e.Id = e1.Id AND e.Month = e1.Month + 1
@@ -116,13 +116,13 @@ ORDER BY e.Id ASC, e.Month DESC;
 ----------------------------------------------------------------------------------------
 -- alternatively, use where clause to filter result
 SELECT
-e.Id
-,e.Month
-,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
+  e.Id
+  ,e.Month
+  ,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
 FROM
 (SELECT Id, MAX(Month) AS max_month
-FROM Employee 
-GROUP BY Id) AS e_max
+ FROM Employee 
+ GROUP BY Id) AS e_max
 -- if using left join, employee with only one record will see NULL returned after join
 JOIN Employee e ON e_max.Id = e.Id
 LEFT JOIN Employee e1 ON e.Id = e1.Id AND e.Month = e1.Month + 1
@@ -133,13 +133,13 @@ ORDER BY e.Id ASC, e.Month DESC;
 ----------------------------------------------------------------------------------------
 -- alternatively, use cross join, also correct
 SELECT
-e.Id
-,e.Month
-,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
+  e.Id
+  ,e.Month
+  ,IFNULL(e.Salary, 0) + IFNULL(e1.Salary, 0) + IFNULL(e2.Salary, 0) AS Salary
 FROM
 (SELECT Id, MAX(Month) AS max_month
-FROM Employee 
-GROUP BY Id) AS e_max,
+ FROM Employee 
+ GROUP BY Id) AS e_max,
 Employee e
 LEFT JOIN Employee e1 ON e.Id = e1.Id AND e.Month = e1.Month + 1
 LEFT JOIN Employee e2 ON e.Id = e2.Id AND e.Month = e2.Month + 2
@@ -155,15 +155,15 @@ Instead of building a temporary table, which has no index, we can accomplish the
 Because SUM() ignore __NULL__ values, we don't need IFNULL() here.
 
 ```
--- MySQL: single join 
+-- MySQL: single join
 SELECT
-e1.Id
-,MAX(e2.Month) AS Month
-,SUM(e2.Salary) AS Salary
+  e1.Id
+  ,MAX(e2.Month) AS Month
+  ,SUM(e2.Salary) AS Salary
 FROM Employee e1
 JOIN Employee e2
-ON e1.Id = e2.Id
-AND e1.Month - e2.Month BETWEEN 1 AND 3
+  ON e1.Id = e2.Id
+  AND e1.Month - e2.Month BETWEEN 1 AND 3
 GROUP BY e1.Id, e1.Month
 ORDER BY e1.Id ASC, e1.Month DESC
 ```
@@ -174,11 +174,11 @@ By the way, we can use window function to retrieve older data. The logic is the 
 -- MS SQL: Lag window function
 WITH cummulative AS (
 SELECT
-Id
-,LAG(Month, 1) OVER (PARTITION BY Id ORDER BY Month ASC) AS Month
-,ISNULL(LAG(Salary, 1) OVER (PARTITION BY Id ORDER BY Month ASC), 0) 
-+ ISNULL(LAG(Salary, 2) OVER (PARTITION BY Id ORDER BY Month ASC), 0) 
-+ ISNULL(LAG(Salary, 3) OVER (PARTITION BY Id ORDER BY Month ASC), 0) AS Salary
+  Id
+  ,LAG(Month, 1) OVER (PARTITION BY Id ORDER BY Month ASC) AS Month
+  ,ISNULL(LAG(Salary, 1) OVER (PARTITION BY Id ORDER BY Month ASC), 0) 
+  + ISNULL(LAG(Salary, 2) OVER (PARTITION BY Id ORDER BY Month ASC), 0) 
+  + ISNULL(LAG(Salary, 3) OVER (PARTITION BY Id ORDER BY Month ASC), 0) AS Salary
 FROM Employee)
 SELECT *
 FROM cummulative
@@ -191,11 +191,11 @@ In MySQL 8, we can add a window alias to make the code cleaner.
 -- MySQL 8 also supports window function, and even window alias!
 WITH cummulative AS (
 SELECT
-Id
-,LAG(Month, 1) OVER w AS Month
-,ISNULL(LAG(Salary, 1) OVER w, 0) 
-+ ISNULL(LAG(Salary, 2) OVER w, 0) 
-+ ISNULL(LAG(Salary, 3) OVER w, 0) AS Salary
+  Id
+  ,LAG(Month, 1) OVER w AS Month
+  ,ISNULL(LAG(Salary, 1) OVER w, 0) 
+  + ISNULL(LAG(Salary, 2) OVER w, 0) 
+  + ISNULL(LAG(Salary, 3) OVER w, 0) AS Salary
 FROM Employee
 WINDOW w AS (PARTITION BY Id ORDER BY Month ASC))
 SELECT *
