@@ -7,7 +7,7 @@
 * Functional dependency
 
 ### Sample data
-Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify dabase will be created with two tables. 
+Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify database will be created with two tables. 
 ```
 mysql < db.sql -uroot -p
 ```
@@ -90,7 +90,7 @@ ORDER BY recent_date;
 2 rows in set (0.01 sec)
 ```
 
-Inner join also serves the purpurse, and avoid making a cartesian product between two tables as in the cross join above (although query optimizer can take care of such trivial optimization, it's useful to know).
+Inner join also serves the purpose, and avoid making a cartesian product between two tables as in the cross join above (although query optimizer can take care of such trivial optimization, it's useful to know).
 
 __Why__ inner join: *user_id* in  *UserHistory* table is a foreign key referring to *User* table primary key. Meaning that it is a subset of the primary key column. There may exists users who never logged on, and never appeared in the *UserHistory* table. Since we are interested in monthly active users. It's safe to ignore those inactive users.
 
@@ -110,7 +110,7 @@ GROUP BY u.user_id
 ORDER BY recent_date;
 ```
 
-If any selected column is __not__ functionally dependent on the group by column, then unpredictable result may be returned, or error may be thrown. To avoid such trouble, only select aggregated columns and group by columns into a temporary tables, and join the temporary table with the original table to retrieve other desierd columns.
+If any selected column is __not__ functionally dependent on the group by column, then unpredictable result may be returned, or error may be thrown. To avoid such trouble, only select aggregated columns and group by columns into a temporary tables, and join the temporary table with the original table to retrieve other desired columns.
 
 ### Q2. Find inactive users 
 *Write a SQL query to determine which user_ids in the User table are not contained in the UserHistory table (assume the UserHistory table has a subset of the user_ids in User table). Do not use the SQL MINUS statement. Note: the UserHistory table can have multiple entries for each user_id (Note that your SQL should be compatible with MySQL 5.0, and avoid using subqueries)*
@@ -132,7 +132,7 @@ WHERE h.user_id IS NULL;
 1 row in set (0.00 sec)
 ```
 
-A less efficient approach is to retain valid users in a hashset. Remember that __NOT IN__ requires full traversal of every element in the hashset for a single check (*DISTINCT* keyword turns the set into hashset, but makes no difference on the result).
+A less efficient approach is to retain valid users in a hashset. Remember that __NOT IN__ requires full traversal of every element in the hashset for a single check (*DISTINCT* keyword turns the set into hash set, but makes no difference on the result).
 
 ```
 SELECT *

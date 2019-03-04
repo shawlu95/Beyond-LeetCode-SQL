@@ -49,9 +49,9 @@ What does top-3 paid employees in each department have in common?
 * Department No. 1 has 0 above him.
 * Department No. 2 has 1 above him.
 * Department No. 3 has 2 above him.
-The conditions are set-up for correlated subquery. In subquery, we can use an equi-join (*DepartmentId*) and non-equi join (*Salary*) to filter the outer query.
+The conditions are set-up for correlated subquery. In subquery, we can use an equijoin (*DepartmentId*) and non-equijoin (*Salary*) to filter the outer query.
 
-Basic [MySQL solution](mysql_correlated_subquery.sql) implementing the equi-join and non-equi join logic above.
+Basic [MySQL solution](mysql_correlated_subquery.sql) implementing the equijoin and non-equijoin logic above.
 ```
 SELECT
   d.Name AS 'Department'
@@ -94,7 +94,7 @@ WHERE rnk <= 3
 ORDER BY Department ASC, Salary DESC;
 ```
 
-We can further improve effiency by [filtering](mssql_pre_filter.sql) the ranking before joining with the department table. Instead of joining every employee with his department, we now only join the department top-3 employees with their departments. This is accomplished with an additional temporary table.
+We can further improve efficiency by [filtering](mssql_pre_filter.sql) the ranking before joining with the department table. Instead of joining every employee with his department, we now only join the department top-3 employees with their departments. This is accomplished with an additional temporary table.
 
 ```
 -- MS SQL: Boosting effiency with pre-filtering

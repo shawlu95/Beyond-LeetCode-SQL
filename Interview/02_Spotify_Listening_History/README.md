@@ -20,7 +20,7 @@ of each user/song combination and then add this count to the first table that
 has the lifetime count.
 
 ### Sample Database
-Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify dabase will be created with two tables. 
+Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify database will be created with two tables. 
 ```
 mysql < db.sql -uroot -p
 ```

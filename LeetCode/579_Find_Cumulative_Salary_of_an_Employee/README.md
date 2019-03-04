@@ -149,7 +149,7 @@ ORDER BY e.Id ASC, e.Month DESC;
 
 ## On Efficiency
 Instead of building a temporary table, which has no index, we can accomplish the filtering in a [single join](mysql_single_join.sql). Observe the following pattern:
-* when calculating the three month cummulative sum, the natural inclination is to add current month T, previous month T-1, and the month before previous month T-2.
+* when calculating the three month cumulative sum, the natural inclination is to add current month T, previous month T-1, and the month before previous month T-2.
 * instead, we can add month T-1, T-2, T-3, and output T-1 as our month column. Month T is gracefully excluded.
 
 Because SUM() ignore __NULL__ values, we don't need IFNULL() here.
@@ -172,7 +172,7 @@ By the way, we can use [window function](mssql_lag.sql) to retrieve older data. 
 
 ```
 -- MS SQL: Lag window function
-WITH cummulative AS (
+WITH cumulative AS (
 SELECT
   Id
   ,LAG(Month, 1) OVER (PARTITION BY Id ORDER BY Month ASC) AS Month
@@ -181,7 +181,7 @@ SELECT
   + ISNULL(LAG(Salary, 3) OVER (PARTITION BY Id ORDER BY Month ASC), 0) AS Salary
 FROM Employee)
 SELECT *
-FROM cummulative
+FROM cumulative
 WHERE Month IS NOT NULL
 ORDER BY Id ASC, Month DESC;
 ```
@@ -189,7 +189,7 @@ ORDER BY Id ASC, Month DESC;
 In MySQL 8, we can add a window alias to make the code cleaner.
 ```
 -- MySQL 8 also supports window function, and even window alias!
-WITH cummulative AS (
+WITH cumulative AS (
 SELECT
   Id
   ,LAG(Month, 1) OVER w AS Month
@@ -199,10 +199,10 @@ SELECT
 FROM Employee
 WINDOW w AS (PARTITION BY Id ORDER BY Month ASC))
 SELECT *
-FROM cummulative
+FROM cumulative
 WHERE Month IS NOT NULL
 ORDER BY Id ASC, Month DESC;
 ```
 
 ## Parting Thought
-Functional-based join such as *e1.Month - e2.Month BETWEEN 1 AND 3* does not leverage the efficiency of index lookup. So it may not scale well. Always check query plan for estimated cost. Fortunately, we can move the index-join *e1.Id = e2.Id* upfront, to reduce the computation effort.
+Functional-based join such as *e1.Month - e2.Month BETWEEN 1 AND 3* does not leverage the efficiency of index lookup. So it may not scale well. Always check query plan for estimated cost. Fortunately, we can move the index-join *e1.Id = e2.Id* to reduce the join size upfront.

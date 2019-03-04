@@ -55,11 +55,11 @@ Make the following observation to interviewers. Confirm your observation is corr
 
 ## On Correctness
 * Need to exclude both banned drivers and riders from calculation.
-* Output rate to 2 decimal place as requried.
+* Output rate to 2 decimal place as required.
 * Give descriptive names to output columns as required.
 * Constrain date range as required.
 
-Basic [solution](mysql_simple.sql) that gives correct ouput:
+Basic [solution](mysql_simple.sql) that gives correct output:
 ```
 -- MySQL: simple version
 SELECT
