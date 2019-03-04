@@ -1,6 +1,6 @@
 # Facebook Advertiser Status
 
-### Key Conceps
+### Key Concepts
 * Conditional update with join.
 * Left join vs. inner join.
 * Edge case: adding new users.
