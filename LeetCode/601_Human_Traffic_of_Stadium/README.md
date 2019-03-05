@@ -54,21 +54,20 @@ The key is to remove duplicates. Consider four days in a row, each day with over
 | day 3| day 3 |
 |          | day 4 |
 
-We can use a set to exclude *(Id, Month)* [pair]
 ```
 -- MySQL solution
 SELECT DISTINCT 
-s1.* 
+  s1.* 
 FROM
-stadium AS s1
-,stadium AS s2
-,stadium AS s3
+  stadium AS s1
+  ,stadium AS s2
+  ,stadium AS s3
 WHERE s1.people >= 100 
-AND s2.people >= 100 
-AND s3.people >= 100 
-AND ((s1.id = s2.id - 1 AND s1.id = s3.id - 2) -- start of window
-OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) -- middle of window
-OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)) -- end of window
+  AND s2.people >= 100 
+  AND s3.people >= 100 
+  AND ((s1.id = s2.id - 1 AND s1.id = s3.id - 2) -- start of window
+    OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) -- middle of window
+    OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)) -- end of window
 ORDER BY s1.id; 
 ```
 
@@ -79,14 +78,14 @@ Joining the table three times resulting in a huge cartesian product. One way to 
 ```
 -- MySQL: pre-filtering
 SELECT DISTINCT 
-s1.* 
+  s1.* 
 FROM
-(SELECT * FROM stadium WHERE people >= 100) AS s1
-,(SELECT * FROM stadium WHERE people >= 100) AS s2
-,(SELECT * FROM stadium WHERE people >= 100) AS s3
+  (SELECT * FROM stadium WHERE people >= 100) AS s1
+  ,(SELECT * FROM stadium WHERE people >= 100) AS s2
+  ,(SELECT * FROM stadium WHERE people >= 100) AS s3
 WHERE (s1.id = s2.id - 1 AND s1.id = s3.id - 2) 
-OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) 
-OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)
+  OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) 
+  OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)
 ORDER BY s1.id;
 ```
 
@@ -95,15 +94,15 @@ If using MS SQL, we only need to define the temporary table once, making it much
 ```
 -- MS SQL: cleaner code
 WITH good_day AS (
-SELECT * FROM stadium WHERE people >= 100
+  SELECT * FROM stadium WHERE people >= 100
 )
 SELECT DISTINCT s1.* FROM
 good_day AS s1,
 good_day AS s2,
 good_day AS s3
 WHERE (s1.id = s2.id - 1 AND s1.id = s3.id - 2) 
-OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) 
-OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)
+  OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) 
+  OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)
 ORDER BY s1.id;
 ```
 
@@ -114,21 +113,21 @@ In MS SQL, the problem can be solved with [window function](mssql_window.sql). B
 -- MS SQL: window
 WITH long_table AS 
 (SELECT
-*
-,LAG(people, 2) OVER (ORDER BY id ASC) AS pre2
-,LAG(people, 1) OVER (ORDER BY id ASC) AS pre1
-,LEAD(people, 1) OVER (ORDER BY id ASC) AS nxt1
-,LEAD(people, 2) OVER (ORDER BY id ASC) AS nxt2
+  *
+  ,LAG(people, 2) OVER (ORDER BY id ASC) AS pre2
+  ,LAG(people, 1) OVER (ORDER BY id ASC) AS pre1
+  ,LEAD(people, 1) OVER (ORDER BY id ASC) AS nxt1
+  ,LEAD(people, 2) OVER (ORDER BY id ASC) AS nxt2
 FROM stadium)
 SELECT
-id
-,visit_date
-,people
+  id
+  ,visit_date
+  ,people
 FROM long_table
 WHERE people >= 100
-AND ((pre2 >= 100 AND pre1 >= 100) 
-OR (pre1 >= 100 AND nxt1 >= 100) 
-OR (nxt1 >= 100 AND nxt2 >= 100))
+  AND ((pre2 >= 100 AND pre1 >= 100) 
+  OR (pre1 >= 100 AND nxt1 >= 100) 
+  OR (nxt1 >= 100 AND nxt2 >= 100))
 ORDER BY id;
 ```
 
@@ -138,25 +137,25 @@ For the sake of completion, MySQL8 supports window function too, and can be writ
 -- MySQL 8 equivalent
 WITH long_table AS 
 (SELECT
-*
-,LAG(people, 2) OVER w AS pre2
-,LAG(people, 1) OVER w AS pre1
-,LEAD(people, 1) OVER w AS nxt1
-,LEAD(people, 2) OVER w AS nxt2
+  *
+  ,LAG(people, 2) OVER w AS pre2
+  ,LAG(people, 1) OVER w AS pre1
+  ,LEAD(people, 1) OVER w AS nxt1
+  ,LEAD(people, 2) OVER w AS nxt2
 FROM stadium
 WINDOW w AS (ORDER BY id ASC))
 SELECT
-id
-,visit_date
-,people
+  id
+  ,visit_date
+  ,people
 FROM long_table
 WHERE people >= 100
-AND ((pre2 >= 100 AND pre1 >= 100) 
-OR (pre1 >= 100 AND nxt1 >= 100) 
-OR (nxt1 >= 100 AND nxt2 >= 100))
+  AND ((pre2 >= 100 AND pre1 >= 100) 
+  OR (pre1 >= 100 AND nxt1 >= 100) 
+  OR (nxt1 >= 100 AND nxt2 >= 100))
 ORDER BY id;
 ```
 
 ## Parting Thought
-Window function is more efficient than join when the table is large. In this case, we are sorting by *id* in the window function, further boosting efficiency (even though the test case in LeetCode does not show its superiority).
+Window function is more efficient than join when the table is large. In this example, we are sorting by *id* in the window, further boosting efficiency. The test case in LeetCode does not show its superiority.
 
