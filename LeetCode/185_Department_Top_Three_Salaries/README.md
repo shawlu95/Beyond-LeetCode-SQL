@@ -80,16 +80,16 @@ The subquery solution above enforces __nested select__, resulting in __N+1__ sel
 
 ```
 -- MS SQL: window function version
-WITH department_ranking AS
-(SELECT
+WITH department_ranking AS (
+SELECT
   e.Name AS Employee
   ,d.Name AS Department
   ,e.Salary
   ,DENSE_RANK() OVER (PARTITION BY DepartmentId ORDER BY Salary DESC) AS rnk
 FROM Employee AS e
 JOIN Department AS d
-ON e.DepartmentId = d.Id)
-
+ON e.DepartmentId = d.Id
+)
 SELECT
   Department
   ,Employee
@@ -103,24 +103,23 @@ We can further improve efficiency by [filtering](mssql_pre_filter.sql) the ranki
 
 ```
 -- MS SQL: Boosting effiency with pre-filtering
-WITH department_ranking AS
-(SELECT
+WITH department_ranking AS (
+SELECT
   e.Name AS Employee
   ,e.Salary
   ,e.DepartmentId
   ,DENSE_RANK() OVER (PARTITION BY e.DepartmentId ORDER BY e.Salary DESC) AS rnk
 FROM Employee AS e
 )
-
 -- pre-filter table to reduce join size
-,top_three AS
-(SELECT
+,top_three AS (
+SELECT
   Employee
   ,Salary
   ,DepartmentId
 FROM department_ranking 
-WHERE rnk <= 3)
-
+WHERE rnk <= 3
+)
 SELECT
   d.Name AS Department
   ,e.Employee

@@ -1,4 +1,4 @@
--- Boosting effiency with pre-filtering
+-- MS SQL: Boosting effiency with pre-filtering
 WITH department_ranking AS (
 SELECT
   e.Name AS Employee
@@ -8,14 +8,14 @@ SELECT
 FROM Employee AS e
 )
 -- pre-filter table to reduce join size
-,top_three AS
-(SELECT
+,top_three AS (
+SELECT
   Employee
   ,Salary
   ,DepartmentId
 FROM department_ranking 
-WHERE rnk <= 3)
-
+WHERE rnk <= 3
+)
 SELECT
   d.Name AS Department
   ,e.Employee

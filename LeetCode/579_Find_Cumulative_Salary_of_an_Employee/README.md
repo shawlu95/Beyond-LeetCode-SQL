@@ -183,7 +183,8 @@ SELECT
   ,ISNULL(LAG(Salary, 1) OVER (PARTITION BY Id ORDER BY Month ASC), 0) 
   + ISNULL(LAG(Salary, 2) OVER (PARTITION BY Id ORDER BY Month ASC), 0) 
   + ISNULL(LAG(Salary, 3) OVER (PARTITION BY Id ORDER BY Month ASC), 0) AS Salary
-FROM Employee)
+FROM Employee
+)
 SELECT *
 FROM cumulative
 WHERE Month IS NOT NULL
@@ -201,7 +202,8 @@ SELECT
   + IFNULL(LAG(Salary, 2) OVER w, 0) 
   + IFNULL(LAG(Salary, 3) OVER w, 0) AS Salary
 FROM Employee
-WINDOW w AS (PARTITION BY Id ORDER BY Month ASC))
+WINDOW w AS (PARTITION BY Id ORDER BY Month ASC)
+)
 SELECT *
 FROM cumulative
 WHERE Month IS NOT NULL

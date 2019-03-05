@@ -77,8 +77,8 @@ FROM Friendship;
 ### Step 2: Expand Pages
 We are recommending pages based on what __friends__ are following, so in this step, friend_id is joined with *PageFollow* table.
 ```
-WITH two_way_friendship AS
-(SELECT 
+WITH two_way_friendship AS (
+SELECT 
   user_id
   ,friend_id
 FROM Friendship
@@ -86,7 +86,8 @@ UNION
 SELECT 
   friend_id
   ,user_id
-FROM Friendship)
+FROM Friendship
+)
 SELECT
   f.user_id
   ,f.friend_id
@@ -124,8 +125,8 @@ ORDER BY f.user_id ASC, p.page_id;
 ### Step 3: Aggregation
 We are recommending for each user, the pages with highest number of followers who are friends. In other word, we are counting friends for each (user_id, page_id). Be careful with what to put in GROUP BY and what to put in COUNT().
 ```
-WITH two_way_friendship AS
-(SELECT 
+WITH two_way_friendship AS (
+SELECT 
   user_id
   ,friend_id
 FROM Friendship
@@ -133,7 +134,8 @@ UNION
 SELECT 
   friend_id
   ,user_id
-FROM Friendship)
+FROM Friendship
+)
 SELECT
   f.user_id
   ,p.page_id
@@ -169,8 +171,8 @@ We don't want to recommend pages user already likes. So we need to check for exi
 
 In the final [solution](solution.sql) output, pages are ranked for each user by the number of friends who liked the page.
 ```
-WITH two_way_friendship AS
-(SELECT 
+WITH two_way_friendship AS(
+SELECT 
   user_id
   ,friend_id
 FROM Friendship
@@ -178,7 +180,8 @@ UNION
 SELECT 
   friend_id
   ,user_id
-FROM Friendship)
+FROM Friendship
+)
 SELECT
   f.user_id
   ,p.page_id

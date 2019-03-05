@@ -111,14 +111,15 @@ In MS SQL, the problem can be solved with [window function](mssql_window.sql). B
 
 ```
 -- MS SQL: window
-WITH long_table AS 
-(SELECT
+WITH long_table AS (
+SELECT
   *
   ,LAG(people, 2) OVER (ORDER BY id ASC) AS pre2
   ,LAG(people, 1) OVER (ORDER BY id ASC) AS pre1
   ,LEAD(people, 1) OVER (ORDER BY id ASC) AS nxt1
   ,LEAD(people, 2) OVER (ORDER BY id ASC) AS nxt2
-FROM stadium)
+FROM stadium
+)
 SELECT
   id
   ,visit_date
@@ -135,15 +136,16 @@ For the sake of completion, MySQL8 supports window function too, and can be writ
 
 ```
 -- MySQL 8 equivalent
-WITH long_table AS 
-(SELECT
+WITH long_table AS (
+SELECT
   *
   ,LAG(people, 2) OVER w AS pre2
   ,LAG(people, 1) OVER w AS pre1
   ,LEAD(people, 1) OVER w AS nxt1
   ,LEAD(people, 2) OVER w AS nxt2
 FROM stadium
-WINDOW w AS (ORDER BY id ASC))
+WINDOW w AS (ORDER BY id ASC)
+)
 SELECT
   id
   ,visit_date
