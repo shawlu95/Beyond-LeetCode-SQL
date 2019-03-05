@@ -1,13 +1,12 @@
 -- Boosting effiency with pre-filtering
-WITH department_ranking AS
-(SELECT
+WITH department_ranking AS (
+SELECT
   e.Name AS Employee
   ,e.Salary
   ,e.DepartmentId
   ,DENSE_RANK() OVER (PARTITION BY e.DepartmentId ORDER BY e.Salary DESC) AS rnk
 FROM Employee AS e
 )
-
 -- pre-filter table to reduce join size
 ,top_three AS
 (SELECT

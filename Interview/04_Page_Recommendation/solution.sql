@@ -1,6 +1,6 @@
 -- MySQL solution
-WITH two_way_friendship AS
-(SELECT 
+WITH two_way_friendship AS (
+SELECT 
   user_id
   ,friend_id
 FROM Friendship
@@ -8,7 +8,8 @@ UNION
 SELECT 
   friend_id
   ,user_id
-FROM Friendship)
+FROM Friendship
+)
 SELECT
   f.user_id
   ,p.page_id

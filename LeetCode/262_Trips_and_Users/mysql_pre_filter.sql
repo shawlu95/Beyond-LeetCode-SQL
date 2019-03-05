@@ -5,7 +5,7 @@ WITH valid_user AS (
   FROM Users
   WHERE Banned = "No"
 )
-, valid_trips AS (
+,valid_trips AS (
   SELECT *
   FROM Trips
   WHERE Request_at BETWEEN "2013-10-01" AND "2013-10-03"
