@@ -8,6 +8,10 @@ Write a SQL to get the cumulative sum of an employee's salary over a period of 3
 The result should be displayed by 'Id' ascending, and then by 'Month' descending.
 
 ### Example
+Load the database file [db.sql](db.sql) to localhost MySQL. Relevant tables will be created in the LeetCode database. 
+```
+mysql < db.sql -uroot -p
+```
 
 __Input__
 ```
@@ -193,9 +197,9 @@ WITH cumulative AS (
 SELECT
   Id
   ,LAG(Month, 1) OVER w AS Month
-  ,ISNULL(LAG(Salary, 1) OVER w, 0) 
-  + ISNULL(LAG(Salary, 2) OVER w, 0) 
-  + ISNULL(LAG(Salary, 3) OVER w, 0) AS Salary
+  ,IFNULL(LAG(Salary, 1) OVER w, 0) 
+  + IFNULL(LAG(Salary, 2) OVER w, 0) 
+  + IFNULL(LAG(Salary, 3) OVER w, 0) AS Salary
 FROM Employee
 WINDOW w AS (PARTITION BY Id ORDER BY Month ASC))
 SELECT *

@@ -1,7 +1,7 @@
 -- MySQL: pre-filtering before join
 -- WARNING: LeetCode MySQL does not allow temporary table
 WITH valid_user AS (
-  SELECT User_Id
+  SELECT Users_Id
   FROM Users
   WHERE Banned = "No"
 )

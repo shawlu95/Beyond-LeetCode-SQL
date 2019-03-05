@@ -47,6 +47,11 @@ Write a SQL query to find the cancellation rate of requests made by unbanned use
 +------------+-------------------+
 ```
 
+Load the database file [db.sql](db.sql) to localhost MySQL. Relevant tables will be created in the LeetCode database. 
+```
+mysql < db.sql -uroot -p
+```
+
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
 * Each trip has two foreign key (*Client_Id*, *Driver_Id*) referring the *Users* table's primary key.
@@ -86,7 +91,7 @@ Finally, we inner join the pre-filtered *valid_trips* table to *valid_user* tabl
 -- MySQL: pre-filtering before join
 -- WARNING: LeetCode MySQL does not allow temporary table
 WITH valid_user AS (
-  SELECT User_Id
+  SELECT Users_Id
   FROM Users
   WHERE Banned = "No"
 )

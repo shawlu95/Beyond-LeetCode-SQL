@@ -36,6 +36,11 @@ Write a SQL query to find employees who earn the top three salaries in each of t
 +------------+----------+--------+
 ```
 
+Load the database file [db.sql](db.sql) to localhost MySQL. Relevant tables will be created in the LeetCode database. 
+```
+mysql < db.sql -uroot -p
+```
+
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
 * Are salary distinct for all employee? If not, must use __DISTINCT__ keyword.
