@@ -43,7 +43,8 @@ mysql> SELECT * FROM PageFollow;
 10 rows in set (0.00 sec)
 ```
 
-### Step 1: Accounting Undirected Edge
+### Solution
+#### Step 1: Accounting Undirected Edge
 Ask for clarification whether the *Friendship* table accounts for two directions. For example, if Alice is friend with Bob, are there two rows (Alice, Bob) and (Bob, Alice) in the table? If not (in this example), we need to union the table with itself.
 
 This is necessary because when we aggregate over *user_id*, we want to match to all friends that *user_id* has. Alice will match to Bob, and Bob will match to Alice.
@@ -74,7 +75,7 @@ FROM Friendship;
 8 rows in set (0.00 sec)
 ```
 
-### Step 2: Expand Pages
+#### Step 2: Expand Pages
 We are recommending pages based on what __friends__ are following, so in this step, friend_id is joined with *PageFollow* table.
 ```
 WITH two_way_friendship AS (
@@ -122,7 +123,7 @@ ORDER BY f.user_id ASC, p.page_id;
 +---------+-----------+----------+
 ```
 
-### Step 3: Aggregation
+#### Step 3: Aggregation
 We are recommending for each user, the pages with highest number of followers who are friends. In other word, we are counting friends for each (user_id, page_id). Be careful with what to put in GROUP BY and what to put in COUNT().
 ```
 WITH two_way_friendship AS (
@@ -166,7 +167,7 @@ ORDER BY f.user_id ASC, COUNT(*) DESC;
 13 rows in set (0.00 sec)
 ```
 
-### Step 4: De-duplicaton
+#### Step 4: De-duplicaton
 We don't want to recommend pages user already likes. So we need to check for existance and exclude pages that are already liked.
 
 In the final [solution](solution.sql) output, pages are ranked for each user by the number of friends who liked the page.
