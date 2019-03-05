@@ -157,5 +157,5 @@ ORDER BY id;
 ```
 
 ## Parting Thought
-Window function is more efficient than join when the table is large. In this example, we are sorting by *id* in the window, further boosting efficiency. The test case in LeetCode does not show its superiority.
+Window function is more efficient than join when the table is large. In this example, we are sorting by index *id* in the window, further boosting efficiency. Furthermore, window solution gets rid of the *DISTINCT* keyword, which establishes a hash set (inefficient). The test case in LeetCode, however, does not show its superiority.
 
