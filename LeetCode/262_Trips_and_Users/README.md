@@ -109,6 +109,24 @@ JOIN valid_user c ON t.Client_Id = c.Users_Id
 GROUP BY t.Request_at;
 ```
 
+Instead of building two temporary tables, we can pre-filter by moving the predicate condition inside JOIN. The logic is the same as the code above: tables are filtered before joining. We want to reduce the table size before join. In the SQL code below, trips and drivers are filtered before being joined, and the clients are filtered before joining with the output of the first join.
+
+```
+-- MySQL cleaner code
+SELECT
+  t.Request_at AS Day
+  ,ROUND(SUM(t.Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'
+FROM Trips t
+JOIN Users d 
+  ON t.Driver_Id = d.Users_Id 
+  AND d.Banned = 'No'
+  AND t.Request_at BETWEEN "2013-10-01" AND "2013-10-03"
+JOIN Users c 
+  ON t.Client_Id = c.Users_Id 
+  And c.Banned = 'No'
+GROUP BY t.Request_at;
+```
+
 Alternatively, use a [set](mysql_set.sql) to retain all valid *User_Id*, and directly filter the *Trip* table without joining. The disadvantage is that because most database engine converts IN clause to series of OR operator, the query needs to be re-evaluated every time a new user gets banned, because the number of OR operator is constantly changing.
 
 When using multi-column predicate, applying more restrictive condition first. For example, filter *Request_at* before filtering *Users_Id*. Because table size gets cut drastically upfront, computation required for later predicate decreases.

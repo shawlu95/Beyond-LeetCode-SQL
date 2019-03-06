@@ -130,5 +130,28 @@ ON e.DepartmentId = d.Id
 ORDER BY d.Name ASC, e.Salary DESC;
 ```
 
+We can get rid of the second temporary table by moving the predicate condition *rnk <=3* inside JOIN. The logic is the same as the code above: tables are filtered before joining. We want to reduce the table size before join. 
+
+```
+-- MS SQL: cleaner version
+WITH department_ranking AS (
+SELECT
+  e.Name AS Employee
+  ,e.Salary
+  ,e.DepartmentId
+  ,DENSE_RANK() OVER (PARTITION BY e.DepartmentId ORDER BY e.Salary DESC) AS rnk
+FROM Employee AS e
+)
+SELECT
+  d.Name AS Department
+  ,r.Employee
+  ,r.Salary
+FROM department_ranking AS r
+JOIN Department AS d
+  ON r.DepartmentId = d.Id
+  AND r.rnk <= 3
+ORDER BY d.Name ASC, r.Salary DESC;
+```
+
 ## Parting Thought
 Because temporary table has no index. The second solution works better only when the pre-filtering results in significant reduction of table size. In this case, fortunately, we are taking only 3 employees out of every departments, which may have hundreds of employees each (huge reduction in join size). For each employee, we have access to *DepartmentId*, which is a foreign key referring to a primary key. The joining operation is reduced to three index lookup for each department, and index lookup is efficient! So the last solution (the longest) is the most efficient one.

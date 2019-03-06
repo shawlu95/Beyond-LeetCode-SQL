@@ -106,6 +106,22 @@ WHERE (s1.id = s2.id - 1 AND s1.id = s3.id - 2)
 ORDER BY s1.id;
 ```
 
+Using either MySQL or MS SQL, we can do away with temporary table, by merging predicates into the JOIN clause. This small change achieves the same filtering effect.
+
+```
+SELECT DISTINCT s1.* 
+FROM stadium AS s1
+LEFT JOIN stadium AS s2
+  ON s1.people >= 100
+  AND s2.people >= 100
+LEFT JOIN stadium AS s3
+  ON s3.people >= 100
+WHERE (s1.id = s2.id - 1 AND s1.id = s3.id - 2) 
+  OR (s1.id = s2.id + 1 AND s1.id = s3.id - 1) 
+  OR (s1.id = s2.id + 2 AND s1.id = s3.id + 1)
+ORDER BY s1.id;
+```
+
 ## Window function
 In MS SQL, the problem can be solved with [window function](mssql_window.sql). Be careful that you __cannot__ use window column in the predicates. You must save the expanded table with window columns in a temporary table.
 
