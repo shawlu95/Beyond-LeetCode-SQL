@@ -9,6 +9,7 @@ FROM Numbers
 ORDER BY newid()
 ```
 
+---
 ### Trivial Solution
 MS SQL has *TABLESAMPLE* method avaialble, which returns any desired number of rows, as a percentage of the entire table.
 ```
@@ -16,6 +17,7 @@ MS SQL has *TABLESAMPLE* method avaialble, which returns any desired number of r
 SELECT * from [TABLE] tablesample(1 PERCENT)
 ```
 
+---
 ### The *Interview* Solution
 This notebook introduces a different technique that addresses the question: "sample N rows from each group." Specifically, we use the world (database)[databases/world_db], and randomly draw 10 cities from each continent.
 
@@ -28,6 +30,8 @@ First, import the [database](../databases/world_db/) in terminal.
 mysql < world.sql -uroot -p
 ```
 
+---
+#### Create Source Table
 Create the table we will be sampling from. To have continent and city columns in the same table, we need to join two tables in the world database.
 ```
 -- this is the table we want to sample from (given)
@@ -59,6 +63,8 @@ ON city.countryCode = country.code;
 10 rows in set (0.05 sec)
 ```
 
+---
+#### Calculate Group Statistics
 What does this mean? Take Ocenia for example, it means that if we draw from __every one__ of its cities with Binomial probability 0.1818, we get 10 successes on average, with 2.86 standard deviation. 
 ```
 -- check gorup size 
@@ -89,6 +95,8 @@ mysql> SELECT * FROM sample_dist_stats LIMIT 10;
 6 rows in set (0.00 sec)
 ```
 
+---
+#### Expand Group Size Column
 Since we need at least 10 samples from each group, we can relax the *p* threshold a little. For example, we can add 2 * std to the desired sample size. 
 
 ```
@@ -140,6 +148,8 @@ SELECT * FROM  city_prob_assign LIMIT 5;
 5 rows in set (0.00 sec)
 ```
 
+---
+#### Adjust Cutoff Threshold
 Calculate the cut-off threshold, adjusted for 2 * standard deviations.
 ```
 DROP TABLE IF EXISTS city_prob_cutoff;
@@ -178,6 +188,8 @@ mysql> SELECT * FROM  city_sample LIMIT 5;
 5 rows in set (0.00 sec)
 ```
 
+---
+#### Sampling
 Check that sample size are at least 10!
 ```
 -- check sample size
@@ -234,6 +246,7 @@ LIMIT 20;
 20 rows in set (0.00 sec)
 ```
 
+---
 ### Combined Pipeline
 We can merge the steps into a single pipeline. Even better, we can store it in a [procedure](stored_procedure.sql). Then we can simly sample any desired number of rows we want. For example, to draw 3 cities from each continent, we can simply call the procedure as follows:
 

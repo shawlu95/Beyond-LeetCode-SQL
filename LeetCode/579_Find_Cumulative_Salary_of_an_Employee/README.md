@@ -66,11 +66,13 @@ Employ '3' has two salary records except its most recent pay month '4': month '3
 | 3  | 2     | 40     |
 ```
 
+---
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
 * Does every employee gets paid every month? (no skipping, no NULL) In this case, months are consecutive, with no missing pay.
 * How to handle employee with only one month history? (in this solution, it is left out)
 
+---
 ## On Correctness
  * The difficult part of this problem is to exclude current month from aggregation, and yet use current month's label in the output. For example, if most recent month is April, we don't want April and its aggregated column (cumulative sum) in out output. The naive way to approach this problem is to first find most recent payment month __for each__ employee, and exclude it from the output.
  
@@ -151,6 +153,7 @@ WHERE e.Id = e_max.Id AND e.Month != e_max.max_month
 ORDER BY e.Id ASC, e.Month DESC;
 ```
 
+---
 ## On Efficiency
 Instead of building a temporary table, which has no index, we can accomplish the filtering in a [single join](mysql_single_join.sql). Observe the following pattern:
 * when calculating the three month cumulative sum, the natural inclination is to add current month T, previous month T-1, and the month before previous month T-2.
@@ -210,5 +213,6 @@ WHERE Month IS NOT NULL
 ORDER BY Id ASC, Month DESC;
 ```
 
+---
 ## Parting Thought
 Functional-based join such as *e1.Month - e2.Month BETWEEN 1 AND 3* does not leverage the efficiency of index lookup. So it may not scale well. Always check query plan for estimated cost. Fortunately, we can move the index-join *e1.Id = e2.Id* to reduce the join size upfront.

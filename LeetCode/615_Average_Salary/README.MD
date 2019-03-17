@@ -56,11 +56,13 @@ The average salary of department '2' is (6000 + 10000)/2 = 8000, which is the av
 
 With he same formula for the average salary comparison in February, the result is 'same' since both the department '1' and '2' have the same average salary with the company, which is 7000.
 
+---
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
 * Ask whether every employee will be in a department (no NULL in the department_id column). If there is NULL, how to display it.
 * Note that people get paid on __different__ day of the same months, meaning that you must process the date label before averaging, otherwise you __will not__ get the correct average.
 
+---
 ## Solution
 The overall strategy is to build two temporary tables, one aggregated over the pay month, one aggregated over the (pay month, department) key pair. After aggregating, joining the two temporary tables. Because every distinct pay month must exist in both table, inner join is enough.
 

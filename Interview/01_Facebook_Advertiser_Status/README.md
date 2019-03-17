@@ -6,7 +6,8 @@
 * Edge case: adding new users.
 * Boolean algebra and simplification.
 
-### Two Tables:
+---
+### Tables:
 * *DailyPay*: user_id (showing today paid ads fee) on day T. __Only__ advertisers who paid will show up in this table. 
 * *Advertiser*: two columns, user_id and their status on day T-1
 Use today’s payment log in *DailyPay* table to update status in *Advertiser* table
@@ -73,6 +74,7 @@ mysql> SELECT * FROM DailyPay;
 5 rows in set (0.00 sec)
 ```
 
+---
 ### Solution
 #### Step 1. Update Existing Advertiser
 After simplifying the boolean algebra, we only need three conditions. State __explicitly__ we don't need "ELSE status" in the CASE statement because we've covered all possible conditions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.

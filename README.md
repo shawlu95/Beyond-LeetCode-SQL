@@ -1,7 +1,10 @@
 # Beyond LeetCode SQL
 This repository covers supplementary analysis of SQL for LeetCode and classic interview questions, tradeoff between performance optimization and developmental efficiency, and how it relates to general database design consideration (e.g. indexing and join). Specific sample databases are provided to illustrate tricky interview questions.
 
-### LeetCode catalogue
+---
+### LeetCode Selected Probems
+Only high-quality problems are selected. Pathological problems such as [Find Median Given Frequency of Numbers](https://leetcode.com/problems/find-median-given-frequency-of-numbers) are not discussed. Entry-level syntax problems such as [Combine Two Tables](https://leetcode.com/problems/combine-two-tables) are not discussed.
+
 | \# | Problems | Solutions | Level | Concept |
 |----|----------|-----------|------| --------|
 | 262 | [Trips and Users](https://leetcode.com/problems/trips-and-users/) | [MySQL](./LeetCode/262_Trips_and_Users/README.md) | Hard | Three-way join; filtering |
@@ -11,7 +14,10 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 | 615 | [Average Salary](https://leetcode.com/problems/average-salary-departments-vs-company/) | [MySQL](./LeetCode/615_Average_Salary/README.md) | Hard | Case; aggregation, join |
 | 618 | [Students Report By Geography](https://leetcode.com/problems/students-report-by-geography/) | [MySQL, MS SQL](./LeetCode/618_Students_Report_by_Geography/README.md) | Hard | Full join, pivoting |
 
-### Classic interview question
+---
+### Classic Interview Questions
+This section covers commonly tested concepts during interviews. Many notebooks are inspired by problems people who violated their confidentiality agreement and posted interview masterials on Quora, Glassdoor, and 1point3acres. Data are either synthetic or from my personal challenge project.
+
 | \# | Problems | Solutions | Concept |
 |----|----------|-----------|------|
 | 1 | Facebook Advertiser Status | [MySQL](./Interview/01_Facebook_Advertiser_Status/README.md) | Transition diagram; conditional update|
@@ -20,9 +26,12 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 | 4 | Page Recommendation | [MySQL](./Interview/04_Page_Recommendation/README.md) | Undirected edge; aggregation; existance |
 | 5 | Pivoting Numeric Data | [MySQL](./Interview/05_Pivoting_Numeric_Data/README.md) | Pivoting numeric data with case statement |
 | 6 | Pivoting Text Data | [MySQL](./Interview/06_Pivoting_Text_Data/README.md) | Pivoting text data with self-join |
-| 7 | Un-pivoting Tables | [MySQL](./Interview/07_Unpivoting_Tables/README.md) | Un-pivoting tables ysubg cross-join |
+| 7 | Un-pivoting Tables | [MySQL](./Interview/07_Unpivoting_Tables/README.md) | Un-pivoting tables using cross-join |
 
+---
 ### Special Topics
+This section covers esoteric details of SQL language and use cases that may be completely useless in interview. Nevertheless, they are fun to explore in their own rights.
+
 | \# | Concept        | Notebook | 
 |----|----------------|----------|
 | 1  | Random Sampling from Groups      | [MySQL8](./Topics/random_sampling)   |
@@ -31,4 +40,6 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 | 4  | FULL JOIN Hack 		            | [MySQL8](./Topics/)    |
 | 5  | Cummulative Product 	            | [MySQL8](./Topics/)    |
 
-### Anti-pattern
+---
+### Anti-patterns
+This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. Counter-examples are scrapped from low quality answers on LeetCode and elsewhere.

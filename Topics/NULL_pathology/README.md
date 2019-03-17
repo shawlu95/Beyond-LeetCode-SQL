@@ -31,6 +31,7 @@ mysql> SELECT * FROM Balance;
 8 rows in set (0.01 sec)
 ```
 
+---
 ### Counting Behavior
 Make sure you are not surprised by the following counting behavior. Explain why those results are returned.
 
@@ -97,6 +98,7 @@ mysql> SELECT name, COUNT(distinct balance) FROM Balance GROUP BY name ORDER BY 
 
 ```
 
+---
 ### Aggregation Behavior
 
 In *SUM()*, *MAX()*, *MIN()*, *AVG()*, rows containing *NULL* are simply ignored. When calculating average, they are not even counted in the denoominator.
@@ -142,6 +144,7 @@ mysql> SELECT name, AVG(balance) FROM Balance GROUP BY name;
 
 ```
 
+---
 ### Boolean Behavior
 * True and NULL returns NULL
 * True or NULLreturns __True__
@@ -154,6 +157,7 @@ mysql> SELECT name, AVG(balance) FROM Balance GROUP BY name;
 * __NULL = NULL__ returns NULL
 * __NULL != NULL__ returns NULL
 
+---
 ### Inclusion & Exclusion Behavior
 When excluding an individual row, we risk exclusing __all__ the NULL rows.
 ```
@@ -234,6 +238,7 @@ mysql> SELECT name, balance
 1 row in set (0.00 sec)
 ```
 
+---
 ### Ordering Behavior
 Note that when in ASC order, NULL appears first. In DESC order, NULL appears last. Use *COALESCE()* if we want to place *NULL* at the end, while still have *ASC* order for the rest of the rows.
 ```
@@ -296,6 +301,7 @@ mysql> SELECT name, SUM(balance) AS sum_balance FROM Balance GROUP BY name ORDER
 5 rows in set (0.00 sec)
 ```
 
+---
 ### Window Behavior
 Unlike aggregate function, ranking function does not ignore NULL. 
 

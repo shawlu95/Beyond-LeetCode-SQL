@@ -52,12 +52,14 @@ Load the database file [db.sql](db.sql) to localhost MySQL. Relevant tables will
 mysql < db.sql -uroot -p
 ```
 
+---
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
 * Each trip has two foreign key (*Client_Id*, *Driver_Id*) referring the *Users* table's primary key.
 * No trip can have __NULL__ in *Driver_id* or *Client_Id*.
 * Because of the above assumptions, the three-way driver-trip-rider join results in same number of rows as the *Trips* table, before applying WHERE clause predicate.
 
+---
 ## On Correctness
 * Need to exclude both banned drivers and riders from calculation.
 * Output rate to 2 decimal place as required.
@@ -80,6 +82,7 @@ GROUP BY t.Request_at
 ORDER BY t.Request_at;
 ```
 
+---
 ## On Efficiency
 SQL performs JOIN operation before applying WHERE clause. If many users are banned, JOIN operation results in lots of invalid trips in which either rider or driver is banned. We may [pre-filter](mysql_pre_filter.sql) the *Users* table and store the results in a temporary table (note that temporary table does not work in LeetCode).
 
@@ -145,5 +148,6 @@ WHERE Request_at BETWEEN "2013-10-01" AND "2013-10-03"
 GROUP BY Request_at;
 ```
 
+---
 ## Parting Thought
 Because temporary table has no index. The second solution works better only when the pre-filtering results in significant reduction of table size. Otherwise, joining temporary tables without index can be slower than joining the full tables. In practice, look up the query plan and estimated cost before running the query.

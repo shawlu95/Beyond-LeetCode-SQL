@@ -39,11 +39,13 @@ For the sample data above, the output is:
 Note:
 Each day only have one row record, and the dates are increasing with id increasing.
 
+---
 ## Observation
 Make the following observation to interviewers. Confirm your observation is correct. Ask for clarification if necessary.
 * Every day has a record. If two dates differs by 1, their id differs by 1. Therefore, instead of joining by *visit_date* we can join by *id*, which is more efficient.
 * We are scanning three-day consecutive window here. A valid row can either be positioned at the beginning of the window, at the middle, or end of the window.
 
+---
 ## On Correctness
 The key is to remove duplicates. Consider four days in a row, each day with over 100 people. In the first window, all three days will be returned. In the next window, day 2, 3, 4 will all be returned, resulting in duplicate day 2 and 3. To remove duplicate, use *DISTINCT* keyword, with three [self-joins]( mysql_simple.sql):.
 
@@ -71,7 +73,7 @@ WHERE s1.people >= 100
 ORDER BY s1.id; 
 ```
 
-
+---
 ## On Efficiency
 Joining the table three times resulting in a huge cartesian product. One way to improve efficiency is simply [pre-filter](mssql_pre_filter.sql) the table, so only days with over 100 people are joined. 
 
@@ -122,7 +124,8 @@ WHERE (s1.id = s2.id - 1 AND s1.id = s3.id - 2)
 ORDER BY s1.id;
 ```
 
-## Window function
+---
+## Optional: Window function
 In MS SQL, the problem can be solved with [window function](mssql_window.sql). Be careful that you __cannot__ use window column in the predicates. You must save the expanded table with window columns in a temporary table.
 
 ```
@@ -174,6 +177,7 @@ WHERE people >= 100
 ORDER BY id;
 ```
 
+---
 ## Parting Thought
 Window function is more efficient than join when the table is large. In this example, we are sorting by index *id* in the window, further boosting efficiency. Furthermore, window solution gets rid of the *DISTINCT* keyword, which establishes a hash set (inefficient). The test case in LeetCode, however, does not show its superiority.
 

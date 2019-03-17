@@ -38,6 +38,7 @@ mysql> select * from coursegrade;
 15 rows in set (0.00 sec)
 ```
 
+---
 ### Pivot Using Self-join
 
 Let's look at a subset of the data.
@@ -240,6 +241,7 @@ JOIN CourseGrade AS t3
 5 rows in set (0.00 sec)
  ```
 
+---
 ### Bonus: Using Case Statement
 We can use the case statement, as described in the previous [note](../05_Pivoting_Numeric_Data/). First, we add columns, using one case statement for each column.
 

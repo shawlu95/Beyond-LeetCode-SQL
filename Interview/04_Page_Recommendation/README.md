@@ -43,6 +43,7 @@ mysql> SELECT * FROM PageFollow;
 10 rows in set (0.00 sec)
 ```
 
+---
 ### Solution
 #### Step 1: Accounting Undirected Edge
 Ask for clarification whether the *Friendship* table accounts for two directions. For example, if Alice is friend with Bob, are there two rows (Alice, Bob) and (Bob, Alice) in the table? If not (in this example), we need to union the table with itself.
@@ -211,6 +212,8 @@ ORDER BY f.user_id ASC, COUNT(*) DESC;
 6 rows in set (0.00 sec)
 ```
 
+---
+#### Optional: Tuple Predicate
 More simply, we can use two-column pairs to check existance.
 
 ```

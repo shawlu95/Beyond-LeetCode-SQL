@@ -41,6 +41,7 @@ mysql> SELECT * FROM UserHistory;
 5 rows in set (0.00 sec)
 ```
 
+---
 ### Q1: Find monthly active users.
 *Write a SQL query that returns the name, phone number and most recent date for any user that has logged in over the last 30 days (you can tell a user has logged in if the action field in UserHistory is set to "logged_on").*
 
@@ -114,6 +115,7 @@ ORDER BY recent_date;
 
 If any selected column is __not__ functionally dependent on the group by column, then unpredictable result may be returned, or error may be thrown. To avoid such trouble, only select aggregated columns and group by columns into a temporary tables, and join the temporary table with the original table to retrieve other desired columns.
 
+---
 ### Q2. Find inactive users 
 *Write a SQL query to determine which user_ids in the User table are not contained in the UserHistory table (assume the UserHistory table has a subset of the user_ids in User table). Do not use the SQL MINUS statement. Note: the UserHistory table can have multiple entries for each user_id (Note that your SQL should be compatible with MySQL 5.0, and avoid using subqueries)*
 

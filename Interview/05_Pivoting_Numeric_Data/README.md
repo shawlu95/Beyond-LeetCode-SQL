@@ -12,6 +12,7 @@ The pivoting process is accomplished in two stages:
 1. Adding columns: breaking the *pivoted* column into multiple columns. This can be accomplished using either *CASE* statement or *self join*. In this case, it is unrealistic to do self-join, because the number of rows is much greater than the cardinalities of the *index* and *pivoted* columns multiplied. See thie [notebook](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/06_Pivoting_Text_Data) for an example of using self-join to pivot data.
 2. Aggregation: reduce the number of rows. The number of rows will be __equal__ to the cardinality of the *index* column.
 
+---
 ### Data
 In this example, we'll use real data on how I spent my money. The data are recorded using an iOS app, which conencts to a PHP server on my localhost, which interfaces with MySQL database. The data file contains one Expenses table, with a subset of the columns from the original table, covering one year of transaction data. You can see how I created the table [here](Expenses.sql).
 
@@ -45,6 +46,7 @@ mysql> SELECT * FROM expenses LIMIT 5;
 5 rows in set (0.00 sec)
 ```
 
+---
 ## Objective
 The unpivoted table contains 1083 rows (1083 records of transactions in year 2018). We want to pivot the table to have *category* as index column, abd the *time* column as *pivoted* column, binned into 12 months. The cardinality of the category column is 25, The cardinality of the *time* column is 12 (12 months). The resulting table will have dimension 25 * 12.
 
@@ -59,8 +61,7 @@ mysql> SELECT COUNT(DISTINCT category) FROM expenses;
 1 row in set (0.00 sec)
 ```
 
-### Pivot Using Case Statement
-
+---
 #### Step 1. Adding Columns
 Because there are too many rows, let's look at a few of them to get a sense of how it works. I'll take two days' data from November, and two days' data from December.
 
@@ -144,6 +145,7 @@ ORDER BY category;
 
 ```
 
+---
 #### Pivot Full Table
 Now we can apply the procedure to all 12 months! Sadly, as shown in the table below, I lost $14224.24 on the stock market when Nasdaq took a nose dive in October 2018.
 

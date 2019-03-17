@@ -7,6 +7,7 @@
 * Edge case: adding new user-song pair.
 * Aggregation.
 
+---
 ### Two Tables
 You have a History table where you have date, user_id, song_id and count(tally).
 It shows at the end of each day how many times in her history a user has listened to a given song.
@@ -48,6 +49,7 @@ mysql> SELECT * from Daily;
 5 rows in set (0.00 sec)
 ```
 
+---
 ### Observation 
 * Note that the *Daily* table is a event-log. To update *History*, we need to aggregate the event log, grouping by *user_id* and *song_id*.
 * A user may listen to a new song for the first time, in which case no existing (*user_id*, *song_id*) compound key pair exists in the *History* table. So we need an additional INSERT statement.
