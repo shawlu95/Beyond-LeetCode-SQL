@@ -30,16 +30,22 @@ This section covers commonly tested concepts during interviews. Many notebooks a
 
 ---
 ### Special Topics
-This section covers esoteric details of SQL language and use cases that may be completely useless in interview. Nevertheless, they are fun to explore in their own rights.
+This section covers esoteric details of SQL language and use cases that may be completely useless in interview. Nevertheless, they come handy when judgement calls and some are simply fun to explore.
 
-| \# | Concept        | Notebook | 
-|----|----------------|----------|
-| 1  | Random Sampling from Groups      | [MySQL8](./Topics/random_sampling)   |
-| 2  | NULL Pathological Study          | [MySQL8](./Topics/NULL_pathology)    |
-| 3  | LAG and LEAD 	                | [MySQL8](./Topics/)    |
+| \# | Concept                          | Notebook    							  | 
+|----|----------------------------------|-----------------------------------------|
+| 1  | Random Sampling from Groups      | [MySQL8](./Topics/01_Random_Sampling)   |
+| 2  | NULL Pathological Study          | [MySQL8](./Topics/02_NULL_pathology)    |
+| 3  | Full Join    	                | [MySQL8](./Topics/03_Full_Join)    	  |
 | 4  | FULL JOIN Hack 		            | [MySQL8](./Topics/)    |
 | 5  | Cummulative Product 	            | [MySQL8](./Topics/)    |
 
 ---
 ### Anti-patterns
-This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. Counter-examples are scrapped from low quality answers on LeetCode and elsewhere.
+This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. 
+
+| \# | Anti-patterns                    | Notebook    							  | 
+|----|----------------------------------|-----------------------------------------|
+| 1  | Random Sampling from Groups      | [MySQL8](./Anti_Patterns/01_Selecting_Non_Aggregated_Columns) |
+| 2  | NULL Pathological Study          | [MySQL8](./Anti_Patterns/02_Bad_Subquery) |
+| 3  | Full join.   	                | [MySQL8](./Anti_Patterns/03_Fail_to_Use_Index) |
