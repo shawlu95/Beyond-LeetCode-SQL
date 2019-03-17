@@ -22,4 +22,5 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 ### Special Topics
 | \# | Concept        | Notebook | 
 |----|----------------|----------|
-| 1  | Sampling       | [MySQL8](./Topics/random_sampling)   |
+| 1  | Random Sampling from Groups      | [MySQL8](./Topics/random_sampling)   |
+| 2  | NULL Pathological Study          | [MySQL8](./Topics/NULL_pathology)    |

@@ -235,10 +235,11 @@ LIMIT 20;
 ```
 
 ### Combined Pipeline
-We can merge the steps into a single pipeline. Even better, we can store it in a [procedure](stored_procedure.sql). Then we can simly sample any desired number of rows we want.
+We can merge the steps into a single pipeline. Even better, we can store it in a [procedure](stored_procedure.sql). Then we can simly sample any desired number of rows we want. For example, to draw 3 cities from each continent, we can simply call the procedure as follows:
 
 ```
 mysql> CALL sample_by_continent(3);
+
 +--------------+---------------------------+---------------+------------+--------------------+-----------------------+--------+---------------+
 | city_name    | country_name              | continent     | group_size | std                | prob                  | cutoff | group_row_num |
 +--------------+---------------------------+---------------+------------+--------------------+-----------------------+--------+---------------+
