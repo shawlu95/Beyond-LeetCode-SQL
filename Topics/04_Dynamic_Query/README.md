@@ -1,0 +1,35 @@
+# Dynamic Query
+
+In the interview question, we covered a classic problem of [grouping by bins](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/08_Group_by_Bins). This [notebook](dynamic.ipynb) illustrates how to generate and execute query dynamically in Python. You can easily build hundreds of bins without manually writing hundreds of *WHEN* conditions.
+
+```
+SELECT CASE WHEN creditLimit BETWEEN 0 AND 9999 THEN '0~9999' 
+WHEN creditLimit BETWEEN 10000 AND 19999 THEN '10000~19999' 
+WHEN creditLimit BETWEEN 20000 AND 29999 THEN '20000~29999' 
+WHEN creditLimit BETWEEN 30000 AND 39999 THEN '30000~39999' 
+WHEN creditLimit BETWEEN 40000 AND 49999 THEN '40000~49999' 
+WHEN creditLimit BETWEEN 50000 AND 59999 THEN '50000~59999' 
+WHEN creditLimit BETWEEN 60000 AND 69999 THEN '60000~69999' 
+WHEN creditLimit BETWEEN 70000 AND 79999 THEN '70000~79999' 
+WHEN creditLimit BETWEEN 80000 AND 89999 THEN '80000~89999' 
+WHEN creditLimit BETWEEN 90000 AND 99999 THEN '90000~99999' 
+WHEN creditLimit BETWEEN 100000 AND 109999 THEN '100000~109999' 
+WHEN creditLimit BETWEEN 110000 AND 119999 THEN '110000~119999' 
+WHEN creditLimit BETWEEN 120000 AND 129999 THEN '120000~129999' 
+WHEN creditLimit BETWEEN 130000 AND 139999 THEN '130000~139999' 
+WHEN creditLimit BETWEEN 140000 AND 149999 THEN '140000~149999' 
+WHEN creditLimit BETWEEN 150000 AND 159999 THEN '150000~159999' 
+WHEN creditLimit BETWEEN 160000 AND 169999 THEN '160000~169999' 
+WHEN creditLimit BETWEEN 170000 AND 179999 THEN '170000~179999' 
+WHEN creditLimit BETWEEN 180000 AND 189999 THEN '180000~189999' 
+WHEN creditLimit BETWEEN 190000 AND 199999 THEN '190000~199999' 
+WHEN creditLimit BETWEEN 200000 AND 209999 THEN '200000~209999' 
+WHEN creditLimit BETWEEN 210000 AND 219999 THEN '210000~219999' 
+WHEN creditLimit BETWEEN 220000 AND 229999 THEN '220000~229999' 
+END AS credit_range ,COUNT(*) AS customer_tally FROM customers GROUP BY credit_range;
+```
+
+---
+### Dependencies
+* sqlalchemy
+* pandas
