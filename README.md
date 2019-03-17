@@ -18,3 +18,8 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 | 2 | Spotify Listening History | [MySQL](./Interview/02_Spotify_Listening_History/README.md) | Update cumulative sum |
 | 3 | Monthly Active User | [MySQL](./Interview/03_Monthly_Active_User/README.md) | Functional dependency; aggregation; filtering |
 | 4 | Page Recommendation | [MySQL](./Interview/04_Page_Recommendation/README.md) | Undirected edge; aggregation; existance |
+
+### Special Topics
+| \# | Concept        | Notebook | 
+|----|----------------|----------|
+| 1  | Sampling       | [MySQL8](./Topics/random_sampling)   |
