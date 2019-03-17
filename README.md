@@ -29,16 +29,17 @@ This section covers commonly tested concepts during interviews. Many notebooks a
 | 7 | Un-pivoting Tables | [MySQL](./Interview/07_Unpivoting_Tables/README.md) | Un-pivoting tables using cross-join |
 
 ---
-### Special Topics
+### Hacks
 This section covers esoteric details of SQL language and use cases that may be completely useless in interview. Nevertheless, they come handy when judgement calls and some are simply fun to explore.
 
 | \# | Concept                          | Notebook    							  | 
 |----|----------------------------------|-----------------------------------------|
-| 1  | Random Sampling from Groups      | [MySQL8](./Topics/01_Random_Sampling)   |
-| 2  | NULL Pathological Study          | [MySQL8](./Topics/02_NULL_pathology)    |
-| 3  | Full Join    	                | [MySQL8](./Topics/03_Full_Join)    	  |
-| 4  | FULL JOIN Hack 		            | [MySQL8](./Topics/)    |
-| 5  | Cummulative Product 	            | [MySQL8](./Topics/)    |
+| 1  | Random Sampling from Groups      | [MySQL8](./Hacks/01_Random_Sampling)   |
+| 2  | NULL Pathological Study          | [MySQL8](./Hacks/02_NULL_pathology)    |
+| 3  | Full Join    	                | [MySQL8](./Hacks/03_Full_Join)    	  |
+| 4  | Dynamic Query (Python) 		    | [MySQL8](./Hacks/04_Dynamic_Query)    |
+| 6  | Stored Procedure 	            | [MySQL8](./Hacks/05_Stored_Precesure)    |
+| 5  | Cummulative Product 	            | [MySQL8](./Hacks/)    |
 
 ---
 ### Anti-patterns

@@ -1,0 +1,33 @@
+DROP SCHEMA IF EXISTS WAU;
+CREATE SCHEMA WAU;
+USE WAU;
+
+CREATE TABLE Login (
+  id INT(11) NOT NULL
+  ,user_id int(11)
+  ,ts DATE
+);
+
+ALTER TABLE Login
+  ADD PRIMARY KEY (id);
+
+ALTER TABLE Login
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+INSERT INTO Login (user_id, ts) VALUES
+(1, "2019-02-14"),
+(1, "2019-02-13"),
+(1, "2019-02-12"),
+(1, "2019-02-11"),
+(2, "2019-02-14"),
+(2, "2019-02-12"),
+(2, "2019-02-11"),
+(2, "2019-02-10"),
+(3, "2019-02-14"),
+(3, "2019-02-12");
+
+INSERT INTO Login (user_id, ts) VALUES
+(4, "2019-02-09"),
+(4, "2019-02-08"),
+(4, "2019-02-08"),
+(4, "2019-02-07");

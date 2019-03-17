@@ -9,7 +9,7 @@ This post is inspired by this [page](https://www.programmerinterview.com/index.p
 * Functional dependency
 
 ### Sample data
-Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify database will be created with two tables. 
+Load the database file [db.sql](db.sql) to localhost MySQL. A MAU database will be created with two tables. 
 ```
 mysql < db.sql -uroot -p
 ```
