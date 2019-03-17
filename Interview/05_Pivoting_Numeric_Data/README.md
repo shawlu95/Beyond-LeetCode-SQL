@@ -1,6 +1,6 @@
 # Pivoting Numeric Data
 
-We've seen a LeetCode problem on pivoting *VARCHAR* data [here]([../../../../LeetCode/618_Students_Report_by_Geography/). This notebook introduces the more common pivoting method: over *NUMERIC* data.
+We've seen a LeetCode problem on pivoting *VARCHAR* data [here](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/LeetCode/618_Students_Report_by_Geography). This notebook introduces the more common pivoting method: over *NUMERIC* data.
 
 The trouble with pivoting *VARCHAR* data is that they cannot be aggregated over, and hence their position (row numebr) in the pivoted table must be determined by a *RANK()* function. For *Numeric* data, the process is much easier: 
 
@@ -9,7 +9,7 @@ The trouble with pivoting *VARCHAR* data is that they cannot be aggregated over,
 
 
 The pivoting process is accomplished in two stages:
-1. Adding columns: breaking the *pivoted* column into multiple columns. This can be accomplished using either *CASE* statement or *self join*. In this case, it is unrealistic to do self-join, because the number of rows is much greater than the cardinalities of the *index* and *pivoted* columns multiplied. See thie [notebook](../06_Pivoting_Text_Data) for an example of using self-join to pivot data.
+1. Adding columns: breaking the *pivoted* column into multiple columns. This can be accomplished using either *CASE* statement or *self join*. In this case, it is unrealistic to do self-join, because the number of rows is much greater than the cardinalities of the *index* and *pivoted* columns multiplied. See thie [notebook](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/06_Pivoting_Text_Data) for an example of using self-join to pivot data.
 2. Aggregation: reduce the number of rows. The number of rows will be __equal__ to the cardinality of the *index* column.
 
 ### Data
