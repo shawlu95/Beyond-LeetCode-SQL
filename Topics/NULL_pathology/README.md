@@ -130,8 +130,6 @@ mysql> SELECT name, AVG(balance) FROM Balance GROUP BY name;
 
 ```
 
-
-
 ### Logical Behavior
 * True and NULL returns NULL
 * True or NULLreturns __True__
@@ -143,7 +141,6 @@ mysql> SELECT name, AVG(balance) FROM Balance GROUP BY name;
 * NULL || 'str' returns NULL
 * __NULL = NULL__ returns NULL
 * __NULL != NULL__ returns NULL
-* NOT (NULL) returns NULL
 
 ### Inclusion & Exclusion Behavior
 When excluding an individual row, we risk exclusing __all__ the NULL rows.
@@ -226,7 +223,7 @@ mysql> SELECT name, balance
 ```
 
 ### Ordering Behavior
-Note that when in ASC order, NULL appears first. In DESC order, NULL appears last.
+Note that when in ASC order, NULL appears first. In DESC order, NULL appears last. Use *COALESCE()* if we want to place *NULL* at the end, while still have *ASC* order for the rest of the rows.
 ```
 mysql> SELECT name, balance FROM Balance ORDER BY balance;
 +-------+---------+
@@ -240,6 +237,21 @@ mysql> SELECT name, balance FROM Balance ORDER BY balance;
 | Bob   |      10 |
 | NULL  |      20 |
 | Cindy |     100 |
++-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT name, balance FROM Balance ORDER BY COALESCE(balance, 1E9);
++-------+---------+
+| name  | balance |
++-------+---------+
+| Bob   |       5 |
+| Alice |      10 |
+| Bob   |      10 |
+| NULL  |      20 |
+| Cindy |     100 |
+| Cindy |    NULL |
+| Shaw  |    NULL |
+| NULL  |    NULL |
 +-------+---------+
 8 rows in set (0.00 sec)
 ```

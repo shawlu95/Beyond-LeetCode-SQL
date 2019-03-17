@@ -18,9 +18,16 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 | 2 | Spotify Listening History | [MySQL](./Interview/02_Spotify_Listening_History/README.md) | Update cumulative sum |
 | 3 | Monthly Active User | [MySQL](./Interview/03_Monthly_Active_User/README.md) | Functional dependency; aggregation; filtering |
 | 4 | Page Recommendation | [MySQL](./Interview/04_Page_Recommendation/README.md) | Undirected edge; aggregation; existance |
+| 5 | Pivoting Numeric Data | [MySQL](./Interview/05_Pivoting_Numeric_Data/README.md) | Pivoting numeric data with case statement |
+| 6 | Pivoting Text Data | [MySQL](./Interview/06_Pivoting_Text_Data/README.md) | Pivoting text data with self-join |
 
 ### Special Topics
 | \# | Concept        | Notebook | 
 |----|----------------|----------|
 | 1  | Random Sampling from Groups      | [MySQL8](./Topics/random_sampling)   |
 | 2  | NULL Pathological Study          | [MySQL8](./Topics/NULL_pathology)    |
+| 3  | LAG and LEAD 	                | [MySQL8](./Topics/)    |
+| 4  | FULL JOIN Hack 		            | [MySQL8](./Topics/)    |
+| 5  | Cummulative Product 	            | [MySQL8](./Topics/)    |
+
+### Anti-pattern
