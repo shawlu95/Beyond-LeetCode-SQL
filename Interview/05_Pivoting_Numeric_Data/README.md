@@ -1,6 +1,6 @@
 # Pivoting Numeric Data
 
-We've seen a LeetCode problem on pivoting *VARCHAR* data [here]([../../LeetCode/618_Students_Report_by_Geography/README.md]). This notebook introduces the more common pivoting method: over *NUMERIC* data.
+We've seen a LeetCode problem on pivoting *VARCHAR* data [here]([../../../../LeetCode/618_Students_Report_by_Geography/). This notebook introduces the more common pivoting method: over *NUMERIC* data.
 
 The trouble with pivoting *VARCHAR* data is that they cannot be aggregated over, and hence their position (row numebr) in the pivoted table must be determined by a *RANK()* function. For *Numeric* data, the process is much easier: 
 
