@@ -1,7 +1,19 @@
 # NULL Pathology
-This notebook covers common pitfalls of using NULL. Any single one can ruin your query.
+This notebook covers common pitfalls of using NULL. Any single one can ruin your query. This notebook is divided into the following sections.
+* Counting Behavior
+* Aggregation Behavior
+* Boolean Behavior
+* Inclusion & Exclusion Behavior
+* Ordering Behavior
+* Window Behavior
 
 ### Sample Data
+Load the database file [db.sql](db.sql) to localhost MySQL. The *Balance* table will be created in the Practice database. 
+```
+mysql < db.sql -uroot -p
+```
+
+Take a look at the data. They will give you enough pain, if you decide to continue reading.
 ```
 mysql> SELECT * FROM Balance;
 +----+-------+---------+
@@ -20,7 +32,7 @@ mysql> SELECT * FROM Balance;
 ```
 
 ### Counting Behavior
-Make sure you can explain the following counting behavior.
+Make sure you are not surprised by the following counting behavior. Explain why those results are returned.
 
 ```
 mysql> SELECT name, COUNT(*) FROM Balance GROUP BY name;
@@ -130,7 +142,7 @@ mysql> SELECT name, AVG(balance) FROM Balance GROUP BY name;
 
 ```
 
-### Logical Behavior
+### Boolean Behavior
 * True and NULL returns NULL
 * True or NULLreturns __True__
 * False and NULL returns__False__

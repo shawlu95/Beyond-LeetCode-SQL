@@ -20,6 +20,7 @@ This repository covers supplementary analysis of SQL for LeetCode and classic in
 | 4 | Page Recommendation | [MySQL](./Interview/04_Page_Recommendation/README.md) | Undirected edge; aggregation; existance |
 | 5 | Pivoting Numeric Data | [MySQL](./Interview/05_Pivoting_Numeric_Data/README.md) | Pivoting numeric data with case statement |
 | 6 | Pivoting Text Data | [MySQL](./Interview/06_Pivoting_Text_Data/README.md) | Pivoting text data with self-join |
+| 7 | Un-pivoting Tables | [MySQL](./Interview/07_Unpivoting_Tables/README.md) | Un-pivoting tables ysubg cross-join |
 
 ### Special Topics
 | \# | Concept        | Notebook | 
