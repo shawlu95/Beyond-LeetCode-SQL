@@ -1,6 +1,6 @@
 # Pivoting Text Data
 
-Different from the *Expenses* table from the earlier [note](../05_Pivoting_Numeric_Data/), this table contains text data, and cannot be summed or averaged over. A different approach is required tp reduce number of tables. Still, just as in pivoting numeric data, we need to go through two steps.
+Different from the *Expenses* table from the earlier [note](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/05_Pivoting_Numeric_Data), this table contains text data, and cannot be summed or averaged over. A different approach is required tp reduce number of tables. Still, just as in pivoting numeric data, we need to go through two steps.
 
 1. Adding columns using self-join or switch statement. We'll study both approaches in this notebook.
 2. Reduce number of rows to the cardinality of *index* column.
@@ -12,7 +12,7 @@ Load the database file [db.sql](db.sql) to localhost MySQL. The *CourseGrade* ta
 mysql < db.sql -uroot -p
 ```
 
-Different from the LeetCode problem, here we do have an *index* column *name* which determines the row number for the info column *grade*. So we do not have to reindex the table using *ROW_NUMBER()*.
+Different from the [LeetCode](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/LeetCode/618_Students_Report_by_Geography) problem, here we do have an *index* column *name* which determines the row number for the info column *grade*. So we do not have to reindex the table using *ROW_NUMBER()*.
 
 ```
 mysql> select * from coursegrade;
