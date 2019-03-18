@@ -34,12 +34,12 @@ This section covers esoteric details of SQL language and use cases that may be c
 
 | \# | Concept                          | Notebook    							  | 
 |----|----------------------------------|-----------------------------------------|
-| 1  | Random Sampling from Groups      | [MySQL8](./Hacks/01_Random_Sampling)   |
-| 2  | NULL Pathological Study          | [MySQL8](./Hacks/02_NULL_pathology)    |
+| 1  | Random Sampling from Groups      | [MySQL8](./Hacks/01_Random_Sampling)    |
+| 2  | NULL Pathological Study          | [MySQL8](./Hacks/02_NULL_pathology)     |
 | 3  | Full Join    	                | [MySQL8](./Hacks/03_Full_Join)    	  |
-| 4  | Dynamic Query (Python) 		    | [MySQL8](./Hacks/04_Dynamic_Query)    |
-| 6  | Stored Procedure 	            | [MySQL8](./Hacks/05_Stored_Precesure)    |
-| 5  | Cummulative Product 	            | [MySQL8](./Hacks/)    |
+| 4  | Dynamic Query (Python) 		    | [MySQL8](./Hacks/04_Dynamic_Query)      |
+| 5  | Stored Procedure 	            | [MySQL8](./Hacks/05_Stored_Precesure)   |
+| 6  | Hacking Aggregation 	            | [MySQL8](./Hacks/06_Hacking_Aggregation)|
 
 ---
 ### Anti-patterns

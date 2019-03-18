@@ -36,7 +36,7 @@ __Warning__: if any country has __NULL__ in the *GNP* column, the query will ret
 ```
 SELECT Name
 FROM country
-WHERE GNP >= ALL(SELECT GNP FROM country);
+WHERE GNP >= ALL(SELECT GNP FROM country WHERE GNP IS NOT NULL);
 ```
 
 Similarly, we can find country with lowest GNP, country whose GNP is above / below average.
@@ -44,17 +44,18 @@ Similarly, we can find country with lowest GNP, country whose GNP is above / bel
 ```
 SELECT Name
 FROM country
-WHERE GNP <= ALL(SELECT GNP FROM country);
+WHERE GNP <= ALL(SELECT GNP FROM country WHERE GNP IS NOT NULL);
 
 SELECT Name
 FROM country
-WHERE GNP >= (SELECT AVG(GNP) FROM country);
+WHERE GNP >= (SELECT AVG(GNP) FROM country WHERE GNP IS NOT NULL);
 
 SELECT Name
 FROM country
-WHERE GNP <= (SELECT AVG(GNP) FROM country);
+WHERE GNP <= (SELECT AVG(GNP) FROM country WHERE GNP IS NOT NULL);
 ```
 
+___
 #### Group Aggregate: Find Largest Country on Each Continent
 Here we normally need to group by continent. 
 ```
@@ -92,6 +93,7 @@ WHERE a.SurfaceArea >= ALL(
   SELECT b.SurfaceArea 
   FROM country AS b 
   WHERE a.Continent = b.Continent
+    AND b.SurfaceArea IS NOT NULL
 );
 +--------------------+---------------+-------------+
 | Name               | Continent     | SurfaceArea |
@@ -119,6 +121,7 @@ WHERE a.SurfaceArea <= ALL(
   SELECT b.SurfaceArea 
   FROM country AS b 
   WHERE a.Continent = b.Continent
+    AND b.SurfaceArea IS NOT NULL
 );
 
 SELECT 
@@ -130,6 +133,7 @@ WHERE a.SurfaceArea >= ALL(
   SELECT AVG(b.SurfaceArea)
   FROM country AS b 
   WHERE a.Continent = b.Continent
+    AND b.SurfaceArea IS NOT NULL
 );
 
 SELECT 
@@ -141,9 +145,40 @@ WHERE a.SurfaceArea <= ALL(
   SELECT AVG(b.SurfaceArea)
   FROM country AS b 
   WHERE a.Continent = b.Continent
+    AND b.SurfaceArea IS NOT NULL
 );
 ```
----
+
+### Note
+By using 'less or equal', we are including the compared object itself during the comparison. Without equal sign, the query will return nothing, because it is impossible to have one row that beats every other row including itself. If we don't use equal sign, we need to exclude the object from comparing against itself.
+
+```
+-- Bad
+SELECT Name
+FROM country
+WHERE GNP > ALL(SELECT GNP FROM country WHERE GNP IS NOT NULL);
+
+Empty set (0.00 sec)
+```
+
+```
+-- Good
+SELECT a.Name
+FROM country AS a
+WHERE GNP > ALL(
+  SELECT b.GNP FROM country AS b 
+  WHERE b.GNP IS NOT NULL 
+    AND b.Name != a.Name
+);
+
++---------------+
+| Name          |
++---------------+
+| United States |
++---------------+
+1 row in set (0.00 sec)
+```
+___
 ### Parting Thoughts
 There are 30 countries whose GNP is above average, and 209 countries who GNP is below average. This is a positively skewed distirbution, whose mean is significantly above median.
 
