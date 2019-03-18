@@ -1,4 +1,4 @@
-# Active Users Past Week
+# Consecutive Active Users
 
 > Given timestamps of logins, figure out how many people on Facebook were active ALL seven days of a week on a mobile phone.
 
@@ -6,7 +6,7 @@ Different from the monthly active user [problem](https://github.com/shawlu95/Bey
 
 ### Key Concepts
 * Self join.
-* Windoe functions.
+* Window functions.
 
 ### Table
 ```

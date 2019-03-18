@@ -16,7 +16,7 @@ The pivoting process is accomplished in two stages:
 ### Data
 In this example, we'll use real data on how I spent my money. The data are recorded using an iOS app, which conencts to a PHP server on my localhost, which interfaces with MySQL database. The data file contains one Expenses table, with a subset of the columns from the original table, covering one year of transaction data. You can see how I created the table [here](Expenses.sql).
 
-Load the database file [db.sql](db.sql) to localhost MySQL. The *Expenses* table will be created in the Practice database. 
+Load the database file [db.sql](db.sql) to localhost MySQL. The *Expenses* table will be created in the Grocery database. 
 ```
 mysql < db.sql -uroot -p
 ```

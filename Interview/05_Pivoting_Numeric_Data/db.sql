@@ -1,5 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS Practice;
-USE Practice;
+CREATE SCHEMA IF NOT EXISTS Grocery;
+USE Grocery;
 
 -- phpMyAdmin SQL Dump
 -- version 4.7.7
