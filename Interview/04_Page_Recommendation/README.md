@@ -242,3 +242,5 @@ WHERE (f.user_id, p.page_id) NOT IN (
 GROUP BY f.user_id, p.page_id
 ORDER BY f.user_id ASC, COUNT(*) DESC;
 ```
+
+See solution [here](solution.sql).

@@ -152,3 +152,5 @@ WHERE user_id NOT IN (
 +---------+------+--------------+
 1 row in set (0.00 sec)
 ```
+
+See solution [here](solution.sql).

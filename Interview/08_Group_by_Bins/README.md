@@ -57,3 +57,5 @@ GROUP BY credit_range;
 ---
 ### Parting thought
 This type of question can easily generalize to a broad range of topics. For example, what is the distribution of user's age, what is the distribution of revenue from each online order?
+
+See solution [here](solution.sql).

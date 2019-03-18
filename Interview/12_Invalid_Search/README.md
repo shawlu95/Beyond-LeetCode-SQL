@@ -186,3 +186,5 @@ FROM tmp;
 ___
 ### Parting Thought
 Though this notebook is meant to be exhaustive, you should communicate with interviewers on which columns can be __NULL__ and which cannot. Some columns cannot be __NULL__ by design. Also, ask for how to present the result where value is __NULL__: whether to leave it as __NULL__ or replace it with more informative text.
+
+See solution [here](solution.sql).

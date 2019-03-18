@@ -261,3 +261,5 @@ HAVING COUNT(DISTINCT s1.song) >= 3;
 +---------+-----------+
 1 row in set (0.00 sec)
 ```
+
+See solution [here](solution.sql).

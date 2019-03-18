@@ -369,8 +369,8 @@ HAVING COUNT(DISTINCT s2.song) >= 3;
 
 We can probably stop here, because the recommendation will be sent to both nodes of the same edge. For example, just take a single column, and recommend to them the user_id from the second column. 
 
-See full solution [here](solution.sql).
-
 ___
 #### Parting Thought
 Do not directly start writing code. There are so many ways things can go wrong that you're bound to run out of time correcting mistakes. Work with simple examples on the whiteboard to get the general direction correct, don't run into crazy mistakes such as joining User table with Song table (automatic fail). Identify some edge cases such as user listens to the same song multiple times a day. Discuss how to handle NULL (though in this song table, both song and user_id are foreign keys, and by referential integrity, must have parent key). 
+
+See solution [here](solution.sql).
