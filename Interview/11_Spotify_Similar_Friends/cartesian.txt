@@ -1,0 +1,79 @@
+mysql> 
+mysql> SELECT *
+    -> FROM User AS u
+    -> JOIN Song AS s1 
+    ->   ON u.user_id = s1.user_id
+    -> JOIN Song AS s2
+    ->   ON u.friend_id = s2.user_id
+    -> ORDER BY u.user_id, s1.song, s2.song;
++----+---------+-----------+----+---------+---------------+------------+----+---------+-------------------+------------+
+| id | user_id | friend_id | id | user_id | song          | ts         | id | user_id | song              | ts         |
++----+---------+-----------+----+---------+---------------+------------+----+---------+-------------------+------------+
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 |  7 | Bill    | Clair de Lune     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 |  7 | Bill    | Clair de Lune     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 |  9 | Bill    | Forever Young     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 |  9 | Bill    | Forever Young     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 23 | Bill    | Lemon Tree        | 2019-03-14 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 23 | Bill    | Lemon Tree        | 2019-03-14 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 24 | Bill    | Mad World         | 2019-03-14 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 24 | Bill    | Mad World         | 2019-03-14 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 10 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 10 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 25 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 25 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 |  6 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 14 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 |  6 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 | 14 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 18 | Cindy   | Clair de Lune | 2019-03-17 |  8 | Bill    | The Fall          | 2019-03-17 |
+|  1 | Cindy   | Bill      | 20 | Cindy   | Clair de Lune | 2019-03-14 |  8 | Bill    | The Fall          | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 |  7 | Bill    | Clair de Lune     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 |  9 | Bill    | Forever Young     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 23 | Bill    | Lemon Tree        | 2019-03-14 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 24 | Bill    | Mad World         | 2019-03-14 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 25 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 10 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 | 14 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 |  6 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 17 | Cindy   | Kiroro        | 2019-03-17 |  8 | Bill    | The Fall          | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 |  7 | Bill    | Clair de Lune     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 |  9 | Bill    | Forever Young     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 23 | Bill    | Lemon Tree        | 2019-03-14 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 24 | Bill    | Mad World         | 2019-03-14 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 10 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 25 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 14 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 |  6 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 21 | Cindy   | Lemon Tree    | 2019-03-14 |  8 | Bill    | The Fall          | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 |  7 | Bill    | Clair de Lune     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 |  9 | Bill    | Forever Young     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 23 | Bill    | Lemon Tree        | 2019-03-14 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 24 | Bill    | Mad World         | 2019-03-14 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 25 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 10 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 14 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 |  6 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 22 | Cindy   | Mad World     | 2019-03-14 |  8 | Bill    | The Fall          | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 |  7 | Bill    | Clair de Lune     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 |  9 | Bill    | Forever Young     | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 23 | Bill    | Lemon Tree        | 2019-03-14 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 24 | Bill    | Mad World         | 2019-03-14 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 10 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 25 | Bill    | My Love           | 2019-03-14 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 |  6 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 | 14 | Bill    | Shape of My Heart | 2019-03-17 |
+|  1 | Cindy   | Bill      | 19 | Cindy   | My Love       | 2019-03-14 |  8 | Bill    | The Fall          | 2019-03-17 |
++----+---------+-----------+----+---------+---------------+------------+----+---------+-------------------+------------+
+66 rows in set (0.00 sec)

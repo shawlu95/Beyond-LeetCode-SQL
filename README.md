@@ -29,7 +29,8 @@ This section covers commonly tested concepts during interviews. Many notebooks a
 | 7 | Un-pivoting Tables 			| [MySQL](./Interview/07_Unpivoting_Tables/README.md) 		   | Un-pivoting tables using cross-join |
 | 8 | Group by Bins 				| [MySQL](./Interview/08_Group_by_Bins/README.md) 			   | Create custom column to group by |
 | 9 | Consecutive Active Users 		| [MySQL](./Interview/09_Consecutive_Active_Users/README.md)   | Self-join, *LAG()* |
-|10 | Recommend Friends 			| [MySQL](./Interview/10_Recommend_Friend/README.md) 		   | Self-join, de-duplication, aggregation |
+|10 | Recommend Friends 			| [MySQL](./Interview/10_Spotify_Recommend_Friend/README.md)   | Self-join, de-duplication, aggregation |
+|11 | Spotify Similar Friends 		| [MySQL](./Interview/11_Spotify_Similar_Friends/README.md)    | Three-way join, de-duplication, aggregation |
 
 ---
 ### Hacks

@@ -1,10 +1,10 @@
 # Recommending Friend
 
-> Write a query that identifies all the users that listened  to three of the same songs on Spotify, on the same day, as someone in their friend list. Assume we have the following table
+> Write a query that identifies users who share similar tastes on music, e.g. listening to at least three songs on the same day, and recommend them to be connected as friends.
 * Song: user_id, song_id, ts
 * User: user_id, friend_id
 
-This is one of the hardest question I found online. So far I haven't seen anyone who posted the correct solution. This question tests multiple concepts and numerous edge cases. Among those are:
+This question tests multiple concepts and numerous edge cases. Among those are:
 * Self-join.
 * __De-duplication.__
 * Exclusion.
