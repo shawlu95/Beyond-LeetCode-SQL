@@ -52,5 +52,5 @@ This section *WILL* discusses common pitfalls such as nested selects, redundant 
 | \# | Anti-patterns                    | Notebook    							  					  | 
 |----|----------------------------------|-------------------------------------------------------------|
 | 1  | Ambiguous Group 			        | [MySQL8](./Anti_Patterns/01_Ambiguous_Group)                |
-| 2  | NULL Pathological Study          | [MySQL8](./Anti_Patterns/02_Bad_Subquery)  				  |
+| 2  | Bad Subquery 		            | [MySQL8](./Anti_Patterns/02_Bad_Subquery)  				  |
 | 3  | Fail to Use Index                | [MySQL8](./Anti_Patterns/03_Fail_to_Use_Index) 			  |
