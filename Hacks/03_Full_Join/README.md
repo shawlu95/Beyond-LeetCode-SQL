@@ -2,6 +2,11 @@
 
 MySQL does not support full join. There are two ways to simulate it.
 
+Load the database file [db.sql](db.sql) to localhost MySQL. Two simple tables will be created in the Practice database. 
+```
+mysql < db.sql -uroot -p
+```
+
 Let's take a look at the tables we want to join. Eveidently, *letter1* table does not contain C; *letter2* table does not contain B.
 
 ```

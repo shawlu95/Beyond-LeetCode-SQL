@@ -18,15 +18,18 @@ Only high-quality problems are selected. Pathological problems such as [Find Med
 ### Classic Interview Questions
 This section covers commonly tested concepts during interviews. Many notebooks are inspired by problems people who violated their confidentiality agreement and posted interview masterials on Quora, Glassdoor, and 1point3acres. Data are either synthetic or from my personal challenge project.
 
-| \# | Problems | Solutions | Concept |
-|----|----------|-----------|------|
-| 1 | Facebook Advertiser Status | [MySQL](./Interview/01_Facebook_Advertiser_Status/README.md) | Transition diagram; conditional update|
-| 2 | Spotify Listening History | [MySQL](./Interview/02_Spotify_Listening_History/README.md) | Update cumulative sum |
-| 3 | Monthly Active User | [MySQL](./Interview/03_Monthly_Active_User/README.md) | Functional dependency; aggregation; filtering |
-| 4 | Page Recommendation | [MySQL](./Interview/04_Page_Recommendation/README.md) | Undirected edge; aggregation; existance |
-| 5 | Pivoting Numeric Data | [MySQL](./Interview/05_Pivoting_Numeric_Data/README.md) | Pivoting numeric data with case statement |
-| 6 | Pivoting Text Data | [MySQL](./Interview/06_Pivoting_Text_Data/README.md) | Pivoting text data with self-join |
-| 7 | Un-pivoting Tables | [MySQL](./Interview/07_Unpivoting_Tables/README.md) | Un-pivoting tables using cross-join |
+| \# | Problems 					| Solutions 												   | Concept 										  |
+|----|------------------------------|--------------------------------------------------------------|--------------------------------------------------|
+| 1 | Facebook Advertiser Status 	| [MySQL](./Interview/01_Facebook_Advertiser_Status/README.md) | Transition diagram; conditional update|
+| 2 | Spotify Listening History 	| [MySQL](./Interview/02_Spotify_Listening_History/README.md)  | Update cumulative sum |
+| 3 | Monthly Active User 			| [MySQL](./Interview/03_Monthly_Active_User/README.md) 	   | Functional dependency; aggregation; filtering |
+| 4 | Page Recommendation 			| [MySQL](./Interview/04_Page_Recommendation/README.md) 	   | Undirected edge; aggregation; existance |
+| 5 | Pivoting Numeric Data 		| [MySQL](./Interview/05_Pivoting_Numeric_Data/README.md) 	   | Pivoting numeric data with case statement |
+| 6 | Pivoting Text Data 			| [MySQL](./Interview/06_Pivoting_Text_Data/README.md) 		   | Pivoting text data with self-join |
+| 7 | Un-pivoting Tables 			| [MySQL](./Interview/07_Unpivoting_Tables/README.md) 		   | Un-pivoting tables using cross-join |
+| 8 | Group by Bins 				| [MySQL](./Interview/08_Group_by_Bins/README.md) 			   | Create custom column to group by |
+| 9 | Consecutive Active Users 		| [MySQL](./Interview/09_Consecutive_Active_Users/README.md)   | Self-join, *LAG()* |
+|10 | Recommend Friends 			| [MySQL](./Interview/10_Recommend_Friend/README.md) 		   | Self-join, de-duplication, aggregation |
 
 ---
 ### Hacks
@@ -45,8 +48,8 @@ This section covers esoteric details of SQL language and use cases that may be c
 ### Anti-patterns
 This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. 
 
-| \# | Anti-patterns                    | Notebook    							  | 
-|----|----------------------------------|-----------------------------------------|
-| 1  | Random Sampling from Groups      | [MySQL8](./Anti_Patterns/01_Selecting_Non_Aggregated_Columns) |
-| 2  | NULL Pathological Study          | [MySQL8](./Anti_Patterns/02_Bad_Subquery) |
-| 3  | Full join.   	                | [MySQL8](./Anti_Patterns/03_Fail_to_Use_Index) |
+| \# | Anti-patterns                    | Notebook    							  					  | 
+|----|----------------------------------|-------------------------------------------------------------|
+| 1  | Ambiguous Group 			        | [MySQL8](./Anti_Patterns/01_Ambiguous_Group)                |
+| 2  | NULL Pathological Study          | [MySQL8](./Anti_Patterns/02_Bad_Subquery)  				  |
+| 3  | Fail to Use Index                | [MySQL8](./Anti_Patterns/03_Fail_to_Use_Index) 			  |

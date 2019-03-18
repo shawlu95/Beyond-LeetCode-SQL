@@ -26,7 +26,7 @@ WHEN creditLimit BETWEEN 190000 AND 199999 THEN '190000~199999'
 WHEN creditLimit BETWEEN 200000 AND 209999 THEN '200000~209999' 
 WHEN creditLimit BETWEEN 210000 AND 219999 THEN '210000~219999' 
 WHEN creditLimit BETWEEN 220000 AND 229999 THEN '220000~229999' 
-END AS credit_range ,COUNT(*) AS customer_tally FROM customers GROUP BY credit_range;
+END AS credit_range, COUNT(*) AS customer_tally FROM customers GROUP BY credit_range;
 ```
 
 ---
