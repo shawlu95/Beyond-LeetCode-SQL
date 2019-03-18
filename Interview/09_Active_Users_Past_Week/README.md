@@ -170,6 +170,27 @@ SET @now = "2019-02-14";
 SELECT
   user_id
   ,ts
+  ,DATEDIFF(@now, LAG(ts, 1) OVER (PARTITION BY user_id ORDER BY ts)) AS day_from_pre1
+  ,DATEDIFF(@now, LAG(ts, 2) OVER (PARTITION BY user_id ORDER BY ts)) AS day_from_pre2
+FROM Login
+WHERE ts = @now;
+
++---------+------------+---------------+---------------+
+| user_id | ts         | day_from_pre1 | day_from_pre2 |
++---------+------------+---------------+---------------+
+|       1 | 2019-02-14 |          NULL |          NULL |
+|       2 | 2019-02-14 |          NULL |          NULL |
+|       3 | 2019-02-14 |          NULL |          NULL |
++---------+------------+---------------+---------------+
+3 rows in set (0.00 sec)
+```
+
+__Warning__: if you're using *WHERE* clause to filter results, you __cannot__ window alias.
+```
+SET @now = "2019-02-14";
+SELECT
+  user_id
+  ,ts
   ,DATEDIFF(@now, LAG(ts, 1) OVER w) AS day_from_pre1
   ,DATEDIFF(@now, LAG(ts, 2) OVER w) AS day_from_pre2
 FROM Login
@@ -179,7 +200,7 @@ WHERE ts = @now;
 ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE ts = @now' at line 8
 ```
 
-Similarly, you cannot use window function in *WHERE* clause. Instead, place it in a temporary table.
+__Warning__: similarly, you cannot use window function in *WHERE* clause. Instead, place it in a temporary table.
 ```
 SET @now = "2019-02-14";
 SELECT
