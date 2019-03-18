@@ -33,6 +33,13 @@ mysql> select * from SearchCategory LIMIT 3;
 __Result table__
 | country | num_search | zeo_result_pct |
 
+
+### Load Data
+Load the database file [db.sql](db.sql) to localhost MySQL. A Search database will be created. 
+```
+mysql < db.sql -uroot -p
+```
+
 ___
 ## Observation
 This question tests one single skill: given an aggregated table, the goal is to aggregated one level higher. The tricky point is to handle numerous __NULL__ cases. In the naive way, we may do the following:

@@ -31,6 +31,8 @@ This section covers commonly tested concepts during interviews. Many notebooks a
 | 9 | Consecutive Active Users 		| [MySQL](./Interview/09_Consecutive_Active_Users/README.md)   | Self-join, *LAG()* |
 |10 | Recommend Friends 			| [MySQL](./Interview/10_Spotify_Recommend_Friend/README.md)   | Self-join, de-duplication, aggregation |
 |11 | Spotify Similar Friends 		| [MySQL](./Interview/11_Spotify_Similar_Friends/README.md)    | Three-way join, de-duplication, aggregation |
+|12 | Invalid Search				| [MySQL](./Interview/12_Invalid_Search/README.md)    		   | __NULL__ handling, rate calculation |
+|13 | Text Confirmation				| [MySQL](./Interview/13_Text_Confirmation/README.md)          | Rate calculation |
 
 ---
 ### Hacks
