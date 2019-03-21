@@ -33,6 +33,9 @@ This section covers commonly tested concepts during interviews. Many notebooks a
 |11 | Spotify Similar Friends 		| [MySQL](./Interview/11_Spotify_Similar_Friends/README.md)    | Three-way join, de-duplication, aggregation |
 |12 | Invalid Search				| [MySQL](./Interview/12_Invalid_Search/README.md)    		   | __NULL__ handling, rate calculation |
 |13 | Text Confirmation				| [MySQL](./Interview/13_Text_Confirmation/README.md)          | Rate calculation |
+|14 | Facebook Common Friends		| [MySQL](./Interview/14_Facebook_Common_Friend/README.md)     | self join, three-way join |
+|15 | Facebook Recommend Friend		| [MySQL](./Interview/15_Facebook_Recommend_Friend/README.md)  | Self join, four-way join |
+|16 | Instagram Common Follower		| [MySQL](./Interview/16_Instagram_Common_Follower/README.md)  | Self join, Directed edge |
 
 ---
 ### Hacks
