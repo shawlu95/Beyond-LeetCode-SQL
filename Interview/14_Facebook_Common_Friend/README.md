@@ -128,3 +128,5 @@ ORDER BY common_friend DESC;
 +---------+-----------+---------------+
 2 rows in set (0.00 sec)
 ```
+
+See solution [here](solution.sql).
