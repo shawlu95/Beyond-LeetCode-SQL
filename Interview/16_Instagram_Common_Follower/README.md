@@ -12,6 +12,7 @@ ___
 ### Observation
 The major realization is that following is a one-way relationship, unlike friendship which must be two-way. The rest is similar to the earlier problem.
 
+___
 ### Step 1. Build Candidate Pairs
 Find all possible account pairs using cross join. Avoid matching an account to itself.
 ```
@@ -41,6 +42,7 @@ ON a.user_id != b.user_id
 12 rows in set (0.00 sec)
 ```
 
+___
 ### Step 2. Find Common Followers
 ```
 SELECT *
@@ -72,6 +74,7 @@ AND af.follower_id = bf.follower_id;
 10 rows in set (0.00 sec)
 ```
 
+___
 ### Step 3. Aggregate Count
 ```
 SELECT
@@ -104,6 +107,7 @@ ORDER BY common DESC, a.user_id, b.user_id;
 6 rows in set (0.00 sec)
 ```
 
+___
 ### Parting Thought
 We do we stil get candidate pairs in both direction? Because the undirected edge only affects __step 2__ when we join both parties of a candidate pair with their respective followers!
 

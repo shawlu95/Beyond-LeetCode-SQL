@@ -58,6 +58,7 @@ GROUP BY dt;
 3 rows in set (0.00 sec)
 ```
 
+___
 ### Q2: Confirmation Rate
 The overall thought process is to take the latest action for each users (a user may fail to confirm many time, but confirmed in the last time). Left join the email table with the latest action, and see how many __NULL__ is in the right table.
 
@@ -138,6 +139,7 @@ SELECT ROUND((SELECT SUM(action = 'CONFIRMED') FROM text) / (SELECT COUNT(*) FRO
 1 row in set (0.00 sec)
 ``` 
 
+___
 ### Q3. Second-day Confirmation
 To offset by one day, we can either hack the *JOIN* condition, or use *LAG()* function.
 
@@ -176,7 +178,7 @@ WHERE t.action = 'CONFIRMED';
 1 row in set (0.00 sec)
 ```
 
-
+___
 ### Parting Thought
 Window function is not convenient here, because each user can attempt text confirmation multiple times a day. To use *LEAD()* or *LAG()* function, we need to specify the fixed numebr of offset for all partitions. To do so we need to group by (date-user_id) key pair to extract one row per user per day in the text table... Already too complex! Forget about it...
 

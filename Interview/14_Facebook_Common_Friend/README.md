@@ -26,6 +26,7 @@ ___
 ### Observation
 Here we are given directed edge. So the first step is to account for both direction (friendship is mutual). Next, for each user_id pair, join both parties with their common friends (excluding each other). Finally, group by the user_id pair and output pair with at least three matches.
 
+___
 ### Step 1. Accounting for Undirected Edge
 We use a UNION all clause. Because there is no duplicate, we do not use UNION.
 ```
@@ -51,6 +52,7 @@ LIMIT 10;
 8 rows in set (0.00 sec)
 ```
 
+___
 ### Step 2. Expand Two-way
 Join the union result twice, to find friends for each user_id. Filter the results to include common friend only. Note that it is __impossible__ to list one of the user himself as the common friend, because the *bf.friend_id = af.friend_id* will not be satisfied.
 
@@ -98,6 +100,7 @@ ORDER BY a, b, a_friend, b_friend;
 18 rows in set (0.00 sec)
 ```
 
+___
 ### Step 3. Aggregation
 Group by the user_id pair and count the number of common friends. Because we've counted both way, each eligible pair will have a counterpart with the opposite direction.
 

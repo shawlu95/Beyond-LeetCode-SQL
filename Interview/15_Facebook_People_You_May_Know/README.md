@@ -5,6 +5,7 @@ ___
 ### Observation
 This is a slight twist on the previous problem. Instead of selecting from existing friendships, we are proposing new ones. We'll use the same table as before.
 
+___
 ### Step 1. Find Candidate Pairs
 This can be done with a cross join. Obviously we want to avoid matching a user with himself.
 
@@ -54,6 +55,7 @@ AND (b.user_id, a.user_id) NOT IN (SELECT user_id, friend_id FROM Friendship);
 2 rows in set (0.01 sec)
 ```
 
+___
 ### Step 2. Expand Two-way
 The rest is the same as the previous problem. Here I constructed a tmp table to exclude existing friendship, instead of using two *AND* clause.
 ```
@@ -91,6 +93,7 @@ JOIN tmp AS bf
 6 rows in set (0.00 sec)
 ```
 
+___
 ### Step 3. Aggregation
 Group by the user_id pair and count the number of common friends. 
 
