@@ -52,7 +52,8 @@ LIMIT 10;
 ```
 
 ### Step 2. Expand Two-way
-Join the union result twice, to find friends for each user_id. Filter the results to include common friend only.
+Join the union result twice, to find friends for each user_id. Filter the results to include common friend only. Note that it is __impossible__ to list one of the user himself as the common friend, because the *bf.friend_id = af.friend_id* will not be satisfied.
+
 ```
 WITH tmp AS (
 SELECT user_id, friend_id FROM Friendship
