@@ -106,3 +106,5 @@ ORDER BY common DESC, a.user_id, b.user_id;
 
 ### Parting Thought
 We do we stil get candidate pairs in both direction? Because the undirected edge only affects __step 2__ when we join both parties of a candidate pair with their respective followers!
+
+See solution [here](solution.sql).
