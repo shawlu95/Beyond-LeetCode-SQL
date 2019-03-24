@@ -1,7 +1,6 @@
 -- filter out banned users (dirver and clients)
 -- calculate rate
 
-
 SELECT
   t.Request_at AS Day
   ,ROUND(SUM(t.Status != "completed") / COUNT(*), 2) AS 'Cancellation Rate'

@@ -22,11 +22,11 @@ SELECT
   ,IFNULL(s.student_number, 0) AS student_number
 FROM department AS d
 LEFT JOIN (
-    SELECT 
-        dept_id
-        ,COUNT(student_name) AS student_number
-    FROM student
-    GROUP BY dept_id
+  SELECT 
+    dept_id
+    ,COUNT(student_name) AS student_number
+  FROM student
+  GROUP BY dept_id
 ) AS s
 ON d.dept_id = s.dept_id
 ORDER BY student_number DESC, dept_name ASC;

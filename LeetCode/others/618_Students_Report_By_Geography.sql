@@ -3,26 +3,25 @@
 -- outer join with america is good enough
 -- (one left join, one out join)
 SELECT 
-    America, Asia, Europe
+  America, Asia, Europe
 FROM
-    (SELECT @as:=0, @am:=0, @eu:=0) t,
-    (SELECT @as:=@as + 1 AS asid, name AS Asia
-    FROM student
-    WHERE continent = 'Asia'
-    ORDER BY Asia) AS t1
-    RIGHT JOIN
-    (SELECT @am:=@am + 1 AS amid, name AS America
-    FROM student
-    WHERE continent = 'America'
-    ORDER BY America) AS t2 
-    ON asid = amid
-    LEFT JOIN
-    (SELECT @eu:=@eu + 1 AS euid, name AS Europe
-    FROM student
-    WHERE continent = 'Europe'
-    ORDER BY Europe) AS t3 
-    ON amid = euid
-;
+  (SELECT @as:=0, @am:=0, @eu:=0) t,
+  (SELECT @as:=@as + 1 AS asid, name AS Asia
+  FROM student
+  WHERE continent = 'Asia'
+  ORDER BY Asia) AS t1
+  RIGHT JOIN
+  (SELECT @am:=@am + 1 AS amid, name AS America
+  FROM student
+  WHERE continent = 'America'
+  ORDER BY America) AS t2 
+  ON asid = amid
+  LEFT JOIN
+  (SELECT @eu:=@eu + 1 AS euid, name AS Europe
+  FROM student
+  WHERE continent = 'Europe'
+  ORDER BY Europe) AS t3 
+  ON amid = euid;
 
 SELECT 
   am.name AS America
@@ -52,16 +51,16 @@ ON asia.id = eu.id
 ORDER BY America;
 
 SELECT
-    america.name AS America
-    ,asia.name as Asia
-    ,europe.name as Europe
+  america.name AS America
+  ,asia.name as Asia
+  ,europe.name as Europe
 FROM
-    (SELECT @a := 0, @b := 0, @c := 0) AS vars
-    ,(SELECT @a := @a + 1 AS ID, name FROM student WHERE continent = "America" ORDER BY name) AS america
-    LEFT JOIN
-    (SELECT @b := @b + 1 AS ID, name FROM student WHERE continent = "Asia" ORDER BY name) AS asia
-    ON america.ID = asia.ID
-    LEFT JOIN
-    (SELECT @c := @c + 1 AS ID, name FROM student WHERE continent = "Europe" ORDER BY name) AS europe
-    ON asia.ID = europe.ID
-    OR america.ID = europe.ID;
+  (SELECT @a := 0, @b := 0, @c := 0) AS vars
+  ,(SELECT @a := @a + 1 AS ID, name FROM student WHERE continent = "America" ORDER BY name) AS america
+  LEFT JOIN
+  (SELECT @b := @b + 1 AS ID, name FROM student WHERE continent = "Asia" ORDER BY name) AS asia
+  ON america.ID = asia.ID
+  LEFT JOIN
+  (SELECT @c := @c + 1 AS ID, name FROM student WHERE continent = "Europe" ORDER BY name) AS europe
+  ON asia.ID = europe.ID
+  OR america.ID = europe.ID;

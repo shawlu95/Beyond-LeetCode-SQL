@@ -26,13 +26,13 @@ and (lat, lon) in (select lat, lon from insurance group by 1, 2 having count(*) 
 SELECT ROUND(SUM(i1.TIV_2016), 2) AS TIV_2016
 FROM insurance i1
 WHERE EXISTS (
-	SELECT *
-	FROM insurance i2
-	WHERE i1.PID != i2.PID 
-		AND i1.TIV_2015 = i2.TIV_2015)
+  SELECT *
+  FROM insurance i2
+  WHERE i1.PID != i2.PID 
+    AND i1.TIV_2015 = i2.TIV_2015)
 AND NOT EXISTS(
-	SELECT *
-	FROM insurance i3
-	WHERE i1.PID != i3.PID 
-		AND i1.LAT = i3.LAT 
-		AND i1.LON = i3.LON);
+  SELECT *
+  FROM insurance i3
+  WHERE i1.PID != i3.PID 
+    AND i1.LAT = i3.LAT 
+    AND i1.LON = i3.LON);

@@ -30,7 +30,7 @@ ORDER BY seat_id;
 SELECT DISTINCT a.seat_id AS seat_id 
 FROM cinema a 
 JOIN cinema b
-    ON a.free = 1 
-        AND b.free = 1
-        AND abs(a.seat_id - b.seat_id) = 1
+  ON a.free = 1 
+    AND b.free = 1
+    AND abs(a.seat_id - b.seat_id) = 1
 ORDER BY seat_id;

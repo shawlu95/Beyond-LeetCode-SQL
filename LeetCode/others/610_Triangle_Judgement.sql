@@ -4,9 +4,9 @@
 # 2. a - c < b (equivalent as above)
 
 SELECT x, y, z,
-    CASE
-        WHEN x + y < z OR x + z < y OR y + z < x THEN 'No'
-        ELSE 'Yes'
-    END
-    AS 'triangle'
-    FROM triangle t;
+  CASE
+    WHEN x + y < z OR x + z < y OR y + z < x THEN 'No'
+    ELSE 'Yes'
+  END
+  AS 'triangle'
+  FROM triangle t;

@@ -4,11 +4,11 @@
 SELECT Name
 FROM Candidate
 WHERE id = (
-	SELECT CandidateID 
-	FROM Vote
-	GROUP BY CandidateID
-	ORDER BY COUNT(*) DESC 
-	LIMIT 1);
+  SELECT CandidateID 
+  FROM Vote
+  GROUP BY CandidateID
+  ORDER BY COUNT(*) DESC 
+  LIMIT 1);
 
 -- incorrect: return most voted candidate that exists in Candidate
 -- if most voted does not exist in Candidate, it is missed (orphaned rows)
