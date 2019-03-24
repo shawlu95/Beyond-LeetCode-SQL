@@ -14,6 +14,8 @@ Only high-quality problems are selected. Pathological problems such as [Find Med
 | 615 | [Average Salary](https://leetcode.com/problems/average-salary-departments-vs-company/) | [MySQL](./LeetCode/615_Average_Salary/README.md) | Hard | Case; aggregation, join |
 | 618 | [Students Report By Geography](https://leetcode.com/problems/students-report-by-geography/) | [MySQL, MS SQL](./LeetCode/618_Students_Report_by_Geography/README.md) | Hard | Full join, pivoting |
 
+Other undiscussed problems have solutions lumped [here](LeetCode/others/).
+
 ---
 ### Classic Interview Questions
 This section covers commonly tested concepts during interviews. Many notebooks are inspired by problems people who violated their confidentiality agreement and posted interview masterials on Quora, Glassdoor, and 1point3acres. Data are either synthetic or from my personal challenge project.
@@ -49,7 +51,7 @@ This section covers esoteric details of SQL language and use cases that may be c
 | 4  | Dynamic Query (Python) 		    | [MySQL8](./Hacks/04_Dynamic_Query)      |
 | 5  | Stored Procedure 	            | [MySQL8](./Hacks/05_Stored_Precesure)   |
 | 6  | Hacking Aggregation 	            | [MySQL8](./Hacks/06_Hacking_Aggregation)|
-
+| 6  | Multi Column Partition 	        | [MySQL8](./Hacks/07_Multi_Column_Partition)|
 ---
 ### Anti-patterns
 This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. 
