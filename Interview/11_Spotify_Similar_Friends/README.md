@@ -15,8 +15,10 @@ First we need to understand the mechanics of three-way join. In this example, we
 
 In this problem, we are using the same [dataset](https://github.com/shawlu95/Beyond-LeetCode-SQL/blob/master/Interview/10_Recommend_Friend/db.sql) as the previous problem. There is only one friendship in the *User* table.
 
-```
+```sql
 SELECT * FROM User;
+```
+```
 +----+---------+-----------+
 | id | user_id | friend_id |
 +----+---------+-----------+
@@ -25,12 +27,13 @@ SELECT * FROM User;
 ```
 
 Now join the only friendship with *Song* table, using user_id. It's clear to see that Cindy listend to 6 songs in her entire history.
-```
+```sql
 SELECT *
 FROM Song AS s1
 JOIN User AS u 
   ON u.user_id = s1.user_id;
-
+```
+```
 +----+---------+---------------+------------+----+---------+-----------+
 | id | user_id | song          | ts         | id | user_id | friend_id |
 +----+---------+---------------+------------+----+---------+-----------+
@@ -45,11 +48,13 @@ JOIN User AS u
 ```
 
 Join the *Song* table using friend_id. We see that Bill  listend to 11 songs in her entire history.
-```
+```sql
 SELECT *
 FROM Song AS s1
 JOIN User AS u 
   ON u.friend_id = s1.user_id;
+```
+```
 +----+---------+-------------------+------------+----+---------+-----------+
 | id | user_id | song              | ts         | id | user_id | friend_id |
 +----+---------+-------------------+------------+----+---------+-----------+
@@ -69,13 +74,15 @@ JOIN User AS u
 ```
 
 What will be result of 3-way join without filtering? For every song that Cindy listened to, it is matched to 11 songs that Bill ever listened to. This is equivalent to a cartesian product, using *Friend* as a linkage table. Most of the paired songs are diffrent, some of them are the same. See the full cartesian product [here](cartesian.txt) to understand its structure.
-```
+```sql
 SELECT COUNT(*)
 FROM User AS u
 JOIN Song AS s1 
   ON u.user_id = s1.user_id
 JOIN Song AS s2
   ON u.friend_id = s2.user_id
+```
+```
 +----------+
 | COUNT(*) |
 +----------+
@@ -88,7 +95,7 @@ ___
 ### Step 2. Filtering & Select
 Apply the *WHERE* clause to get the __same__ songs listened on the __same__ day.
 
-```
+```sql
 SELECT *
 FROM Song AS s1
 JOIN User AS u 
@@ -97,6 +104,8 @@ JOIN Song AS s2
   ON u.friend_id = s2.user_id
 WHERE s1.ts = s2.ts
   AND s1.song = s2.song;
+```
+```
 +----+---------+---------------+------------+----+---------+-----------+----+---------+---------------+------------+
 | id | user_id | song          | ts         | id | user_id | friend_id | id | user_id | song          | ts         |
 +----+---------+---------------+------------+----+---------+-----------+----+---------+---------------+------------+
@@ -111,7 +120,7 @@ WHERE s1.ts = s2.ts
 
 Equivalently, we can move the *WHERE* clause conditions into the *JOIN* clause. 
 
-```
+```sql
 SELECT *
 FROM Song AS s1
 JOIN User AS u 
@@ -120,6 +129,8 @@ JOIN Song AS s2
   ON u.friend_id = s2.user_id
   AND s1.ts = s2.ts
   AND s1.song = s2.song;
+```
+```
 +----+---------+---------------+------------+----+---------+-----------+----+---------+---------------+------------+
 | id | user_id | song          | ts         | id | user_id | friend_id | id | user_id | song          | ts         |
 +----+---------+---------------+------------+----+---------+-----------+----+---------+---------------+------------+
@@ -136,7 +147,7 @@ ___
 ### Step 3. De-duplication
 Note that 'My Love' is double counted on March 14. We don't want to count it as two different songs. So in the *COUNT()* function, we need to count *DISTINCT* song title.
 
-```
+```sql
 SELECT 
   s1.ts, u.user_id
   ,u.friend_id
@@ -150,7 +161,8 @@ WHERE s1.ts = s2.ts
   AND s1.song = s2.song
 GROUP BY s1.ts, u.user_id, u.friend_id
 HAVING shared >= 3;
-
+```
+```
 +------------+---------+-----------+--------+
 | ts         | user_id | friend_id | shared |
 +------------+---------+-----------+--------+
@@ -161,7 +173,7 @@ HAVING shared >= 3;
 
 Finally, filter user pairs who have at least three songs on common on any day. Note that we need to select *DISTINCT* user pair. Because a pair of users may listened to more than three common songs in more than one day!
 
-```
+```sql
 SELECT DISTINCT
   u.user_id
   ,u.friend_id
@@ -174,6 +186,8 @@ WHERE s1.ts = s2.ts
   AND s1.song = s2.song
 GROUP BY s1.ts, u.user_id, u.friend_id
 HAVING COUNT(DISTINCT s1.song) >= 3;
+```
+```
 +---------+-----------+
 | user_id | friend_id |
 +---------+-----------+
@@ -185,7 +199,7 @@ HAVING COUNT(DISTINCT s1.song) >= 3;
 ___
 ### Cross Join Solution
 The cross join yields the same result.
-```
+```sql
 -- cross join
 SELECT DISTINCT
   u.user_id, u.friend_id
@@ -198,6 +212,8 @@ WHERE
   AND s1.ts = s2.ts
 GROUP BY 1, 2, s1.ts
 HAVING COUNT(DISTINCT s1.song) >= 3;
+```
+```
 +---------+-----------+
 | user_id | friend_id |
 +---------+-----------+
@@ -209,7 +225,7 @@ HAVING COUNT(DISTINCT s1.song) >= 3;
 ### Optional: Pre-filtering
 Because the user table is large, and most users may be inactive most of the days, it is preferable to pre-filter tables such that only users who have evner listened to >= 3 songs a day are included in the join. 
 
-```
+```sql
 WITH active_user_id AS (
   SELECT
     u.user_id
@@ -254,6 +270,8 @@ ON p.ts = s2.ts
 WHERE s2.song = s1.song
 GROUP BY p.user_id, p.friend_id, s1.ts
 HAVING COUNT(DISTINCT s1.song) >= 3;
+```
+```
 +---------+-----------+
 | user_id | friend_id |
 +---------+-----------+

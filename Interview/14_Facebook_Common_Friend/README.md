@@ -4,7 +4,7 @@
 ___
 ### Load Data
 Load the database file [db.sql](db.sql) to localhost MySQL. A Facebook database will be created with one Friendship table. 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 

@@ -5,6 +5,8 @@ Given the following table, what is the percentage of invalid search result, and 
 __Schema__
 ```sql
 mysql> describe SearchCategory;
+```
+```
 +-----------------+---------------+------+-----+---------+-------+
 | Field           | Type          | Null | Key | Default | Extra |
 +-----------------+---------------+------+-----+---------+-------+
@@ -17,9 +19,10 @@ mysql> describe SearchCategory;
 ```
 
 __Sample data__
-```
-
+```sql
 mysql> select * from SearchCategory LIMIT 3;
+```
+```
 +---------+------------+------------+-----------------+
 | country | search_cat | num_search | zero_result_pct |
 +---------+------------+------------+-----------------+
@@ -36,7 +39,7 @@ __Result table__
 
 ### Load Data
 Load the database file [db.sql](db.sql) to localhost MySQL. A Search database will be created. 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 
@@ -44,14 +47,15 @@ ___
 ## Observation
 This question tests one single skill: given an aggregated table, the goal is to aggregated one level higher. The tricky point is to handle numerous __NULL__ cases. In the naive way, we may do the following:
 
-```
+```sql
 SELECT
   country
   ,SUM(num_search) AS num_search
   ,SUM(num_search * zero_result_pct) AS sum_zero_result
 FROM SearchCategory
 GROUP BY country;
-
+```
+```
 +---------+------------+-----------------+
 | country | num_search | sum_zero_result |
 +---------+------------+-----------------+
@@ -64,7 +68,7 @@ GROUP BY country;
 ```
 
 Then divide the two columns to get net percentage of zero result searches.
-```
+```sql
 SELECT
   country, 
   num_search,
@@ -76,7 +80,8 @@ FROM (
     ,SUM(num_search * zero_result_pct) AS sum_zero_result
   FROM SearchCategory
   GROUP BY country) AS a;
-
+```
+```
 +---------+------------+-----------------+
 | country | num_search | zero_result_pct |
 +---------+------------+-----------------+
@@ -101,8 +106,10 @@ If *zero_result_pct* is __NULL__, the multiplying it with *num_search* results i
 
 Take China for example, the dog category has the highest volume of searches, and yet we are treating it as having zero invalid result. The resulting net percentage is grossly underestimated.
 
-```
+```sql
 SELECT * FROM SearchCategory WHERE country = 'CN';
+```
+```
 +---------+------------+------------+-----------------+
 | country | search_cat | num_search | zero_result_pct |
 +---------+------------+------------+-----------------+
@@ -115,13 +122,15 @@ SELECT * FROM SearchCategory WHERE country = 'CN';
 ```
 
 To fix the denominator, we add a case statement. See that the *num_search* column drops lower for China and US.
-```
+```sql
 SELECT
   country
   ,SUM(CASE WHEN zero_result_pct IS NOT NULL THEN num_search ELSE NULL END) AS num_search
   ,SUM(num_search * zero_result_pct) AS sum_zero_result
 FROM SearchCategory
 GROUP BY country;
+```
+```
 +---------+------------+-----------------+
 | country | num_search | sum_zero_result |
 +---------+------------+-----------------+
@@ -133,7 +142,7 @@ GROUP BY country;
 ```
 
 Finally, we can get the proper estimate of invalid search. See how much we had underestimated the *zero_result_pct* earlier!
-```
+```sql
 SELECT
   country, 
   num_search,
@@ -145,6 +154,8 @@ FROM (
     ,SUM(num_search * zero_result_pct) AS sum_zero_result
   FROM SearchCategory
   GROUP BY country) AS a;
+```
+```
 +---------+------------+-----------------+
 | country | num_search | zero_result_pct |
 +---------+------------+-----------------+
@@ -158,7 +169,7 @@ FROM (
 
 ___
 ### Optional: MySQL8
-```
+```sql
 WITH tmp AS (
 SELECT
     country
@@ -172,6 +183,8 @@ SELECT
   num_search,
   ROUND(sum_zero_result / num_search, 2) AS zero_result_pct
 FROM tmp;
+```
+```
 +---------+------------+-----------------+
 | country | num_search | zero_result_pct |
 +---------+------------+-----------------+

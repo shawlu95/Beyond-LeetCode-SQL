@@ -7,7 +7,7 @@ This exercise covers a typical interview problem. Two tables are presented, with
 ___
 ### Load Data
 Load the database file [db.sql](db.sql) to localhost MySQL. A Email database will be created with two tables. 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 ```sql

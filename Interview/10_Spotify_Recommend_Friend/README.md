@@ -16,12 +16,14 @@ To understand de-duplication, one needs to fully grasp the self-join mechanism, 
 ___
 ### Load Data
 Load the database file [db.sql](db.sql) to localhost MySQL. A SpotifyFriend database will be created with two tables. 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 
-```
+```sql
 mysql> SELECT * FROM Song LIMIT 5;
+```
+```
 +----+---------+-------------------+------------+
 | id | user_id | song              | ts         |
 +----+---------+-------------------+------------+
@@ -32,8 +34,11 @@ mysql> SELECT * FROM Song LIMIT 5;
 |  5 | Alex    | Forever Young     | 2019-03-17 |
 +----+---------+-------------------+------------+
 5 rows in set (0.00 sec)
-
+```
+```sql
 mysql> SELECT * FROM User;
+```
+```
 +----+---------+-----------+
 | id | user_id | friend_id |
 +----+---------+-----------+
@@ -57,12 +62,14 @@ Let's first clear-up the arithmetic of inner join. If one row in left table find
 
 Self-join is no different. If we apply enough condition to restrict matching, we only end up matching one row to one row, and the result contains the same number of rows as before self join.
 
-```
+```sql
 SELECT
   *
 FROM Song AS s1
 WHERE s1.user_id = 'Cindy'
   AND s1.ts = '2019-03-14';
+```
+```
 +----+---------+---------------+------------+
 | id | user_id | song          | ts         |
 +----+---------+---------------+------------+
@@ -72,7 +79,8 @@ WHERE s1.user_id = 'Cindy'
 | 22 | Cindy   | Mad World     | 2019-03-14 |
 +----+---------+---------------+------------+
 4 rows in set (0.00 sec)
-
+```
+```sql
 SELECT
   *
 FROM Song AS s1
@@ -82,6 +90,8 @@ JOIN Song AS s2
 WHERE s1.user_id = 'Cindy'
   AND s2.user_id = 'Cindy'
   AND s1.ts = '2019-03-14';
+```
+```
 
 +----+---------+---------------+------------+----+---------+---------------+------------+
 | id | user_id | song          | ts         | id | user_id | song          | ts         |
@@ -96,13 +106,14 @@ WHERE s1.user_id = 'Cindy'
 
 In this example, we don't want to match a user to himself. So we need two equalities and one inequality in the self join: the date and song will be equal, and the user_id must not be equal. Now let's self-join on a small scale, for Cindy and Bill on Mar-14.
 
-```
+```sql
 SELECT
   *
 FROM Song AS s1
 WHERE s1.user_id = 'Bill'
   AND s1.ts = '2019-03-14';
-
+```
+```
 +----+---------+------------+------------+
 | id | user_id | song       | ts         |
 +----+---------+------------+------------+
@@ -120,7 +131,7 @@ Can you predict the result of this join? Here is the accounting:
 * Cindy listened to Clair de Lune whereas Bill did not, returning 0 match.
 * The total number of rows returned is (1 + 1) * 2 + (2 + 2) = 8 rows.
 
-```
+```sql
 SELECT
   s1.user_id
   ,s2.user_id
@@ -131,7 +142,8 @@ JOIN (SELECT * FROM Song WHERE user_id IN ('Cindy', 'Bill') AND ts = '2019-03-14
   ON s1.user_id != s2.user_id
   AND s1.song = s2.song
 ORDER BY s1.user_id, s2.user_id, s2.song;
-
+```
+```
 +---------+---------+------------+------------+
 | user_id | user_id | song       | ts         |
 +---------+---------+------------+------------+
@@ -157,15 +169,18 @@ ___
 From left to right, the graph represent the following self-join.
 
 __Left graph: two edges__
-```
+```sql
 SELECT * FROM Song WHERE id IN (22, 24);
+```
+```
 +----+---------+-----------+------------+
 | id | user_id | song      | ts         |
 +----+---------+-----------+------------+
 | 22 | Cindy   | Mad World | 2019-03-14 |
 | 24 | Bill    | Mad World | 2019-03-14 |
 +----+---------+-----------+------------+
-
+```
+```sql
 WITH tmp AS (
 SELECT * FROM Song WHERE id IN (22, 24)
 )
@@ -176,6 +191,8 @@ JOIN tmp AS s2
   ON s1.user_id != s2.user_id
   AND s1.song = s2.song
 ORDER BY s1.user_id, s2.user_id, s2.song;
+```
+```
 +----+---------+-----------+------------+----+---------+-----------+------------+
 | id | user_id | song      | ts         | id | user_id | song      | ts         |
 +----+---------+-----------+------------+----+---------+-----------+------------+
@@ -185,8 +202,10 @@ ORDER BY s1.user_id, s2.user_id, s2.song;
 ```
 
 __Middle graph: four edges__
-```
+```sql
 SELECT * FROM Song WHERE id IN (2, 15, 16);
+```
+```
 +----+---------+-------------------+------------+
 | id | user_id | song              | ts         |
 +----+---------+-------------------+------------+
@@ -195,7 +214,8 @@ SELECT * FROM Song WHERE id IN (2, 15, 16);
 | 16 | Bill    | Shape of My Heart | 2019-03-17 |
 +----+---------+-------------------+------------+
 3 rows in set (0.00 sec)
-
+```
+```sql
 WITH tmp AS (
 SELECT * FROM Song WHERE id IN (2, 15, 16)
 )
@@ -206,6 +226,8 @@ JOIN tmp AS s2
   ON s1.user_id != s2.user_id
   AND s1.song = s2.song
 ORDER BY s1.user_id, s2.user_id, s2.song;
+```
+```
 +----+---------+-------------------+------------+----+---------+-------------------+------------+
 | id | user_id | song              | ts         | id | user_id | song              | ts         |
 +----+---------+-------------------+------------+----+---------+-------------------+------------+
@@ -218,8 +240,10 @@ ORDER BY s1.user_id, s2.user_id, s2.song;
 ```
 
 __Right graph: eight edges__
-```
+```sql
 SELECT * FROM Song WHERE id IN (12, 13, 14, 15);
+```
+```
 +----+---------+-------------------+------------+
 | id | user_id | song              | ts         |
 +----+---------+-------------------+------------+
@@ -229,7 +253,8 @@ SELECT * FROM Song WHERE id IN (12, 13, 14, 15);
 | 15 | Bill    | Shape of My Heart | 2019-03-17 |
 +----+---------+-------------------+------------+
 4 rows in set (0.01 sec)
-
+```
+```sql
 WITH tmp AS (
 SELECT * FROM Song WHERE id IN (12, 13, 14, 15)
 )
@@ -240,6 +265,8 @@ JOIN tmp AS s2
   ON s1.user_id != s2.user_id
   AND s1.song = s2.song
 ORDER BY s1.user_id, s2.user_id, s2.song;
+```
+```
 +----+---------+-------------------+------------+----+---------+-------------------+------------+
 | id | user_id | song              | ts         | id | user_id | song              | ts         |
 +----+---------+-------------------+------------+----+---------+-------------------+------------+
@@ -257,7 +284,7 @@ ORDER BY s1.user_id, s2.user_id, s2.song;
 ___ 
 #### Step 2. Aggregation
 Identify that there are three columns to aggregate over: user_id pair and date. 
-```
+```sql
 SELECT
   s1.user_id
   ,s2.user_id
@@ -269,7 +296,8 @@ JOIN (SELECT * FROM Song WHERE user_id IN ('Cindy', 'Bill') AND ts = '2019-03-14
   AND s1.ts = s2.ts
   AND s1.song = s2.song
 GROUP BY s1.user_id, s2.user_id, s2.ts;
-
+```
+```
 +---------+---------+-------------------------+------------+
 | user_id | user_id | COUNT(DISTINCT s2.song) | ts         |
 +---------+---------+-------------------------+------------+
@@ -283,7 +311,7 @@ It's clear that the user_id pair is counted both way, and the count is correct a
 
 Now we can replace the truncated table with the full table.
 
-```
+```sql
 SELECT
   s1.user_id
   ,s2.user_id
@@ -296,7 +324,8 @@ JOIN Song AS s2
   AND s1.song = s2.song
 GROUP BY s1.user_id, s2.user_id, s2.ts
 ORDER BY s2.ts, common_song;
-
+```
+```
 +---------+---------+-------------+------------+
 | user_id | user_id | common_song | ts         |
 +---------+---------+-------------+------------+
@@ -315,7 +344,7 @@ ___
 #### Step 3. Filtering
 First we need to filter user_id pair that have fewer than 3 common song on any day.
 
-```
+```sql
 SELECT
   s1.user_id
   ,s2.user_id
@@ -328,7 +357,8 @@ JOIN Song AS s2
   AND s1.song = s2.song
 GROUP BY s1.user_id, s2.user_id, s2.ts
 HAVING common_song >= 3;
-
+```
+```
 +---------+---------+-------------+------------+
 | user_id | user_id | common_song | ts         |
 +---------+---------+-------------+------------+
@@ -341,7 +371,7 @@ HAVING common_song >= 3;
 ```
 
 Next, we need to filter user_id pairs that are already friend. Because the Friend table accounts for one way edge, we need to *UNION* with the opposite direction.
-```
+```sql
 SELECT
   s1.user_id
   ,s2.user_id AS recommended
@@ -357,7 +387,8 @@ WHERE (s1.user_id, s2.user_id) NOT IN (
 )
 GROUP BY s1.user_id, s2.user_id, s2.ts
 HAVING COUNT(DISTINCT s2.song) >= 3;
-
+```
+```
 +---------+-------------+
 | user_id | recommended |
 +---------+-------------+
