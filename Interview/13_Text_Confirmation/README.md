@@ -10,8 +10,10 @@ Load the database file [db.sql](db.sql) to localhost MySQL. A Email database wil
 ```
 mysql < db.sql -uroot -p
 ```
-```
+```sql
 SELECT * FROM email;
+```
+```
 +---------------------+---------+---------------------+
 | ts                  | user_id | email               |
 +---------------------+---------+---------------------+
@@ -23,8 +25,10 @@ SELECT * FROM email;
 4 rows in set (0.00 sec)
 ```
 
-```
+```sql
 SELECT * FROM text;
+```
+```
 +----+---------------------+---------+-----------+
 | id | ts                  | user_id | action    |
 +----+---------------------+---------+-----------+
@@ -41,13 +45,14 @@ SELECT * FROM text;
 ___
 ### Q1: Daily Signups 
 This is a simple application of aggregate function. Note that the *DateTime* data type needs to be converted into *Date* before aggregation.
-```
+```sql
 SELECT
   CAST(ts AS DATE) AS dt
   ,COUNT(*) AS signups
 FROM Email
 GROUP BY dt;
-
+```
+```
 +------------+---------+
 | dt         | signups |
 +------------+---------+
@@ -63,12 +68,13 @@ ___
 The overall thought process is to take the latest action for each users (a user may fail to confirm many time, but confirmed in the last time). Left join the email table with the latest action, and see how many __NULL__ is in the right table.
 
 __Aggregation__
-```
+```sql
 SELECT user_id, ts, action
 FROM text WHERE (user_id, ts) IN (
   SELECT user_id, MAX(ts) FROM text GROUP BY user_id
 );
-
+```
+```
 +---------+---------------------+-----------+
 | user_id | ts                  | action    |
 +---------+---------------------+-----------+
@@ -80,7 +86,7 @@ FROM text WHERE (user_id, ts) IN (
 ```
 
 __Left Join__
-```
+```sql
 SELECT *
 FROM Email AS e
 LEFT JOIN (
@@ -90,7 +96,8 @@ LEFT JOIN (
   )
 ) AS c
 ON e.user_id = c.user_id;
-
+```
+```
 +---------------------+---------+---------------------+---------+-----------+
 | ts                  | user_id | email               | user_id | action    |
 +---------------------+---------+---------------------+---------+-----------+
@@ -103,7 +110,7 @@ ON e.user_id = c.user_id;
 ```
 
 __Calculate Confirmation Rate__
-```
+```sql
 SELECT 
   ROUND(SUM(c.action IS NOT NULL) / COUNT(DISTINCT e.user_id), 2) AS rate
 FROM Email AS e
@@ -114,7 +121,8 @@ LEFT JOIN (
   )
 ) AS c
 ON e.user_id = c.user_id;
-
+```
+```
 +------+
 | rate |
 +------+
@@ -129,8 +137,10 @@ Also note that each user can confirm text message __at most__ once, after which 
 
 Then we can calculate confirmation rate in one line. Make sure to double check the above assumptions before writing down the query.
 
-```
+```sql
 SELECT ROUND((SELECT SUM(action = 'CONFIRMED') FROM text) / (SELECT COUNT(*) FROM Email), 2) AS rate;
+```
+```
 +------+
 | rate |
 +------+
@@ -144,12 +154,14 @@ ___
 To offset by one day, we can either hack the *JOIN* condition, or use *LAG()* function.
 
 __Offset 1-day__
-```
+```sql
 SELECT *
 FROM Email AS e
 LEFT JOIN Text AS t
 ON e.user_id = t.user_id
   AND DATEDIFF(t.ts, e.ts) = 1;
+```
+```
 +---------------------+---------+---------------------+------+---------------------+---------+-----------+
 | ts                  | user_id | email               | id   | ts                  | user_id | action    |
 +---------------------+---------+---------------------+------+---------------------+---------+-----------+
@@ -162,7 +174,7 @@ ON e.user_id = t.user_id
 ```
 
 __Extract Result__
-```
+```sql
 SELECT
   e.user_id
 FROM Email AS e
@@ -170,6 +182,8 @@ JOIN Text AS t
 ON e.user_id = t.user_id
   AND DATEDIFF(t.ts, e.ts) = 1
 WHERE t.action = 'CONFIRMED';
+```
+```
 +---------+
 | user_id |
 +---------+
@@ -184,7 +198,7 @@ Window function is not convenient here, because each user can attempt text confi
 
 Simply put, window function is good for studying the immediate next action. For example, we may use *LEAD()* to calculate how many hours elapse on average before user attempts a second confirmation.
 
-```
+```sql
 SELECT
   user_id
   ,ts
@@ -192,8 +206,9 @@ SELECT
   ,LEAD(ts, 1) OVER (PARTITION BY user_id ORDER BY ts) AS next_ts
   ,LEAD(action, 1) OVER (PARTITION BY user_id ORDER BY ts) AS next_action
   ,TIMEDIFF(LEAD(ts, 1) OVER (PARTITION BY user_id ORDER BY ts), ts) AS time_diff
-FROM Text
-
+FROM Text;
+```
+```
 +---------+---------------------+-----------+---------------------+-------------+-----------+
 | user_id | ts                  | action    | next_ts             | next_action | time_diff |
 +---------+---------------------+-----------+---------------------+-------------+-----------+

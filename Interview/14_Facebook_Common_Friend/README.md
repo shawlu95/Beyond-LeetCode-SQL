@@ -8,8 +8,10 @@ Load the database file [db.sql](db.sql) to localhost MySQL. A Facebook database 
 mysql < db.sql -uroot -p
 ```
 
+```sql
+select * from friendship limit 5;
 ```
-select * from friendship limit 5;                                        
+```                                  
 +----+---------+-----------+
 | id | user_id | friend_id |
 +----+---------+-----------+
@@ -29,14 +31,15 @@ Here we are given directed edge. So the first step is to account for both direct
 ___
 ### Step 1. Accounting for Undirected Edge
 We use a UNION all clause. Because there is no duplicate, we do not use UNION.
-```
+```sql
 SELECT user_id, friend_id FROM Friendship
 WHERE user_id = 'alice'
 UNION ALL
 SELECT friend_id, user_id FROM Friendship
 WHERE user_id = 'alice'
 LIMIT 10;
-
+```
+```
 +---------+-----------+
 | user_id | friend_id |
 +---------+-----------+
@@ -56,7 +59,7 @@ ___
 ### Step 2. Expand Two-way
 Join the union result twice, to find friends for each user_id. Filter the results to include common friend only. Note that it is __impossible__ to list one of the user himself as the common friend, because the *bf.friend_id = af.friend_id* will not be satisfied.
 
-```
+```sql
 WITH tmp AS (
 SELECT user_id, friend_id FROM Friendship
 UNION ALL
@@ -74,7 +77,8 @@ JOIN tmp AS bf
 	ON ab.friend_id = bf.user_id
 	AND bf.friend_id = af.friend_id
 ORDER BY a, b, a_friend, b_friend;
-
+```
+```
 +---------+---------+----------+----------+
 | a       | b       | a_friend | b_friend |
 +---------+---------+----------+----------+
@@ -104,7 +108,7 @@ ___
 ### Step 3. Aggregation
 Group by the user_id pair and count the number of common friends. Because we've counted both way, each eligible pair will have a counterpart with the opposite direction.
 
-```
+```sql
 WITH tmp AS (
 SELECT user_id, friend_id FROM Friendship
 UNION ALL
@@ -123,7 +127,8 @@ JOIN tmp AS bf
 GROUP BY ab.user_id, ab.friend_id
 HAVING common_friend >= 3
 ORDER BY common_friend DESC;
-
+```
+```
 +---------+-----------+---------------+
 | user_id | friend_id | common_friend |
 +---------+-----------+---------------+

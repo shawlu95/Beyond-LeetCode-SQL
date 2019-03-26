@@ -9,13 +9,14 @@ ___
 ### Step 1. Find Candidate Pairs
 This can be done with a cross join. Obviously we want to avoid matching a user with himself.
 
-```
+```sql
 SELECT * FROM
 (SELECT DISTINCT user_id FROM Friendship) AS a
 CROSS JOIN
 (SELECT DISTINCT user_id FROM Friendship) AS b
 ON a.user_id != b.user_id;
-
+```
+```
 +---------+---------+
 | user_id | user_id |
 +---------+---------+
@@ -58,7 +59,7 @@ AND (b.user_id, a.user_id) NOT IN (SELECT user_id, friend_id FROM Friendship);
 ___
 ### Step 2. Expand Two-way
 The rest is the same as the previous problem. Here I constructed a tmp table to exclude existing friendship, instead of using two *AND* clause.
-```
+```sql
 WITH tmp AS (
 SELECT user_id, friend_id FROM Friendship
 UNION ALL
@@ -79,7 +80,8 @@ JOIN tmp AS af
 JOIN tmp AS bf
 	ON b.user_id = bf.user_id
 	AND bf.friend_id = af.friend_id;
-
+```
+```
 +---------+---------+---------------+
 | user_id | user_id | common_friend |
 +---------+---------+---------------+
@@ -97,7 +99,7 @@ ___
 ### Step 3. Aggregation
 Group by the user_id pair and count the number of common friends. 
 
-```
+```sql
 WITH tmp AS (
 SELECT user_id, friend_id FROM Friendship
 UNION ALL
@@ -120,7 +122,8 @@ JOIN tmp AS bf
 	AND bf.friend_id = af.friend_id
 GROUP BY a.user_id, b.user_id
 ORDER BY common_friend DESC;
-
+```
+```
 +---------+---------+---------------+
 | user_id | user_id | common_friend |
 +---------+---------+---------------+
