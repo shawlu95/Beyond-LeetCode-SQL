@@ -3,7 +3,7 @@
 Given the following table, what is the percentage of invalid search result, and the total number of searches for each country?
 
 __Schema__
-```
+```sql
 mysql> describe SearchCategory;
 +-----------------+---------------+------+-----+---------+-------+
 | Field           | Type          | Null | Key | Default | Extra |

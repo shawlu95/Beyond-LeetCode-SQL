@@ -38,7 +38,7 @@ ON a.user_id != b.user_id;
 
 Also, we don't want to recommend people who are already friends.
 
-```
+```sql
 SELECT * FROM
 (SELECT DISTINCT user_id FROM Friendship) AS a
 CROSS JOIN
@@ -46,7 +46,8 @@ CROSS JOIN
 ON a.user_id != b.user_id
 AND (a.user_id, b.user_id) NOT IN (SELECT user_id, friend_id FROM Friendship)
 AND (b.user_id, a.user_id) NOT IN (SELECT user_id, friend_id FROM Friendship);
-
+```
+```
 +---------+---------+
 | user_id | user_id |
 +---------+---------+
