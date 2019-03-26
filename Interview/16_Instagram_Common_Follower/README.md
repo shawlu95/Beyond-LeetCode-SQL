@@ -4,7 +4,7 @@
 ___
 ### Load Data
 Load the database file [db.sql](db.sql) to localhost MySQL. A Instagram database will be created with one Follow table. 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 
@@ -15,14 +15,16 @@ The major realization is that following is a one-way relationship, unlike friend
 ___
 ### Step 1. Build Candidate Pairs
 Find all possible account pairs using cross join. Avoid matching an account to itself.
-```
+```sql
 SELECT *
 FROM
 (SELECT DISTINCT user_id FROM Follow) AS a
 CROSS JOIN
 (SELECT DISTINCT user_id FROM Follow) AS b 
 ON a.user_id != b.user_id
+```
 
+```
 +---------+---------+
 | user_id | user_id |
 +---------+---------+
@@ -44,7 +46,7 @@ ON a.user_id != b.user_id
 
 ___
 ### Step 2. Find Common Followers
-```
+```sql
 SELECT *
 FROM
 (SELECT DISTINCT user_id FROM Follow) AS a
@@ -56,7 +58,9 @@ ON a.user_id = af.user_id
 JOIN Follow AS bf
 ON b.user_id = bf.user_id
 AND af.follower_id = bf.follower_id;
+```
 
+```
 +---------+---------+---------+-------------+---------+-------------+
 | user_id | user_id | user_id | follower_id | user_id | follower_id |
 +---------+---------+---------+-------------+---------+-------------+
@@ -76,7 +80,7 @@ AND af.follower_id = bf.follower_id;
 
 ___
 ### Step 3. Aggregate Count
-```
+```sql
 SELECT
 a.user_id
 ,b.user_id
@@ -93,7 +97,9 @@ ON b.user_id = bf.user_id
 AND af.follower_id = bf.follower_id
 GROUP BY a.user_id, b.user_id
 ORDER BY common DESC, a.user_id, b.user_id;
+```
 
+```
 +---------+---------+--------+
 | user_id | user_id | common |
 +---------+---------+--------+
