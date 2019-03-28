@@ -9,11 +9,12 @@ mysql < db.sql -uroot -p
 
 ___
 ### Multiple-column Partition
-```
+```sql
 SELECT *, ROW_NUMBER() OVER w AS quiz_number
 FROM Quiz
 WINDOW w AS (PARTITION BY user_id, course ORDER BY quiz_date);
-
+```
+```
 +----+---------+--------+------------+-------------+
 | id | user_id | course | quiz_date  | quiz_number |
 +----+---------+--------+------------+-------------+
@@ -36,11 +37,12 @@ ___
 Similarly, we can ORDER BY multiple columns in the window function to break ties. This is useful in resolving edge cases.
 
 
-```
+```sql
 SELECT *, ROW_NUMBER() OVER w AS quiz_number
 FROM Quiz
 WINDOW w AS (PARTITION BY user_id ORDER BY course, quiz_date);
-
+```
+```
 +----+---------+--------+------------+-------------+
 | id | user_id | course | quiz_date  | quiz_number |
 +----+---------+--------+------------+-------------+

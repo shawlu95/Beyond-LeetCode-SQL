@@ -2,7 +2,7 @@
 
 ### Anti-pattern
 One common pitfall of sampling is to assign a random number to each row, order all rows, and return the top few rows. This is very inefficient, as ordering takes O(nlogn) time and incurs IO cost when table is large. 
-```
+```sql
 -- anti-pattern
 SELECT TOP 1 PERCENT Number
 FROM Numbers
@@ -12,7 +12,7 @@ ORDER BY newid()
 ---
 ### Trivial Solution
 MS SQL has *TABLESAMPLE* method avaialble, which returns any desired number of rows, as a percentage of the entire table.
-```
+```sql
 -- MS SQL
 SELECT * from [TABLE] tablesample(1 PERCENT)
 ```
@@ -26,14 +26,14 @@ The objective is to sample without sorting random number. First we need to assig
 We can model the selection as a Binomial process, we can get the parameter *p*, which is simple the sample_size / group_size. From *p* we can calculate the standard deviation, and adjust the threshold probability to include more rows wuch that the probability of drawing fewer than desired sample size is small.
 
 First, import the [database](../databases/world_db/) in terminal.
-```
+```bash
 mysql < world.sql -uroot -p
 ```
 
 ---
 #### Create Source Table
 Create the table we will be sampling from. To have continent and city columns in the same table, we need to join two tables in the world database.
-```
+```sql
 -- this is the table we want to sample from (given)
 DROP TABLE IF EXISTS city_by_continent;
 CREATE TEMPORARY TABLE city_by_continent AS
@@ -44,7 +44,8 @@ SELECT
 FROM city
 JOIN country
 ON city.countryCode = country.code;
-
+```
+```
 -- show 10 rows
 +----------------+--------------+---------------+
 | city_name      | country_name | continent     |
@@ -66,7 +67,7 @@ ON city.countryCode = country.code;
 ---
 #### Calculate Group Statistics
 What does this mean? Take Ocenia for example, it means that if we draw from __every one__ of its cities with Binomial probability 0.1818, we get 10 successes on average, with 2.86 standard deviation. 
-```
+```sql
 -- check gorup size 
 -- use normal distirbution to approximate binomial draw
 DROP TABLE IF EXISTS sample_dist_stats;
@@ -80,7 +81,8 @@ SELECT
 FROM city_by_continent
 GROUP BY continent
 ORDER BY city_tally;
-
+```
+```
 mysql> SELECT * FROM sample_dist_stats LIMIT 10;
 +---------------+------------+--------+------+--------------------+
 | continent     | city_tally | p      | mean | std                |
@@ -99,15 +101,15 @@ mysql> SELECT * FROM sample_dist_stats LIMIT 10;
 #### Expand Group Size Column
 Since we need at least 10 samples from each group, we can relax the *p* threshold a little. For example, we can add 2 * std to the desired sample size. 
 
-```
-
+```sql
 DROP TABLE IF EXISTS city_group;
 CREATE TEMPORARY TABLE city_group AS 
 SELECT
   c.*
   ,COUNT(*) OVER (PARTITION BY continent) AS group_size
 FROM city_by_continent AS c;
-
+```
+```
 mysql> SELECT * FROM  city_group LIMIT 5;
 +----------------+----------------------+-----------+------------+
 | city_name      | country_name         | continent | group_size |
@@ -122,7 +124,7 @@ mysql> SELECT * FROM  city_group LIMIT 5;
 ```
 
 Next, add the standard deviation column, which depends on the group size.
-```
+```sql
 SET @sample_size = 10;
 
 DROP TABLE IF EXISTS city_prob_assign;
@@ -134,7 +136,8 @@ SELECT
   ,SQRT(group_size * (@sample_size / group_size) * (1 - @sample_size / group_size)) AS std
   ,RAND() AS prob
 FROM city_group AS c;
-
+```
+```
 SELECT * FROM  city_prob_assign LIMIT 5;
 +----------------+----------------------+-----------+------------+--------------------+---------------------+
 | city_name      | country_name         | continent | group_size | std                | prob                |
@@ -151,7 +154,7 @@ SELECT * FROM  city_prob_assign LIMIT 5;
 ---
 #### Adjust Cutoff Threshold
 Calculate the cut-off threshold, adjusted for 2 * standard deviations.
-```
+```sql
 DROP TABLE IF EXISTS city_prob_cutoff;
 CREATE TEMPORARY TABLE city_prob_cutoff AS 
 SELECT
@@ -163,7 +166,7 @@ SELECT * FROM  city_prob_cutoff LIMIT 5;
 ```
 
 Finally, filter the results by cutoff threshold. Notice we are ranking random number here. But because window function is evaluated after *WHERE* clause, we are only ranking a few rows in each group.
-```
+```sql
 -- draw sample by cutoff probabilities
 DROP TABLE IF EXISTS city_sample;
 CREATE TEMPORARY TABLE city_sample AS 
@@ -174,7 +177,8 @@ SELECT
   ,RANK() OVER (PARTITION BY continent ORDER BY prob) AS group_row_num
 FROM city_prob_cutoff AS c
 WHERE prob < cutoff;
-
+```
+```
 mysql> SELECT * FROM  city_sample LIMIT 5;
 +-----------+--------------+-----------+------------+--------------------+-----------------------+--------+---------------+
 | city_name | country_name | continent | group_size | std                | prob                  | cutoff | group_row_num |
@@ -191,13 +195,14 @@ mysql> SELECT * FROM  city_sample LIMIT 5;
 ---
 #### Sampling
 Check that sample size are at least 10!
-```
+```sql
 -- check sample size
 SELECT continent, COUNT(*) AS sample_size 
 FROM city_prob_cutoff
 WHERE prob < cutoff
 GROUP BY continent;
-
+```
+```
 +---------------+-------------+
 | continent     | sample_size |
 +---------------+-------------+
@@ -212,13 +217,14 @@ GROUP BY continent;
 ```
 
 Finally, cut off row number greater than 10, and retain 10 rows in each group.
-```
+```sql
 -- draw fixed sample size
 SELECT * 
 FROM city_sample
 WHERE group_row_num <= 10
 LIMIT 20;
-
+```
+```
 +-----------------+--------------------+-----------+------------+--------------------+-----------------------+--------+---------------+
 | city_name       | country_name       | continent | group_size | std                | prob                  | cutoff | group_row_num |
 +-----------------+--------------------+-----------+------------+--------------------+-----------------------+--------+---------------+
@@ -250,7 +256,7 @@ LIMIT 20;
 ### Combined Pipeline
 We can merge the steps into a single [pipeline](solution.sql). Even better, we can store it in a [procedure](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Topics/05_Stored_Precesure/stored_procedure.sql). 
 
-```
+```sql
 SET @sample_size = 10;
 
 WITH 

@@ -10,7 +10,8 @@ This post is inspired by this [page](https://www.programmerinterview.com/index.p
 
 ### Sample data
 Load the database file [db.sql](db.sql) to localhost MySQL. A MAU database will be created with two tables. 
-```
+
+```bash
 mysql < db.sql -uroot -p
 ```
 ```
@@ -45,7 +46,7 @@ mysql> SELECT * FROM UserHistory;
 ### Q1: Find monthly active users.
 *Write a SQL query that returns the name, phone number and most recent date for any user that has logged in over the last 30 days (you can tell a user has logged in if the action field in UserHistory is set to "logged_on").*
 
-```
+```sql
 SET @today := "2019-03-01";
 SELECT 
   User.name
@@ -57,6 +58,8 @@ WHERE User.user_id = UserHistory.user_id
   AND UserHistory.date >= DATE_SUB(@today, INTERVAL 30 DAY) 
 GROUP BY User.user_id;
 
+```
+```
 +--------+--------------+-----------------------+
 | name   | phone_num    | max(UserHistory.date) |
 +--------+--------------+-----------------------+
@@ -71,7 +74,7 @@ The above solution is only correct when phone_num and name are functionally depe
 
 Depending on database engine configuration, an error may be thrown when a selected column is neither aggregated nor in the group by clause. If we are certain that one-on-one mapping exists, we can add a aggregate function to the additional columns (*MAX()* or *MIN()*).
 
-```
+```sql
 SET @today := "2019-03-01";
 SELECT
   MAX(u.name) -- functionally dependent on user_id
@@ -84,6 +87,8 @@ WHERE u.user_id = h.user_id
 GROUP BY u.user_id
 ORDER BY recent_date;
 
+```
+```
 +-------------+------------------+-------------+
 | MAX(u.name) | MAX(u.phone_num) | recent_date |
 +-------------+------------------+-------------+
@@ -97,7 +102,7 @@ Inner join also serves the purpose, and avoid making a cartesian product between
 
 __Why__ inner join: *user_id* in  *UserHistory* table is a foreign key referring to *User* table primary key. Meaning that it is a subset of the primary key column. There may exists users who never logged on, and never appeared in the *UserHistory* table. Since we are interested in monthly active users. It's safe to ignore those inactive users.
 
-```
+```sql
 -- using inner join
 SET @today := "2019-03-01";
 SELECT
@@ -121,13 +126,14 @@ If any selected column is __not__ functionally dependent on the group by column,
 
 See [here](https://www.programmerinterview.com/index.php/database-sql/practice-interview-question-2-continued/) for a detailed walk-through. However, the solution is not totally correct. We __don't__ need the *DISTINCT* keyword here. Because if a *user_id* has no match in the *UserHistory* table, that row it returned __only once__.
 
-```
+```sql
 SELECT *
 FROM User AS u
 LEFT JOIN UserHistory AS h
   ON u.user_id = h.user_id
 WHERE h.user_id IS NULL;
-
+```
+```
 +---------+------+--------------+---------+------+--------+
 | user_id | name | phone_num    | user_id | date | action |
 +---------+------+--------------+---------+------+--------+
@@ -138,13 +144,14 @@ WHERE h.user_id IS NULL;
 
 A less efficient approach is to retain valid users in a hashset. Remember that __NOT IN__ requires full traversal of every element in the hashset for a single check (*DISTINCT* keyword turns the set into hash set, but makes no difference on the result).
 
-```
+```sql
 SELECT *
 FROM User
 WHERE user_id NOT IN (
   SELECT DISTINCT user_id FROM UserHistory
 );
-
+```
+```
 +---------+------+--------------+
 | user_id | name | phone_num    |
 +---------+------+--------------+

@@ -10,7 +10,7 @@ ___
 
 ### Step 1. Create Column to Group By
 
-```
+```sql
 SELECT
   customerName
   ,CASE 
@@ -20,7 +20,8 @@ SELECT
   END AS credit_range
 FROM customers
 LIMIT 5;
-
+```
+```
 +----------------------------+--------------+
 | customerName               | credit_range |
 +----------------------------+--------------+
@@ -33,7 +34,7 @@ LIMIT 5;
 ```
 
 ### Step 2. Group by Bin
-```
+```sql
 SELECT
   CASE 
   WHEN creditLimit BETWEEN 0 AND 50000 THEN '0 ~ 50k'
@@ -43,7 +44,8 @@ SELECT
   ,COUNT(*) AS customer_tally
 FROM customers
 GROUP BY credit_range;
-
+```
+```
 +--------------+----------------+
 | credit_range | customer_tally |
 +--------------+----------------+

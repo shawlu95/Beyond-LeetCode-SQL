@@ -22,7 +22,8 @@ has the lifetime count.
 
 ### Sample Database
 Load the database file [db.sql](db.sql) to localhost MySQL. A Spotify database will be created with two tables. 
-```
+
+```bash
 mysql < db.sql -uroot -p
 ```
 
@@ -57,7 +58,7 @@ mysql> SELECT * from Daily;
 ### Solution
 __Step 1. Build temporary table.__ 
 For both the UPDATE and INSERT statements, we need the same aggregated information from the *Daily* table. So we can save it as a temporary table.
-```
+```sql
 SET @now = "2019-03-01 00:00:00";
 
 -- Create tamporary table
@@ -86,7 +87,7 @@ mysql> SELECT * FROM daily_count;
 ```
 
 __Step 2. Update existing pair.__ It's okay to join the temporary table with the History table during the update process, because History is independent of the temporary table. 
-```
+```sql
 UPDATE History AS uh
 JOIN daily_count AS dc
   ON uh.user_id = dc.user_id
@@ -108,7 +109,7 @@ mysql> SELECT * FROM History;
 
 __Step 3. Insert new pair.__ After updating existing (*user_id*, *song_id*) compound key pair, we need to insert new ones:
 
-```
+```sql
 INSERT INTO History (user_id, song_id, tally)
 SELECT
   dc.user_id

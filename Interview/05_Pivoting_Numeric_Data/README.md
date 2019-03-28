@@ -17,7 +17,8 @@ The pivoting process is accomplished in two stages:
 In this example, we'll use real data on how I spent my money. The data are recorded using an iOS app, which conencts to a PHP server on my localhost, which interfaces with MySQL database. The data file contains one Expenses table, with a subset of the columns from the original table, covering one year of transaction data. You can see how I created the table [here](Expenses.sql).
 
 Load the database file [db.sql](db.sql) to localhost MySQL. The *Expenses* table will be created in the Grocery database. 
-```
+
+```bash
 mysql < db.sql -uroot -p
 ```
 
@@ -51,7 +52,6 @@ mysql> SELECT * FROM expenses LIMIT 5;
 The unpivoted table contains 1083 rows (1083 records of transactions in year 2018). We want to pivot the table to have *category* as index column, abd the *time* column as *pivoted* column, binned into 12 months. The cardinality of the category column is 25, The cardinality of the *time* column is 12 (12 months). The resulting table will have dimension 25 * 12.
 
 ```
-
 mysql> SELECT COUNT(DISTINCT category) FROM expenses;
 +--------------------------+
 | COUNT(DISTINCT category) |
@@ -87,7 +87,7 @@ WHERE time BETWEEN "2018-12-01" AND "2018-12-02"
 
 Using __one__ *CASE* statement for __each__ distinct value in the pivoted column ('Nov' and 'Dec' in this case). This creates two columns. For the 'Nov' column, we only want to retain data from November. For 'Dec' column, only retain data from December.
 
-```
+```sql
 WITH tmp AS (
 SELECT * FROM Expenses
 WHERE time BETWEEN "2018-12-01" AND "2018-12-02"
@@ -99,7 +99,8 @@ SELECT
   ,CASE WHEN EXTRACT(MONTH FROM time) = 11 THEN cost ELSE 0 END AS 'Nov'
 FROM tmp
 ORDER BY time;
-
+```
+```
 +---------------+-------+-------+
 | category      | Dec   | Nov   |
 +---------------+-------+-------+
@@ -118,7 +119,7 @@ ORDER BY time;
 #### Step 2. Aggregation
 Now, to calculate the total amount of money spent in each category, we simply aggregate over the category column!
 
-```
+```sql
 WITH tmp AS (
 SELECT * FROM Expenses
 WHERE time BETWEEN "2018-12-01" AND "2018-12-02"
@@ -131,7 +132,8 @@ SELECT
 FROM tmp
 GROUP BY category
 ORDER BY category;
-
+```
+```
 +---------------+-------+-------+
 | category      | Dec   | Nov   |
 +---------------+-------+-------+
@@ -149,7 +151,7 @@ ORDER BY category;
 #### Pivot Full Table
 Now we can apply the procedure to all 12 months! Sadly, as shown in the table below, I lost $14224.24 on the stock market when Nasdaq took a nose dive in October 2018.
 
-```
+```sql
 SELECT
   category
   ,SUM(CASE WHEN EXTRACT(MONTH FROM time) = 12 THEN cost ELSE 0 END) AS 'Dec'
@@ -167,7 +169,8 @@ SELECT
 FROM Expenses
 GROUP BY category
 ORDER BY category;
-
+```
+```
 +----------------+---------+---------+----------+---------+---------+---------+---------+---------+---------+---------+---------+---------+
 | category       | Dec     | Nov     | Oct      | Sep     | Aug     | Jul     | Jun     | May     | Apr     | Mar     | Feb     | Jan     |
 +----------------+---------+---------+----------+---------+---------+---------+---------+---------+---------+---------+---------+---------+

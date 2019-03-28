@@ -4,7 +4,7 @@
 ### Building Procedure
 For complex queries that are frequently reused, with a few changes in parameters, we can store it as a procedure, and run it like a function. The syntax to create stored procedure is:
 
-```
+```sql
 DROP PROCEDURE IF EXISTS my_procedure;
 
 DELIMITER //

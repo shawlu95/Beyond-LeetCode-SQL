@@ -46,7 +46,7 @@ ___
 ### Self-join Method
 Directly joining tables against itself 7 times causes row number to explode. Since we are not differentiating same user's multiple logins in a day, we only need to keep one record for each user per day before joining the table. Because the *ts* column is *date* type, we only need a *DISTINCT* keyword to filter the duplicates. If the column is *datetime* type, we would need to transform it into *date* type first.
 
-```
+```sql
 WITH tmp AS (
   SELECT DISTINCT user_id, ts FROM Login)
 SELECT 
@@ -59,7 +59,8 @@ JOIN tmp AS d2
   ON d2.user_id = d1.user_id
   AND DATEDIFF(d0.ts, d2.ts) = 2;
   -- AND DATEDIFF(d1.ts, d2.ts) = 1 -- only need one of the condition, because we are using inner join (no NULL)
-
+```
+```
 +---------+------------+---------+------------+---------+------------+
 | user_id | ts         | user_id | ts         | user_id | ts         |
 +---------+------------+---------+------------+---------+------------+
@@ -73,7 +74,7 @@ JOIN tmp AS d2
 
 Did you see any problem? The query returns all users who have __ever__ been active for 3 days in __all__ history. The question asks for users who have been active in the __most recent__ 3 days only. So we need to add condition on the *d0.ts* column. Preferably, we use pre-filter instead of post-filter. Only one user satisfies out conditions. 
 
-```
+```sql
 @now = '2019-02-04';
 WITH tmp AS (
   SELECT DISTINCT user_id, ts FROM Login)
@@ -86,7 +87,8 @@ JOIN tmp AS d1
 JOIN tmp AS d2
   ON d2.user_id = d1.user_id
   AND DATEDIFF(d0.ts, d2.ts) = 2;
-
+```
+```
 +---------+------------+---------+------------+---------+------------+
 | user_id | ts         | user_id | ts         | user_id | ts         |
 +---------+------------+---------+------------+---------+------------+
@@ -97,7 +99,7 @@ JOIN tmp AS d2
 
 Equivalently, we can pre-filter the source table into several sub-tables before joining them. This solution also works for *datetime* data type.
 
-```
+```sql
 SET @now = "2019-02-14";
 WITH tmp AS (
   SELECT DISTINCT user_id, ts FROM Login)
@@ -110,6 +112,8 @@ JOIN tmp AS d1
 JOIN tmp AS d2
   ON DATEDIFF(@now, d2.ts) = 2
   AND d2.user_id = d1.user_id;
+```
+```
 +----+---------+------------+----+---------+------------+----+---------+------------+
 | id | user_id | ts         | id | user_id | ts         | id | user_id | ts         |
 +----+---------+------------+----+---------+------------+----+---------+------------+
@@ -131,7 +135,7 @@ If the answer to Q1 is 1, answer to Q2 is 2, then the customer is active in the 
 
 Note that for this logic to work, we must have __one__ record per day for each customers. If we have multiple records per day, *LAG* function will return 0 for those duplicates.
 
-```
+```sql
 SET @now = "2019-02-14";
 SELECT
   user_id
@@ -139,7 +143,8 @@ SELECT
   ,DATEDIFF(@now, LAG(ts, 2) OVER w) AS day_from_pre2
 FROM Login
 WINDOW w AS (PARTITION BY user_id ORDER BY ts);
-
+```
+```
 +---------+---------------+---------------+
 | user_id | day_from_pre1 | day_from_pre2 |
 +---------+---------------+---------------+
@@ -165,7 +170,7 @@ __Warning__: because *WHERE* is evaluated before window function, the following 
 
 > Window functions are permitted only in the SELECT list and the ORDER BY clause of the query. They are forbidden elsewhere, such as in GROUP BY, HAVING and WHERE clauses. This is because they logically execute after the processing of those clauses. Also, window functions execute after regular aggregate functions.
 
-```
+```sql
 SET @now = "2019-02-14";
 SELECT
   user_id
@@ -174,7 +179,8 @@ SELECT
   ,DATEDIFF(@now, LAG(ts, 2) OVER (PARTITION BY user_id ORDER BY ts)) AS day_from_pre2
 FROM Login
 WHERE ts = @now;
-
+```
+```
 +---------+------------+---------------+---------------+
 | user_id | ts         | day_from_pre1 | day_from_pre2 |
 +---------+------------+---------------+---------------+
@@ -216,7 +222,7 @@ ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that 
 ```
 
 The correct implementation.
-```
+```sql
 SET @now = "2019-02-14";
 WITH tmp AS (
 SELECT
@@ -232,7 +238,8 @@ FROM tmp
 WHERE ts = @now
   AND day_from_pre1 = 1
   AND day_from_pre2 = 2;
-
+```
+```
 +---------+
 | user_id |
 +---------+
@@ -243,7 +250,7 @@ WHERE ts = @now
 
 ---
 ### Generalize to 7 Days
-```
+```sql
 SET @now = "2019-02-14";
 WITH tmp AS (
   SELECT DISTINCT user_id, ts FROM Login)
@@ -273,7 +280,7 @@ JOIN tmp AS d7
   AND d0.user_id = d7.user_id;
 ```
 
-```
+```sql
 SET @now = "2019-02-14";
 WITH tmp AS (
 SELECT

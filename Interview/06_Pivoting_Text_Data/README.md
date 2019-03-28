@@ -8,7 +8,7 @@ Different from the *Expenses* table from the earlier [note](https://github.com/s
 Load the database file [db.sql](db.sql) to localhost MySQL. The *CourseGrade* table will be created in the Practice database. The table *CourseGrade* contains letter grade of five students on three courses. It has exactly |pivot column| * |index column| = 3 * 5 = 15 rows, and the info column, *grade* cannot be summed as we did before with numeric data.
 
 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 
@@ -59,7 +59,7 @@ SELECT * FROM CourseGrade WHERE name IN ('Alice', 'Bob')
 
 Unconditional cross join produces 6 * 6 = 36 rows. Self-joining the table using the name results in 3 courses * 3 courses = 9 rows for each student. For each student, every class is matched to three other classes. 
 
-```
+```sql
 WITH tmp AS (
 SELECT * FROM CourseGrade WHERE name IN ('Alice', 'Bob')
 )
@@ -67,7 +67,8 @@ SELECT
   *
 FROM tmp AS t1, tmp AS t2
 WHERE t1.name = t2.name;
-
+```
+```
 +-------+--------+-------+-------+--------+-------+
 | name  | course | grade | name  | course | grade |
 +-------+--------+-------+-------+--------+-------+
@@ -95,7 +96,7 @@ WHERE t1.name = t2.name;
 ```
 For each student, we want one column for each course, so we can directly filter on the course name. Filtering one table's course name reduces the number of rows by a factor of 3. Filtering both tables reduces by a factor of 3 * 3.
 
-```
+```sql
 WITH tmp AS (
 SELECT * FROM CourseGrade WHERE name IN ('Alice', 'Bob')
 )
@@ -104,8 +105,9 @@ SELECT
 FROM tmp AS t1, tmp AS t2
 WHERE t1.name = t2.name
   AND t1.course = 'CS106B';
-
- +-------+--------+-------+-------+--------+-------+
+```
+```
++-------+--------+-------+-------+--------+-------+
 | name  | course | grade | name  | course | grade |
 +-------+--------+-------+-------+--------+-------+
 | Alice | CS106B | A     | Alice | CS106B | A     |
@@ -116,7 +118,8 @@ WHERE t1.name = t2.name
 | Bob   | CS106B | C     | Bob   | CS224N | F     |
 +-------+--------+-------+-------+--------+-------+
 6 rows in set (0.00 sec)
-
+```
+```sql
 WITH tmp AS (
 SELECT * FROM CourseGrade WHERE name IN ('Alice', 'Bob')
 )
@@ -127,7 +130,8 @@ WHERE t1.name = t2.name
   AND t1.course = 'CS106B'
   AND t2.course = 'CS229'
 ;
-
+```
+```
 +-------+--------+-------+-------+--------+-------+
 | name  | course | grade | name  | course | grade |
 +-------+--------+-------+-------+--------+-------+
@@ -138,7 +142,7 @@ WHERE t1.name = t2.name
 ```
 
 We can easily generalize to three tables, and possibly more.
-```
+```sql
 WITH tmp AS (
 SELECT * FROM CourseGrade WHERE name IN ('Alice', 'Bob')
 )
@@ -150,8 +154,9 @@ WHERE t1.name = t2.name
   AND t1.course = 'CS106B'
   AND t2.course = 'CS229'
   AND t3.course = 'CS224N';
-
- +-------+--------+-------+-------+--------+-------+-------+--------+-------+
+```
+```
++-------+--------+-------+-------+--------+-------+-------+--------+-------+
 | name  | course | grade | name  | course | grade | name  | course | grade |
 +-------+--------+-------+-------+--------+-------+-------+--------+-------+
 | Alice | CS106B | A     | Alice | CS229  | A     | Alice | CS224N | B     |
@@ -162,7 +167,7 @@ WHERE t1.name = t2.name
 
 Notice that by setting the filtering criteria, we are setting the __value__ of the additional columns! To make it clearer, simply rename the column title with the course title, and get rid of the *course* column, since it's redundant.
 
-```
+```sql
 WITH tmp AS (
 SELECT * FROM CourseGrade WHERE name IN ('Alice', 'Bob')
 )
@@ -177,8 +182,9 @@ WHERE t1.name = t2.name
   AND t1.course = 'CS106B'
   AND t2.course = 'CS229'
   AND t3.course = 'CS224N';
-
- +-------+--------+-------+--------+
+```
+```
++-------+--------+-------+--------+
 | name  | CS106B | CS229 | CS224N |
 +-------+--------+-------+--------+
 | Alice | A      | A     | B      |
@@ -188,7 +194,7 @@ WHERE t1.name = t2.name
  ```
 
 Now we can remove the temporary table and pivot the entire table.
- ```
+```sql
 SELECT
   t1.name
   ,t1.grade AS 'CS106B'
@@ -200,7 +206,8 @@ WHERE t1.name = t2.name
   AND t1.course = 'CS106B'
   AND t2.course = 'CS229'
   AND t3.course = 'CS224N';
-
+```
+```
 +---------+--------+-------+--------+
 | name    | CS106B | CS229 | CS224N |
 +---------+--------+-------+--------+
@@ -214,7 +221,7 @@ WHERE t1.name = t2.name
 ```
 
 To boost efficiency, we may replace cross join with inner join, and pre-filter on the course title before join.
-```
+```sql
 SELECT
   t1.name
   ,t1.grade AS 'CS106B'
@@ -228,7 +235,8 @@ JOIN CourseGrade AS t2
 JOIN CourseGrade AS t3
   ON t3.course = 'CS224N'
  AND t2.name = t3.name;
-
+```
+```
 +---------+--------+-------+--------+
 | name    | CS106B | CS229 | CS224N |
 +---------+--------+-------+--------+
@@ -245,14 +253,15 @@ JOIN CourseGrade AS t3
 ### Bonus: Using Case Statement
 We can use the case statement, as described in the previous [note](../05_Pivoting_Numeric_Data/). First, we add columns, using one case statement for each column.
 
-```
+```sql
 SELECT
   *
   ,CASE WHEN course = 'CS106B' THEN grade ELSE NULL END AS 'CS106B'
   ,CASE WHEN course = 'CS229' THEN grade ELSE NULL END AS 'CS229'
   ,CASE WHEN course = 'CS224N' THEN grade ELSE NULL END AS 'CS224N'
 FROM CourseGrade;
-
+```
+```
 +---------+--------+-------+--------+-------+--------+
 | name    | course | grade | CS106B | CS229 | CS224N |
 +---------+--------+-------+--------+-------+--------+
@@ -277,7 +286,7 @@ FROM CourseGrade;
 
 Next, we reduce the numebr of rows to the cardinality of index column, using aggregate function. The redundant column *course* is dropped out. Since each group only contains one valid cell that is not NULL, using either *MAX()* or *MIN()* gives the same result. Just don't use *AVG()*, *SUM()* or *COUNT()*.
 
-```
+```sql
 SELECT
   name
   ,MAX(CASE WHEN course = 'CS106B' THEN grade ELSE NULL END) AS 'CS106B'
@@ -285,6 +294,8 @@ SELECT
   ,MAX(CASE WHEN course = 'CS224N' THEN grade ELSE NULL END) AS 'CS224N'
 FROM CourseGrade
 GROUP BY name;
+```
+```
 +---------+--------+-------+--------+
 | name    | CS106B | CS229 | CS224N |
 +---------+--------+-------+--------+
@@ -295,7 +306,8 @@ GROUP BY name;
 | Elsa    | B      | B     | A      |
 +---------+--------+-------+--------+
 5 rows in set (0.00 sec)
-
+```
+```sql
 SELECT
   name
   ,MIN(CASE WHEN course = 'CS106B' THEN grade ELSE NULL END) AS 'CS106B'
@@ -303,6 +315,8 @@ SELECT
   ,MIN(CASE WHEN course = 'CS224N' THEN grade ELSE NULL END) AS 'CS224N'
 FROM CourseGrade
 GROUP BY name;
+```
+```
 +---------+--------+-------+--------+
 | name    | CS106B | CS229 | CS224N |
 +---------+--------+-------+--------+

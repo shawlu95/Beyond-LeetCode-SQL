@@ -2,7 +2,7 @@
 
 In the interview question, we covered a classic problem of [grouping by bins](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/08_Group_by_Bins). This [notebook](dynamic.ipynb) illustrates how to generate and execute query dynamically in Python. You can easily build hundreds of bins without manually writing hundreds of *WHEN* conditions.
 
-```
+```sql
 SELECT CASE WHEN creditLimit BETWEEN 0 AND 9999 THEN '0~9999' 
 WHEN creditLimit BETWEEN 10000 AND 19999 THEN '10000~19999' 
 WHEN creditLimit BETWEEN 20000 AND 29999 THEN '20000~29999' 

@@ -41,7 +41,8 @@ When user did pay on day T (#1, 3, 5, 7). They can become either EXISTING or RES
 
 ### Sample Database
 Load the database file [db.sql](db.sql) to localhost MySQL. An Advertiser database will be created with two tables. 
-```
+
+```bash
 mysql < db.sql -uroot -p
 ```
 
@@ -78,7 +79,7 @@ mysql> SELECT * FROM DailyPay;
 ### Solution
 #### Step 1. Update Existing Advertiser
 After simplifying the boolean algebra, we only need three conditions. State __explicitly__ we don't need "ELSE status" in the CASE statement because we've covered all possible conditions. Also emphasize we need __LEFT JOIN__ to find out who did not pay on day T.
-```
+```sql
 UPDATE Advertiser AS a
 LEFT JOIN DailyPay AS d
   ON a.user_id = d.user_id
@@ -110,7 +111,7 @@ mysql> SELECT * FROM Advertiser;
 #### Step 2. Insert New Advertiser
 Note that we missed the new user. To find the new user, left join *DailyPay* with *Advertiser*. If there is no match on the right, the user is new.
 
-```
+```sql
 INSERT INTO 
 Advertiser (user_id, status)
 SELECT d.user_id

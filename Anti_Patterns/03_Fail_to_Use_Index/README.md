@@ -2,14 +2,15 @@
 
 In this notebook we use *sakila* database. Specifically, we want to count how many movies each actor has starred. We obviously need to group by the first name and last name of the actor.
 
-```
+```sql
 SELECT actor.first_name, actor.last_name, COUNT(*)
 FROM sakila.film_actor
 INNER JOIN sakila.actor USING(actor_id)
 GROUP BY actor.first_name, actor.last_name
 ORDER BY 1, 2
 LIMIT 5;
-
+```
+```
 +------------+-----------+----------+
 | first_name | last_name | COUNT(*) |
 +------------+-----------+----------+
@@ -24,14 +25,15 @@ LIMIT 5;
 
 But we can do much better by grouping by index. Notice that index uniquely identifies an actor, just as first name and last name uniquely identify an actor.
 
-```
+```sql
 SELECT actor.first_name, actor.last_name, COUNT(*)
 FROM sakila.film_actor
 INNER JOIN sakila.actor USING(actor_id)
 GROUP BY film_actor.actor_id
 ORDER BY 1, 2
 LIMIT 5;
-
+```
+```
 +------------+-----------+----------+
 | first_name | last_name | COUNT(*) |
 +------------+-----------+----------+
@@ -48,7 +50,7 @@ You may notice that the first two columns are neither in the GROUP BY clause nor
 
 The most correct version is to do one of the following:
 
-```
+```sql
 SELECT MAX(actor.first_name), MAX(actor.last_name), COUNT(*)
 FROM sakila.film_actor
 INNER JOIN sakila.actor USING(actor_id)

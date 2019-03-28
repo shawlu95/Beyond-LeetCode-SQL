@@ -9,7 +9,7 @@ The reversal is accomplished by cross joining with an auxillary table, to inreas
 In this notebook, we'll go over two examples: unpivoting the numeric table and text table we accomplished in the earlier notebooks. You'll see that, by aggregating over numeric data, we have permanently lost information, and cannot fully un-pivot back to the original state.
 
 Before getting started, load the pivot table by running the following [script](pivot_table.sql).
-```
+```bash
 mysql < pivot_table.sql -uroot -p
 ```
 
@@ -18,7 +18,7 @@ mysql < pivot_table.sql -uroot -p
 #### Step 1. Build the Auxillary Table
 Different SQL server gives you different syntax in building auxillary table. In MySQL, the process is rather verbose.
 
-```
+```sql
 SELECT * FROM (
   SELECT 'CS106B' AS course_name
   UNION ALL
@@ -26,7 +26,8 @@ SELECT * FROM (
   UNION ALL
   SELECT 'CS224N' year
        ) aux;
-
+```
+```
 +-------------+
 | course_name |
 +-------------+
@@ -40,7 +41,7 @@ SELECT * FROM (
 #### Step 2. Cross Join with Pivot Table
 Notice that this will uncover the numebr of rows to 15 (5 students * 3 courses), which is where we started with.
 
-```
+```sql
 SELECT * FROM 
 course_grade_pivoted,
 (
@@ -50,7 +51,8 @@ course_grade_pivoted,
   UNION ALL
   SELECT 'CS224N' year
        ) aux;
-
+```
+```
 +---------+--------+-------+--------+-------------+
 | name    | CS106B | CS229 | CS224N | course |
 +---------+--------+-------+--------+-------------+
@@ -109,7 +111,7 @@ The only thing we need to do know is to combine the three columns to one, extrac
 
 
 We can use a case statement to condition on the value of the course column, and extract the corresponding value from the matching columns.
-```
+```sql
 SELECT 
   name
   ,aux.course
@@ -126,7 +128,8 @@ FROM  course_grade_pivoted,
   UNION ALL
   SELECT 'CS224N' year
        ) aux;
-
+```
+```
 +---------+--------+-------+
 | name    | course | grade |
 +---------+--------+-------+
@@ -153,7 +156,7 @@ FROM  course_grade_pivoted,
 ### Unpivoting Numeric Data
 To unpivote the table from this [notebook](../05_Pivoting_Numeric_Data/), we apply the same two-step technique. However, because the pivot table was constructed by summing over groups, we are unable to uncover the 1083 rows. Instead, we can only recover 25 categories * 12 months = 300 rows. Here we show 24 rows, for 'Social' and 'Book' categories.
 
-```
+```sql
 SELECT 
   category
   ,aux.month
@@ -198,7 +201,8 @@ FROM expenses_pivoted,
   SELECT 'Dec'
        ) AS aux
 LIMIT 24;
-
+```
+```
 +----------+-------+--------+
 | category | month | month  |
 +----------+-------+--------+

@@ -9,7 +9,7 @@ This notebook covers common pitfalls of using NULL. Any single one can ruin your
 
 ### Sample Data
 Load the database file [db.sql](db.sql) to localhost MySQL. The *Balance* table will be created in the Practice database. 
-```
+```bash
 mysql < db.sql -uroot -p
 ```
 

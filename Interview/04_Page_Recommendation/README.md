@@ -10,7 +10,8 @@ This question is inspired by this quora [post](https://www.quora.com/How-can-I-p
 
 ### Sample data
 Load the database file [db.sql](db.sql) to localhost MySQL. A Recommendation database will be created with two tables. 
-```
+
+```bash
 mysql < db.sql -uroot -p
 ```
 ```
@@ -50,7 +51,7 @@ Ask for clarification whether the *Friendship* table accounts for two directions
 
 This is necessary because when we aggregate over *user_id*, we want to match to all friends that *user_id* has. Alice will match to Bob, and Bob will match to Alice.
 
-```
+```sql
 SELECT 
   user_id
   ,friend_id
@@ -60,7 +61,8 @@ SELECT
   friend_id
   ,user_id
 FROM Friendship;
-
+```
+```
 +---------+-----------+
 | user_id | friend_id |
 +---------+-----------+
@@ -78,7 +80,7 @@ FROM Friendship;
 
 #### Step 2: Expand Pages
 We are recommending pages based on what __friends__ are following, so in this step, friend_id is joined with *PageFollow* table.
-```
+```sql
 WITH two_way_friendship AS (
 SELECT 
   user_id
@@ -98,7 +100,8 @@ FROM two_way_friendship AS f
 LEFT JOIN PageFollow AS p
   ON f.friend_id = p.user_id
 ORDER BY f.user_id ASC, p.page_id;
-
+```
+```
 +---------+-----------+----------+
 | user_id | friend_id | page_id  |
 +---------+-----------+----------+
@@ -126,7 +129,7 @@ ORDER BY f.user_id ASC, p.page_id;
 
 #### Step 3: Aggregation
 We are recommending for each user, the pages with highest number of followers who are friends. In other word, we are counting friends for each (user_id, page_id). Be careful with what to put in GROUP BY and what to put in COUNT().
-```
+```sql
 WITH two_way_friendship AS (
 SELECT 
   user_id
@@ -147,7 +150,8 @@ LEFT JOIN PageFollow AS p
   ON f.friend_id = p.user_id
 GROUP BY f.user_id, p.page_id
 ORDER BY f.user_id ASC, COUNT(*) DESC;
-
+```
+```
 +---------+----------+------------------+
 | user_id | page_id  | friends_follower |
 +---------+----------+------------------+
@@ -172,7 +176,7 @@ ORDER BY f.user_id ASC, COUNT(*) DESC;
 We don't want to recommend pages user already likes. So we need to check for existance and exclude pages that are already liked.
 
 In the final [solution](solution.sql) output, pages are ranked for each user by the number of friends who liked the page.
-```
+```sql
 WITH two_way_friendship AS(
 SELECT 
   user_id
@@ -198,7 +202,8 @@ WHERE NOT EXISTS (
 )
 GROUP BY f.user_id, p.page_id
 ORDER BY f.user_id ASC, COUNT(*) DESC;
-
+```
+```
 +---------+----------+------------------+
 | user_id | page_id  | friends_follower |
 +---------+----------+------------------+
@@ -216,7 +221,7 @@ ORDER BY f.user_id ASC, COUNT(*) DESC;
 #### Optional: Tuple Predicate
 More simply, we can use two-column pairs to check existance.
 
-```
+```sql
 -- MySQL equivalent solution
 WITH two_way_friendship AS(
 SELECT 

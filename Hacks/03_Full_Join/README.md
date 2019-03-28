@@ -33,7 +33,7 @@ mysql> SELECT * FROM letter2;
 
 ---
 ### Hack
-```
+```sql
 SELECT 
   l1.id
   ,l1.letter
@@ -50,7 +50,8 @@ SELECT
 FROM letter1 l1
 RIGHT JOIN letter2 l2 ON l1.letter = l2.letter
 WHERE l1.letter IS NULL;
-
+```
+```
 +------+--------+------+--------+
 | id   | letter | id   | letter |
 +------+--------+------+--------+
@@ -64,7 +65,7 @@ WHERE l1.letter IS NULL;
 6 rows in set (0.00 sec)
 ```
 
-```
+```sql
 SELECT 
   l1.id
   ,l1.letter
@@ -81,7 +82,8 @@ SELECT
 FROM letter1 l1
 LEFT JOIN letter2 l2 ON l1.letter = l2.letter
 WHERE l2.letter IS NULL;
-
+```
+```
 +------+--------+------+--------+
 | id   | letter | id   | letter |
 +------+--------+------+--------+
@@ -99,7 +101,7 @@ WHERE l2.letter IS NULL;
 ### Warning
 Do not use *UNION*, which creates a hashset. If the returned rows are not distinct, you get fewer rows than expected!
 
-```
+```sql
 SELECT l1.letter, l2.letter
 FROM letter1 l1
 LEFT JOIN letter2 l2
@@ -109,7 +111,8 @@ SELECT l1.letter, l2.letter
 FROM letter1 l1
 RIGHT JOIN letter2 l2 
 ON l1.letter=l2.letter;
-
+```
+```
 +--------+--------+
 | letter | letter |
 +--------+--------+
@@ -121,14 +124,15 @@ ON l1.letter=l2.letter;
 ```
 
 The answer should be:
-```
+```sql
 SELECT l1.letter, l2.letter FROM letter1 l1
 LEFT JOIN letter2 l2 ON l1.letter = l2.letter
 UNION ALL
 SELECT l1.letter, l2.letter FROM letter1 l1
 RIGHT JOIN letter2 l2 ON l1.letter = l2.letter
 WHERE l1.letter IS NULL;
-
+```
+```
 +--------+--------+
 | letter | letter |
 +--------+--------+
