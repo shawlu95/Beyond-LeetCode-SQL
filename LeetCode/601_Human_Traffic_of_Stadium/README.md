@@ -56,7 +56,7 @@ The key is to remove duplicates. Consider four days in a row, each day with over
 | day 3| day 3 |
 |          | day 4 |
 
-```
+```sql
 -- MySQL solution
 SELECT DISTINCT 
   s1.* 
@@ -77,7 +77,7 @@ ORDER BY s1.id;
 ## On Efficiency
 Joining the table three times resulting in a huge cartesian product. One way to improve efficiency is simply [pre-filter](mssql_pre_filter.sql) the table, so only days with over 100 people are joined. 
 
-```
+```sql
 -- MySQL: pre-filtering
 SELECT DISTINCT 
   s1.* 
@@ -93,7 +93,7 @@ ORDER BY s1.id;
 
 If using MS SQL, we only need to define the temporary table once, making it much easier to maintain.
 
-```
+```sql
 -- MS SQL: cleaner code
 WITH good_day AS (
   SELECT * FROM stadium WHERE people >= 100
@@ -110,7 +110,7 @@ ORDER BY s1.id;
 
 Using either MySQL or MS SQL, we can do away with temporary table, by merging predicates into the JOIN clause. This small change achieves the same filtering effect.
 
-```
+```sql
 SELECT DISTINCT s1.* 
 FROM stadium AS s1
 LEFT JOIN stadium AS s2
@@ -128,7 +128,7 @@ ORDER BY s1.id;
 ## Optional: Window function
 In MS SQL, the problem can be solved with [window function](mssql_window.sql). Be careful that you __cannot__ use window column in the predicates. You must save the expanded table with window columns in a temporary table.
 
-```
+```sql
 -- MS SQL: window
 WITH long_table AS (
 SELECT
@@ -153,7 +153,7 @@ ORDER BY id;
 
 For the sake of completion, MySQL8 supports window function too, and can be written with window alias.
 
-```
+```sql
 -- MySQL 8 equivalent
 WITH long_table AS (
 SELECT

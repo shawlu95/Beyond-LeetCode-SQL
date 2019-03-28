@@ -59,7 +59,7 @@ What does top-3 paid employees in each department have in common?
 The conditions are set-up for correlated subquery. In subquery, we can use an equijoin (*DepartmentId*) and non-equijoin (*Salary*) to filter the outer query.
 
 Basic [MySQL solution](mysql_correlated_subquery.sql) implementing the equijoin and non-equijoin logic above.
-```
+```sql
 SELECT
   d.Name AS 'Department'
   ,e.Name AS 'Employee'
@@ -81,7 +81,7 @@ WHERE
 ## On Efficiency
 The subquery solution above enforces __nested select__, resulting in __N+1__ select statements and bad runtime efficiency. If we have access to window function ([MS SQL solution](mssql_window.sql), we can simply rank salary over each department as partition, and pick the top 3. Instead of using __DISTINCT__, the window solution uses __DENSE_RANK()__. Note that we cannot refer to window column *rnk* in the WHERE clause. So we must set up a temporary table.
 
-```
+```sql
 -- MS SQL: window function version
 WITH department_ranking AS (
 SELECT
@@ -104,7 +104,7 @@ ORDER BY Department ASC, Salary DESC;
 
 We can further improve efficiency by [filtering](mssql_pre_filter.sql) the ranking before joining with the department table. Instead of joining every employee with his department, we now only join the department top-3 employees with their departments. This is accomplished with an additional temporary table.
 
-```
+```sql
 -- MS SQL: Boosting effiency with pre-filtering
 WITH department_ranking AS (
 SELECT
@@ -135,7 +135,7 @@ ORDER BY d.Name ASC, e.Salary DESC;
 
 We can get rid of the second temporary table by moving the predicate condition *rnk <=3* inside JOIN. The logic is the same as the code above: tables are filtered before joining. We want to reduce the table size before join. 
 
-```
+```sql
 -- MS SQL: cleaner version
 WITH department_ranking AS (
 SELECT

@@ -63,7 +63,7 @@ mysql> SELECT ROW_NUMBER() OVER (ORDER BY name) AS ID, name FROM student WHERE c
 #### Step 2. Full Join
 In MS SQL, use *FULL JOIN* to combine the three temporary tables, in any order. Note that when joining the third table, the *JOIN* condition could match to either the first table or the second table.
 
-```
+```sql
 -- MS SQL
 SELECT
   a.name AS America
@@ -81,7 +81,7 @@ OR c.ID = a.ID;
 ```
 
 In a different order: we don't have to know in advance which group has most students.
-```
+```sql
 -- MS SQL
 SELECT
   a.name AS America

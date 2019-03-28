@@ -67,11 +67,13 @@ Make the following observation to interviewers. Confirm your observation is corr
 The overall strategy is to build two temporary tables, one aggregated over the pay month, one aggregated over the (pay month, department) key pair. After aggregating, joining the two temporary tables. Because every distinct pay month must exist in both table, inner join is enough.
 
 #### Step 1. Company Monthly Average
-```
+```sql
 mysql> SELECT 
     ->   date_format(pay_date, '%Y-%m') as pay_month
     ->   ,AVG(amount) AS corp_avg_sal 
     ->   FROM salary GROUP BY pay_month;
+```
+```
 +-----------+--------------+
 | pay_month | corp_avg_sal |
 +-----------+--------------+
@@ -83,11 +85,13 @@ mysql> SELECT
 
 Notice what happens if you don't process pay_date column before aggregating: you get the wrong average, and your final result will be wrong.
 
-```
+```sql
 mysql> SELECT 
     ->   pay_date
     ->   ,AVG(amount) AS corp_avg_sal 
     ->   FROM salary GROUP BY pay_date;
+```
+```
 +------------+--------------+
 | pay_date   | corp_avg_sal |
 +------------+--------------+
@@ -101,7 +105,7 @@ mysql> SELECT
 #### Step 2. Department Monthly Average
 Similarly, process pay_date before aggregating.
 
-```
+```sql
 mysql> SELECT 
     ->   date_format(pay_date, '%Y-%m') as pay_month
     ->  ,e.department_id
@@ -110,6 +114,8 @@ mysql> SELECT
     ->  JOIN employee AS e
     ->     ON s.employee_id = e.employee_id
     ->  GROUP BY pay_month, e.department_id;
+```
+```
 +-----------+---------------+--------------+
 | pay_month | department_id | dept_avg_sal |
 +-----------+---------------+--------------+
@@ -126,7 +132,7 @@ Can use inner join, or cross join with where clause, or left join. The results a
 
 Remember to give alias to derived tables. See full solution [here](mysql_session_vars.sql).
 
-```
+```sql
 mysql> SELECT  
     ->   a.pay_month
     ->   ,a.department_id, 
@@ -153,6 +159,8 @@ mysql> SELECT
     -> ) AS b
     -> ON a.pay_month = b.pay_month
     -> ORDER BY pay_month, department_id;
+```
+```
 +-----------+---------------+------------+
 | pay_month | department_id | comparison |
 +-----------+---------------+------------+

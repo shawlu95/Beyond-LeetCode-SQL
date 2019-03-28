@@ -83,7 +83,7 @@ Make the following observation to interviewers. Confirm your observation is corr
  * Corner case: if a user has only one row in history, he left join will return NULL on right hand side. However, his only row is also his most recent month (__max_month__), and so is excluded from the result. 
 
 We can use a set to exclude *(Id, Month)* [pair](mysql_set.sql):
-```
+```sql
 -- MySQL: set solution
 SELECT
   e.Id
@@ -103,7 +103,7 @@ ORDER BY e.Id ASC, e.Month DESC;
 
 Or we can use a [temporary](mysql_join_tmp_table.sql) table, and filter the result either with non-equijoin, inner join or cross join. See how each version of the solution handles edge case, and gives the exact same result.
 
-```
+```sql
 -- MySQL: non-equijoin
 SELECT
   e.Id
@@ -161,7 +161,7 @@ Instead of building a temporary table, which has no index, we can accomplish the
 
 Because SUM() ignore __NULL__ values, we don't need IFNULL() here.
 
-```
+```sql
 -- MySQL: single join
 SELECT
   e1.Id
@@ -177,7 +177,7 @@ ORDER BY e1.Id ASC, e1.Month DESC
 
 By the way, we can use [window function](mssql_lag.sql) to retrieve older data. The logic is the same as above.
 
-```
+```sql
 -- MS SQL: Lag window function
 WITH cumulative AS (
 SELECT
@@ -195,7 +195,7 @@ ORDER BY Id ASC, Month DESC;
 ```
 
 In MySQL 8, we can add a window alias to make the code cleaner.
-```
+```sql
 -- MySQL 8 also supports window function, and even window alias!
 WITH cumulative AS (
 SELECT

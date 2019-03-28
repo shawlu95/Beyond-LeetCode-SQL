@@ -67,7 +67,7 @@ Make the following observation to interviewers. Confirm your observation is corr
 * Constrain date range as required.
 
 Basic [solution](mysql_simple.sql) that gives correct output:
-```
+```sql
 -- MySQL: simple version
 SELECT
   t.Request_at AS Day
@@ -90,7 +90,7 @@ Similarly, joining the full *Trips* table can be wasteful. It may contain years 
 
 Finally, we inner join the pre-filtered *valid_trips* table to *valid_user* table twice. INNER JOIN filters out trips that have no match in *valid_users*, meaning that the driver or rider is banned. 
 
-```
+```sql
 -- MySQL: pre-filtering before join
 -- WARNING: LeetCode MySQL does not allow temporary table
 WITH valid_user AS (
@@ -114,7 +114,7 @@ GROUP BY t.Request_at;
 
 Instead of building two temporary tables, we can pre-filter by moving the predicate condition inside JOIN. The logic is the same as the code above: tables are filtered before joining. We want to reduce the table size before join. In the SQL code below, trips and drivers are filtered before being joined, and the clients are filtered before joining with the output of the first join.
 
-```
+```sql
 -- MySQL cleaner code
 SELECT
   t.Request_at AS Day
@@ -136,7 +136,7 @@ When using multi-column predicate, applying more restrictive condition first. Fo
 
 Using IN (... Banned = "No") clause is more efficient than using NOT IN (...Banned = "Yes"). To check an element is not in a set, a full scan of the set is required.
 
-```
+```sql
 -- MySQL: set version
 SELECT
   Request_at AS Day
