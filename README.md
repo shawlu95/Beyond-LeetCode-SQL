@@ -52,6 +52,70 @@ This section covers esoteric details of SQL language and use cases that may be c
 | 5  | Stored Procedure 	            | [MySQL8](./Hacks/05_Stored_Precesure)   |
 | 6  | Hacking Aggregation 	            | [MySQL8](./Hacks/06_Hacking_Aggregation)|
 | 6  | Multi Column Partition 	        | [MySQL8](./Hacks/07_Multi_Column_Partition)|
+
+___
+### Table Optimization
+* **cardinality**: the uniqueness of the data.
+
+Index types:
+* single column index
+* unique index (e.g. SSN)
+  - cannot create unique index on column with duplicate or **NULL** values
+* composite index
+  - column that get's most recently queried gets placed first
+* implicit index: primary key (automatically unique)
+
+Create index when column:
+* is frequently referneced in `order by` or `group by`
+* contains lots of unique values
+
+Avoid index when column:
+* in small table
+* return high percentage of matching data
+* require frequent batch update (drop before updating)
+* contains lots of **NULL**
+* gets frequently manipulated
+* extremely long string
+
+**best practice**: rebuild index frequently to reduce fragmentation
+
+___ 
+### Query Optimization
+* Place smaller table first when joining multiple tables
+* Largest table is the base table
+  - base table is placed on right hand side of equal sign (where clause)
+* Place most restrictive condition **last**: 
+  - The condition in the WHERE clause of a statement that returns the fewest rows of data
+  - the most restrictive condition was listed last in the WHERE clause,
+* try to use indexed column
+```SQL
+FROM TABLE1,   -- Smallest table
+     TABLE2,   -- to
+     TABLE3    -- Largest table, also base table
+WHERE TABLE1.COLUMN = TABLE3.COLUMN    -- Join condition
+  AND TABLE2.COLUMN = TABLE3.COLUMN    -- Join condition
+[ AND CONDITION1 ]                     -- Filter condition
+[ AND CONDITION2 ]                     -- Filter condition
+```
+
+___
+### Formatting for Readability
+* Always begin a new line with each clause in the statement. For example, place the FROM clause on a separate line from the SELECT clause. Then place the WHERE clause on a separate line from the FROM clause, and so on.
+
+* Use tabs or spaces for indentation when arguments of a clause in the statement exceed one line.
+
+* Use tabs and spaces consistently.
+
+* Use table aliases when multiple tables are used in the statement. The use of the full table name to qualify each column in the state- ment quickly clutters the statement and makes reading it difficult.
+
+* Use remarks sparingly in SQL statements if they are available with- in your specific implementation. Remarks are great for documenta- tion, but too many of them clutter a statement.
+
+* Begin a new line with each column name in the SELECT clause if many columns are being selected.
+
+* Begin a new line with each table name in the FROM clause if many tables are being used.
+
+* Begin a new line with each condition of the WHERE clause. You can easily see all conditions of the statement and the order in which they are used.
+
 ---
 ### Anti-patterns
 This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. 
