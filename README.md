@@ -55,6 +55,8 @@ This section covers esoteric details of SQL language and use cases that may be c
 
 ___
 ### Table Optimization
+Avoid full-table scan. Used for primary key (automatic), foreign key, commonly used columns. 
+
 * **cardinality**: the uniqueness of the data.
 
 Index types:
@@ -81,6 +83,9 @@ Avoid index when column:
 
 ___ 
 ### Query Optimization
+
+![alt-text](assets/sql_order.png)
+
 * Place smaller table first when joining multiple tables
 * Largest table is the base table
   - base table is placed on right hand side of equal sign (where clause)
@@ -88,6 +93,7 @@ ___
   - The condition in the WHERE clause of a statement that returns the fewest rows of data
   - the most restrictive condition was listed last in the WHERE clause,
 * try to use indexed column
+
 ```SQL
 FROM TABLE1,   -- Smallest table
      TABLE2,   -- to
@@ -97,6 +103,22 @@ WHERE TABLE1.COLUMN = TABLE3.COLUMN    -- Join condition
 [ AND CONDITION1 ]                     -- Filter condition
 [ AND CONDITION2 ]                     -- Filter condition
 ```
+
+* Using the `like` operator and wildcards (flexible search)
+* Avoiding the `or` operator, use `in` operator
+  - data retrieval is measurably faster by replac- ing OR conditions with the IN predicate
+* Avoiding the `HAVING` clause
+  - try to frame the restriction earlier (`where` clause)
+  - try to keep `HAVING` clause simple (use constant, not function)
+* avoiding large sort operations
+  - it is best to schedule queries with large sorts as periodic batch processes during off-peak database usage so that the performance of most user processes is not affected.
+* Prefer stored procedure
+  - compiled and permanently stored in the database in an executable format.
+* Disabling indexes during batch loads
+  - When the batch load is complete, you should rebuild the indexes.
+  - reduction of fragmentation that is found in the index
+* cost-based optimization: check database server manual
+* Using view: keep the levels of code in your query as flat as possible and to test and tune the statements that make up your views
 
 ___
 ### Formatting for Readability
