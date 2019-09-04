@@ -9,7 +9,7 @@ Only high-quality problems are selected. Pathological problems such as [Find Med
 |----|----------|-----------|------| --------|
 | 262 | [Trips and Users](https://leetcode.com/problems/trips-and-users/) | [MySQL](./LeetCode/262_Trips_and_Users/README.md) | Hard | Three-way join; filtering |
 | 185 | [Department Top Three Salaries](https://leetcode.com/problems/department-top-three-salaries) | [MySQL, MS SQL](./LeetCode/185_Department_Top_Three_Salaries/README.md) | Hard | Non-equijoin; aggregation; window functionsample |
-| 579 | [Cumulative Salary of Employee](https://leetcode.com/problems/find-cumulative-salary-of-an-employee/) | [MySQL, MS SQL](./LeetCode/579_Find_Cumulative_Salary_of_an_Employee/README.md) | Hard | Self-join; left join; aggregation | 
+| 579 | [Cumulative Salary of Employee](https://leetcode.com/problems/find-cumulative-salary-of-an-employee/) | [MySQL, MS SQL](./LeetCode/579_Find_Cumulative_Salary_of_an_Employee/README.md) | Hard | Self-join; left join; aggregation |
 | 601 | [Human Traffic of Stadium](https://leetcode.com/problems/human-traffic-of-stadium/) | [MySQL, MS SQL](./LeetCode/601_Human_Traffic_of_Stadium/README.md) | Hard | Self-join; de-duplication; window |
 | 615 | [Average Salary](https://leetcode.com/problems/average-salary-departments-vs-company/) | [MySQL](./LeetCode/615_Average_Salary/README.md) | Hard | Case; aggregation, join |
 | 618 | [Students Report By Geography](https://leetcode.com/problems/students-report-by-geography/) | [MySQL, MS SQL](./LeetCode/618_Students_Report_by_Geography/README.md) | Hard | Full join, pivoting |
@@ -18,7 +18,7 @@ Other undiscussed problems have solutions lumped [here](LeetCode/others/).
 
 ---
 ### Classic Interview Questions
-This section covers commonly tested concepts during interviews. Many notebooks are inspired by problems people who violated their confidentiality agreement and posted interview masterials on Quora, Glassdoor, and 1point3acres. Data are either synthetic or from my personal challenge project.
+This section covers commonly tested concepts during interviews. Many notebooks are inspired by problems people who violated their confidentiality agreement and posted interview materials on Quora, Glassdoor, and 1point3acres. Data are either synthetic or from my personal challenge project.
 
 | \# | Problems 					| Solutions 												   | Concept 										  |
 |----|------------------------------|--------------------------------------------------------------|--------------------------------------------------|
@@ -43,7 +43,7 @@ This section covers commonly tested concepts during interviews. Many notebooks a
 ### Hacks
 This section covers esoteric details of SQL language and use cases that may be completely useless in interview. Nevertheless, they come handy when judgement calls and some are simply fun to explore.
 
-| \# | Concept                          | Notebook    							  | 
+| \# | Concept                          | Notebook    							  |
 |----|----------------------------------|-----------------------------------------|
 | 1  | Random Sampling from Groups      | [MySQL8](./Hacks/01_Random_Sampling)    |
 | 2  | NULL Pathological Study          | [MySQL8](./Hacks/02_NULL_pathology)     |
@@ -55,7 +55,7 @@ This section covers esoteric details of SQL language and use cases that may be c
 
 ___
 ### Table Optimization
-Avoid full-table scan. Used for primary key (automatic), foreign key, commonly used columns. 
+Avoid full-table scan. Used for primary key (automatic), foreign key, commonly used columns.
 
 * **cardinality**: the uniqueness of the data.
 
@@ -81,7 +81,7 @@ Avoid index when column:
 
 **best practice**: rebuild index frequently to reduce fragmentation
 
-___ 
+___
 ### Query Optimization
 
 ![alt-text](assets/sql_order.png)
@@ -89,7 +89,7 @@ ___
 * Place smaller table first when joining multiple tables
 * Largest table is the base table
   - base table is placed on right hand side of equal sign (where clause)
-* Place most restrictive condition **last**: 
+* Place most restrictive condition **last**:
   - The condition in the WHERE clause of a statement that returns the fewest rows of data
   - the most restrictive condition was listed last in the WHERE clause,
 * try to use indexed column
@@ -140,9 +140,9 @@ ___
 
 ---
 ### Anti-patterns
-This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word. 
+This section *WILL* discusses common pitfalls such as nested selects, redundant temporary tables, unnecessary cross join, unnecessary hashset using distinct key word.
 
-| \# | Anti-patterns                    | Notebook    							  					  | 
+| \# | Anti-patterns                    | Notebook    							  					  |
 |----|----------------------------------|-------------------------------------------------------------|
 | 1  | Ambiguous Group 			        | [MySQL8](./Anti_Patterns/01_Ambiguous_Group)                |
 | 2  | Bad Subquery 		            | [MySQL8](./Anti_Patterns/02_Bad_Subquery)  				  |
