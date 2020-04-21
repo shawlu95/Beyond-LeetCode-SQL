@@ -98,12 +98,12 @@ mysql> SELECT * FROM Advertiser;
 +----+---------+-----------+
 |  1 | bing    | CHURN     |
 |  2 | yahoo   | EXISTING  |
-|  3 | alibaba | CHURN     |
-|  4 | baidu   | EXISTING  |
-|  5 | target  | CHURN     |
-|  6 | tesla   | RESURRECT |
-|  7 | morgan  | CHURN     |
-|  8 | chase   | EXISTING  |
+|  3 | alibaba | EXISTING  |
+|  4 | baidu   | CHURN     |
+|  5 | target  | RESURRECT |
+|  6 | tesla   | CHURN     |
+|  7 | morgan  | EXISTING  |
+|  8 | chase   | CHURN     |
 +----+---------+-----------+
 8 rows in set (0.00 sec)
 ```
@@ -130,13 +130,13 @@ SELECT * FROM Advertiser;
 +----+---------+-----------+
 |  1 | bing    | CHURN     |
 |  2 | yahoo   | EXISTING  |
-|  3 | alibaba | CHURN     |
-|  4 | baidu   | EXISTING  |
-|  5 | target  | CHURN     |
-|  6 | tesla   | RESURRECT |
-|  7 | morgan  | CHURN     |
-|  8 | chase   | EXISTING  |
-| 10 | fitdata | NEW       |
+|  3 | alibaba | EXISTING  |
+|  4 | baidu   | CHURN     |
+|  5 | target  | RESURRECT |
+|  6 | tesla   | CHURN     |
+|  7 | morgan  | EXISTING  |
+|  8 | chase   | CHURN     |
+|  9 | fitdata | NEW       |
 +----+---------+-----------+
 9 rows in set (0.00 sec)
 ```
