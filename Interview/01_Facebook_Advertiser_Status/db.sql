@@ -34,7 +34,7 @@ CREATE TABLE `DailyPay` (
   `paid` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `DailyPay` (`id`, `user_id`, `paid_amount`) VALUES
+INSERT INTO `DailyPay` (`id`, `user_id`, `paid`) VALUES
 (1, 'yahoo', 45),
 (2, 'alibaba', 100),
 (3, 'target', 13),
