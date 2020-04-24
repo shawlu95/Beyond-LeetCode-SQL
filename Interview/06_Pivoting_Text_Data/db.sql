@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS Practice;
 USE Practice;
 
----------------------------------------
+-- ---------------------------------------
 
 --
 -- Table structure for table `CourseGrade`
