@@ -10,6 +10,7 @@ SELECT
 FROM CourseGrade
 GROUP BY name;
 
+USE Grocery;
 DROP TABLE IF EXISTS expenses_pivoted;
 CREATE TABLE expenses_pivoted AS
 SELECT
