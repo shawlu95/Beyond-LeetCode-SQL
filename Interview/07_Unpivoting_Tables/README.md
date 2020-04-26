@@ -1,10 +1,10 @@
 # Unpivoting Table
 
-This is the reverse process of pivoting. In effect, we are reducing the number of columns, and increasing the number of rows. The key is to define an auxillary table. In this notebook, we will un-pivot both the numeric pivot [table](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/05_Pivoting_Numeric_Data) and the text pivot [table](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/06_Pivoting_Text_Data).
+This is the reverse process of pivoting. In effect, we are reducing the number of columns, and increasing the number of rows. The key is to define an auxiliary table. In this notebook, we will un-pivot both the numeric pivot [table](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/05_Pivoting_Numeric_Data) and the text pivot [table](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/06_Pivoting_Text_Data).
 
-> An auxillary table is a temporary table that contains a single columns containing the name of the columns to be dropped from the pivot table.
+> An auxiliary table is a temporary table that contains a single columns containing the name of the columns to be dropped from the pivot table.
 
-The reversal is accomplished by cross joining with an auxillary table, to inrease the number of rows. Then we apply a case statement on the auxillary table's value, and select the to-be-dropped columns correspondingly.
+The reversal is accomplished by cross joining with an auxiliary table, to inrease the number of rows. Then we apply a case statement on the auxiliary table's value, and select the to-be-dropped columns correspondingly.
 
 In this notebook, we'll go over two examples: unpivoting the numeric table and text table we accomplished in the earlier notebooks. You'll see that, by aggregating over numeric data, we have permanently lost information, and cannot fully un-pivot back to the original state.
 
@@ -15,8 +15,14 @@ mysql < pivot_table.sql -uroot -p
 
 ---
 ### Unpivoting Text Data
-#### Step 1. Build the Auxillary Table
-Different SQL server gives you different syntax in building auxillary table. In MySQL, the process is rather verbose.
+#### Step 1. Build the auxiliary Table
+Switch to `Practice` database:
+
+```sql
+USE Practice;
+```
+
+Different SQL server gives you different syntax in building auxiliary table. In MySQL, the process is rather verbose.
 
 ```sql
 SELECT * FROM (
@@ -24,7 +30,7 @@ SELECT * FROM (
   UNION ALL
   SELECT 'CS229'
   UNION ALL
-  SELECT 'CS224N' year
+  SELECT 'CS224N'
        ) aux;
 ```
 ```
@@ -49,12 +55,12 @@ course_grade_pivoted,
   UNION ALL
   SELECT 'CS229'
   UNION ALL
-  SELECT 'CS224N' year
+  SELECT 'CS224N'
        ) aux;
 ```
 ```
 +---------+--------+-------+--------+-------------+
-| name    | CS106B | CS229 | CS224N | course |
+| name    | CS106B | CS229 | CS224N | course      |
 +---------+--------+-------+--------+-------------+
 | Alice   | A      | A     | B      | CS106B      |
 | Alice   | A      | A     | B      | CS229       |
@@ -126,7 +132,7 @@ FROM  course_grade_pivoted,
   UNION ALL
   SELECT 'CS229'
   UNION ALL
-  SELECT 'CS224N' year
+  SELECT 'CS224N'
        ) aux;
 ```
 ```
@@ -154,7 +160,15 @@ FROM  course_grade_pivoted,
 
 ---
 ### Unpivoting Numeric Data
-To unpivote the table from this [notebook](../05_Pivoting_Numeric_Data/), we apply the same two-step technique. However, because the pivot table was constructed by summing over groups, we are unable to uncover the 1083 rows. Instead, we can only recover 25 categories * 12 months = 300 rows. Here we show 24 rows, for 'Social' and 'Book' categories.
+To unpivote the table from this [notebook](../05_Pivoting_Numeric_Data/), we apply the same two-step technique. However, because the pivot table was constructed by summing over groups, we are unable to uncover the 1083 rows. Instead, we can only recover 25 categories * 12 months = 300 rows. 
+
+Switch to `Grocery` database:
+
+```sql
+USE Grocery;
+```
+
+Here we show 24 rows, for 'Social' and 'Book' categories.
 
 ```sql
 SELECT 
