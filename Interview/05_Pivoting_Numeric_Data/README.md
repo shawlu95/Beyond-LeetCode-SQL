@@ -9,7 +9,7 @@ The trouble with pivoting *VARCHAR* data is that they cannot be aggregated over,
 
 
 The pivoting process is accomplished in two stages:
-1. Adding columns: breaking the *pivoted* column into multiple columns. This can be accomplished using either *CASE* statement or *self join*. In this case, it is unrealistic to do self-join, because the number of rows is much greater than the cardinalities of the *index* and *pivoted* columns multiplied. See thie [notebook](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/06_Pivoting_Text_Data) for an example of using self-join to pivot data.
+1. Adding columns: breaking the *pivoted* column into multiple columns. This can be accomplished using either *CASE* statement or *self join*. In this case, it is unrealistic to do self-join, because the number of rows is much greater than the cardinalities of the *index* and *pivoted* columns multiplied. See this [notebook](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/06_Pivoting_Text_Data) for an example of using self-join to pivot data.
 2. Aggregation: reduce the number of rows. The number of rows will be __equal__ to the cardinality of the *index* column.
 
 ---
@@ -49,7 +49,7 @@ mysql> SELECT * FROM expenses LIMIT 5;
 
 ---
 ## Objective
-The unpivoted table contains 1083 rows (1083 records of transactions in year 2018). We want to pivot the table to have *category* as index column, abd the *time* column as *pivoted* column, binned into 12 months. The cardinality of the category column is 25, The cardinality of the *time* column is 12 (12 months). The resulting table will have dimension 25 * 12.
+The unpivoted table contains 1083 rows (1083 records of transactions in year 2018). We want to pivot the table to have *category* as index column, and the *time* column as *pivoted* column, binned into 12 months. The cardinality of the category column is 25, The cardinality of the *time* column is 12 (12 months). The resulting table will have dimension 25 * 12.
 
 ```
 mysql> SELECT COUNT(DISTINCT category) FROM expenses;

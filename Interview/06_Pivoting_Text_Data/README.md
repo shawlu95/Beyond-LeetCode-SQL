@@ -1,6 +1,6 @@
 # Pivoting Text Data
 
-Different from the *Expenses* table from the earlier [note](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/05_Pivoting_Numeric_Data), this table contains text data, and cannot be summed or averaged over. A different approach is required tp reduce number of tables. Still, just as in pivoting numeric data, we need to go through two steps.
+Different from the *Expenses* table from the earlier [note](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/05_Pivoting_Numeric_Data), this table contains text data, and cannot be summed or averaged over. A different approach is required to reduce number of tables. Still, just as in pivoting numeric data, we need to go through two steps.
 
 1. Adding columns using self-join or switch statement. We'll study both approaches in this notebook.
 2. Reduce number of rows to the cardinality of *index* column.
