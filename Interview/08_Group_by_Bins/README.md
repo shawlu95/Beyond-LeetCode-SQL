@@ -1,6 +1,12 @@
 # Group by Bins
 
-One common task is to put rows into bins, meaning that there does not exist a conveninet column for us to GROUP BY. In this notebook, we will use the *classicmodels* database. It contains a *customers* table. We will put customers into different class of credit limit.
+One common task is to put rows into bins, meaning that there does not exist a conveninet column for us to GROUP BY. In this notebook, we will use the [*classicmodels* database](../../databases/classicmodels/mysqlsampledatabase.sql). Load the database:
+
+```bash
+mysql < mysqlsampledatabase.sql -uroot -p
+```
+
+It contains a *customers* table. We will put customers into different class of credit limit.
 
 * 0~50,000
 * 50,001~100,000
