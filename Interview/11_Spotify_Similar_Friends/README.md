@@ -1,10 +1,10 @@
 # 11_Spotify_Similar_Friends
 
 > Write a query that identifies all the users that listened  to three of the same songs on Spotify, on the same day, as someone in their friend list. Assume we have the following table
-* Song: user_id, song_id, ts
+* Song: user_id, song, ts
 * User: user_id, friend_id
 
-This question is similar to the [last](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/10_Recommend_Friend) one. The difference is that we are examining users who are already friends. Instead of self-joining song table, we need a three-way-join on song-user-song tables. The key concepts to test are:
+This question is similar to the [last](https://github.com/shawlu95/Beyond-LeetCode-SQL/tree/master/Interview/10_Spotify_Recommend_Friend) one. The difference is that we are examining users who are already friends. Instead of self-joining song table, we need a three-way-join on song-user-song tables. The key concepts to test are:
 * De-duplication with *DISTINCT*.
 * Join type: inner or outer join?
 * Aggregation: which columns to group by?
@@ -13,7 +13,7 @@ ___
 ### Step 1. Three-way Join
 First we need to understand the mechanics of three-way join. In this example, we need *INNER* join to look for __same__ songs that are played on the __same__ day. So for any pair of user A, B who are friend, we can safely ignore songs that user A listened on a day that user B did not, and songs that user B listened on a day that user A did not: we only need the common songs.
 
-In this problem, we are using the same [dataset](https://github.com/shawlu95/Beyond-LeetCode-SQL/blob/master/Interview/10_Recommend_Friend/db.sql) as the previous problem. There is only one friendship in the *User* table.
+In this problem, we are using the same [dataset](https://github.com/shawlu95/Beyond-LeetCode-SQL/blob/master/Interview/10_Spotify_Recommend_Friend/db.sql) as the previous problem. There is only one friendship in the *User* table.
 
 ```sql
 SELECT * FROM User;
