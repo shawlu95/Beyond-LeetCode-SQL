@@ -224,13 +224,17 @@ ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that 
 The correct implementation.
 ```sql
 SET @now = "2019-02-14";
-WITH tmp AS (
+WITH Login_distinct AS (
+  SELECT DISTINCT user_id,
+  ts
+  FROM Login
+), tmp AS (
 SELECT
   user_id
   ,ts
   ,DATEDIFF(@now, LAG(ts, 1) OVER w) AS day_from_pre1
   ,DATEDIFF(@now, LAG(ts, 2) OVER w) AS day_from_pre2
-FROM Login
+FROM Login_DISTINCT
 WINDOW w AS (PARTITION BY user_id ORDER BY ts)
 )
 SELECT user_id
@@ -282,9 +286,14 @@ JOIN tmp AS d7
 
 ```sql
 SET @now = "2019-02-14";
-WITH tmp AS (
+WITH Login_distinct AS (
+  SELECT DISTINCT user_id,
+  ts
+  FROM Login
+), tmp AS (
 SELECT
   user_id
+  ,ts
   ,DATEDIFF(@now, LAG(ts, 1) OVER w) AS day_from_pre1
   ,DATEDIFF(@now, LAG(ts, 2) OVER w) AS day_from_pre2
   ,DATEDIFF(@now, LAG(ts, 3) OVER w) AS day_from_pre3
@@ -292,7 +301,7 @@ SELECT
   ,DATEDIFF(@now, LAG(ts, 5) OVER w) AS day_from_pre5
   ,DATEDIFF(@now, LAG(ts, 6) OVER w) AS day_from_pre6
   ,DATEDIFF(@now, LAG(ts, 7) OVER w) AS day_from_pre7
-FROM Login
+FROM Login_distinct
 WINDOW w AS (PARTITION BY user_id ORDER BY ts)
 )
 SELECT user_id
