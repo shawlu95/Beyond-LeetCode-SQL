@@ -224,13 +224,17 @@ ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that 
 The correct implementation.
 ```sql
 SET @now = "2019-02-14";
-WITH tmp AS (
+WITH Login_distinct AS (
+  SELECT DISTINCT user_id,
+  ts
+  FROM Login
+), tmp AS (
 SELECT
   user_id
   ,ts
   ,DATEDIFF(@now, LAG(ts, 1) OVER w) AS day_from_pre1
   ,DATEDIFF(@now, LAG(ts, 2) OVER w) AS day_from_pre2
-FROM Login
+FROM Login_DISTINCT
 WINDOW w AS (PARTITION BY user_id ORDER BY ts)
 )
 SELECT user_id
@@ -274,25 +278,26 @@ JOIN tmp AS d5
   AND d0.user_id = d5.user_id
 JOIN tmp AS d6
   ON DATEDIFF(@now, d6.ts) = 6
-  AND d0.user_id = d6.user_id
-JOIN tmp AS d7
-  ON DATEDIFF(@now, d7.ts) = 7
-  AND d0.user_id = d7.user_id;
+  AND d0.user_id = d6.user_id;
 ```
 
 ```sql
 SET @now = "2019-02-14";
-WITH tmp AS (
+WITH Login_distinct AS (
+  SELECT DISTINCT user_id,
+  ts
+  FROM Login
+), tmp AS (
 SELECT
   user_id
+  ,ts
   ,DATEDIFF(@now, LAG(ts, 1) OVER w) AS day_from_pre1
   ,DATEDIFF(@now, LAG(ts, 2) OVER w) AS day_from_pre2
   ,DATEDIFF(@now, LAG(ts, 3) OVER w) AS day_from_pre3
   ,DATEDIFF(@now, LAG(ts, 4) OVER w) AS day_from_pre4
   ,DATEDIFF(@now, LAG(ts, 5) OVER w) AS day_from_pre5
   ,DATEDIFF(@now, LAG(ts, 6) OVER w) AS day_from_pre6
-  ,DATEDIFF(@now, LAG(ts, 7) OVER w) AS day_from_pre7
-FROM Login
+FROM Login_distinct
 WINDOW w AS (PARTITION BY user_id ORDER BY ts)
 )
 SELECT user_id
@@ -303,8 +308,7 @@ WHERE ts=@now
   AND day_from_pre3 = 3
   AND day_from_pre4 = 4
   AND day_from_pre5 = 5
-  AND day_from_pre6 = 6
-  AND day_from_pre7 = 7;
+  AND day_from_pre6 = 6;
 ```
 
 See full solution [here](solution.sql)
