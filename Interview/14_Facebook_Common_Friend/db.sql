@@ -24,7 +24,7 @@ INSERT INTO `Friendship` (`id`, `user_id`, `friend_id`) VALUES
 (6, 'bob', 'charles'),
 (7, 'bob', 'mary'),
 (8, 'david', 'sonny'),
-(9, 'charles', 'sonny');
+(9, 'charles', 'sonny'),
 (10, 'bob', 'sonny');
 
 ALTER TABLE `Friendship`
