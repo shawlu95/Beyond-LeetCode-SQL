@@ -9,7 +9,7 @@ Truncate table salary;
 insert into salary (id, employee_id, amount, pay_date) values ('1', '1', '9000', '2017/03/31');
 insert into salary (id, employee_id, amount, pay_date) values ('2', '2', '6000', '2017/03/31');
 insert into salary (id, employee_id, amount, pay_date) values ('3', '3', '10000', '2017/03/31');
-insert into salary (id, employee_id, amount, pay_date) values ('4', '1', '6000', '2017/02/25');
+insert into salary (id, employee_id, amount, pay_date) values ('4', '1', '7000', '2017/02/25');
 insert into salary (id, employee_id, amount, pay_date) values ('5', '2', '6000', '2017/02/28');
 insert into salary (id, employee_id, amount, pay_date) values ('6', '3', '8000', '2017/02/28');
 
