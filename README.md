@@ -11,7 +11,7 @@ Only high-quality problems are selected. Pathological problems such as [Find Med
 | 185 | [Department Top Three Salaries](https://leetcode.com/problems/department-top-three-salaries) | [MySQL, MS SQL](./LeetCode/185_Department_Top_Three_Salaries/README.md) | Hard | Non-equijoin; aggregation; window functionsample |
 | 579 | [Cumulative Salary of Employee](https://leetcode.com/problems/find-cumulative-salary-of-an-employee/) | [MySQL, MS SQL](./LeetCode/579_Find_Cumulative_Salary_of_an_Employee/README.md) | Hard | Self-join; left join; aggregation |
 | 601 | [Human Traffic of Stadium](https://leetcode.com/problems/human-traffic-of-stadium/) | [MySQL, MS SQL](./LeetCode/601_Human_Traffic_of_Stadium/README.md) | Hard | Self-join; de-duplication; window |
-| 615 | [Average Salary](https://leetcode.com/problems/average-salary-departments-vs-company/) | [MySQL](./LeetCode/615_Average_Salary/README.md) | Hard | Case; aggregation, join |
+| 615 | [Average Salary](https://leetcode.com/problems/average-salary-departments-vs-company/) | [MySQL](./LeetCode/615_Average_Salary/README.MD) | Hard | Case; aggregation, join |
 | 618 | [Students Report By Geography](https://leetcode.com/problems/students-report-by-geography/) | [MySQL, MS SQL](./LeetCode/618_Students_Report_by_Geography/README.md) | Hard | Full join, pivoting |
 
 Other undiscussed problems have solutions lumped [here](LeetCode/others/).
@@ -128,9 +128,9 @@ ___
 
 * Use tabs and spaces consistently.
 
-* Use table aliases when multiple tables are used in the statement. The use of the full table name to qualify each column in the state- ment quickly clutters the statement and makes reading it difficult.
+* Use table aliases when multiple tables are used in the statement. The use of the full table name to qualify each column in the statement quickly clutters the statement and makes reading it difficult.
 
-* Use remarks sparingly in SQL statements if they are available with- in your specific implementation. Remarks are great for documenta- tion, but too many of them clutter a statement.
+* Use remarks sparingly in SQL statements if they are available with- in your specific implementation. Remarks are great for documentation, but too many of them clutter a statement.
 
 * Begin a new line with each column name in the SELECT clause if many columns are being selected.
 
